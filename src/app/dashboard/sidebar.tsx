@@ -32,7 +32,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href={"/dashboard"} passHref legacyBehavior>
+            <Link href="/dashboard" passHref>
               <SidebarMenuButton className="bg-secondary text-foreground py-6 px-4 text-lg transition-all duration-150 cursor-pointer">
                 <Computer className="h-5 w-5" />
                 <span className="text-base font-semibold">Next Supa Shad</span>
@@ -49,7 +49,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <Link href={item.url} passHref legacyBehavior>
+                  <Link href={item.url} passHref>
                     <SidebarMenuButton
                       className="hover:bg-primary/10 data-[active=true]:bg-primary/20 data-[active=true]:text-primary py-5 px-4 text-lg transition-all duration-150 cursor-pointer"
                       data-active={pathname === item.url}
