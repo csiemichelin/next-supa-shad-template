@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${crimsonText.className} font-sans antialiased`}>
+      <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
         {children}
         <Analytics />
       </body>
