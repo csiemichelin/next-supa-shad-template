@@ -190,35 +190,80 @@ export function Header() {
               className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">Home</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.2rem]
+                  transition-all 
+                  active:font-bold
+                "
+              >首頁</span>
             </a>
             <a
               href="#about"
               className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">About</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.2rem]
+                  transition-all 
+                  active:font-bold
+                "
+              >關於我們</span>
             </a>
             <a
               href="#menu"
               className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">Menu</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.2rem]
+                  transition-all 
+                  active:font-bold
+                "
+              >菜單</span>
             </a>
             <a
               href="#gallery"
               className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">Gallery</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.2rem]
+                  transition-all 
+                  active:font-bold
+                "
+              >職人匠心</span>
             </a>
             <a
               href="#contact"
               className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
               onClick={() => setIsMenuOpen(false)}
             >
-              <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">Contact</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.2rem]
+                  transition-all 
+                  active:font-bold
+                "
+              >聯絡我們</span>
             </a>
             <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
               立即點餐

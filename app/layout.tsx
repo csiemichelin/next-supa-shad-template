@@ -18,7 +18,7 @@ const chenYu = localFont({
 })
 
 export const metadata: Metadata = {
-  title: '時光咖啡 Shiguang Coffee House',
+  title: '時光咖啡 Shiguang Coffee',
   description: '在溫暖靜謐的空間裡，細細品味每一杯手作咖啡，讓時光慢一點走。',
   generator: 'v0.app',
   icons: {

@@ -254,7 +254,7 @@ export function Menu() {
                       className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all group"
                     >
                       <ShoppingCart className="mr-2 h-5 w-5" />
-                      Add to Cart
+                      加到購物車
                     </Button>
                   </div>
                 </div>

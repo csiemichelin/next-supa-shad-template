@@ -109,8 +109,8 @@ export function Contact() {
             <CardContent className="p-0">
               <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden group">
                 <img
-                  src="/images/coffee-shop-storefront-exterior.jpg"
-                  alt="Shiguang Coffee House storefront"
+                  src="/images/store-front.png"
+                  alt="Shiguang Coffee storefront"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
@@ -121,7 +121,7 @@ export function Contact() {
             isButtonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}>
             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
-              Get Directions
+              查看路線
             </Button>
           </div>
         </div>

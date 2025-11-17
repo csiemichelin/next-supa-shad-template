@@ -75,7 +75,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
         </div>
 
         {items.length > 0 && (
-          <div className="border-t border-border pt-6 space-y-4">
+          <div className="border-t border-border pt-6 pb-6 px-4 space-y-4">
             <div className="flex justify-between items-center text-lg font-bold">
               <span>Total:</span>
               <span className="text-accent">${getTotal().toFixed(2)}</span>
@@ -84,14 +84,14 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               size="lg"
             >
-              Checkout
+              點餐
             </Button>
             <Button
               variant="outline"
               className="w-full"
               onClick={clearCart}
             >
-              Clear Cart
+              清空購物車
             </Button>
           </div>
         )}
