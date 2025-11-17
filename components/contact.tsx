@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MapPin, Phone, Clock } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import Image from "next/image"
 
 export function Contact() {
   const [visibleCards, setVisibleCards] = useState<number[]>([])
@@ -122,6 +123,13 @@ export function Contact() {
           }`}>
             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
               查看路線
+              <Image
+                src="/icons/map-location-dot-solid-full.png"
+                alt="造訪我們"
+                width={20}
+                height={20}
+                className="h-5 w-5 group-hover:translate-x-1 transition-transform"
+              />
             </Button>
           </div>
         </div>

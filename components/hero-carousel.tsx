@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
+import Image from "next/image"
 
 type Slide = {
   id: number
@@ -120,10 +121,23 @@ export function HeroCarousel() {
           }`}>
             <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all group">
               瀏覽菜單
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Image
+                src="/icons/mug-hot-solid-full.png"
+                alt="瀏覽菜單"
+                width={20}
+                height={20}
+                className="h-5 w-5 group-hover:translate-x-1 transition-transform"
+              />
             </Button>
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:scale-105 hover:text-primary transition-all">
               造訪我們
+              <Image
+                src="/icons/hand-pointer-regular-full.svg"
+                alt="造訪我們"
+                width={20}
+                height={20}
+                className="h-5 w-5 group-hover:translate-x-1 transition-transform"
+              />
             </Button>
           </div>
         </div>

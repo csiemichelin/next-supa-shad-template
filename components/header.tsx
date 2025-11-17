@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Menu, X } from 'lucide-react'
 import { CartButton } from './cart-button'
+import Link from "next/link"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -25,17 +26,19 @@ export function Header() {
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20 md:h-24">
-          <div className="flex items-center text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
-            <img
-              src="/logo/logo_black.png"
-              alt="時光咖啡 Shiguang Coffee"
-              className="h-20 md:h-20 object-contain"
-            />
-            <span lang="zh-Hant" className="text-2xl md:text-3xl font-bold">
-              時光咖啡
-            </span>
-          </div>
-
+          <Link href="/" className="inline-flex">
+            <div className="flex items-center text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
+              <img
+                src="/logo/logo_black.png"
+                alt="時光咖啡 Shiguang Coffee"
+                className="h-20 md:h-20 object-contain"
+              />
+              <span lang="zh-Hant" className="text-2xl md:text-3xl font-bold">
+                時光咖啡
+              </span>
+            </div>
+          </Link>
+  
           <nav className="hidden md:flex items-center gap-10">
             <a href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span

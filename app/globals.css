@@ -161,7 +161,7 @@
 }
 
 .animate-subtle-zoom {
-  animation: subtle-zoom 20s ease-in-out infinite;
+  animation: subtle-zoom 8s ease-in-out infinite;
 }
 
 .animate-float {
