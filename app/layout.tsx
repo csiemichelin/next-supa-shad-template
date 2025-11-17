@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Crimson_Text } from 'next/font/google'
+import localFont from "next/font/local";
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
@@ -9,9 +10,16 @@ const crimsonText = Crimson_Text({
   display: 'swap',
 });
 
+// 加入辰宇落雁體
+const chenYu = localFont({
+  src: '../public/fonts/ChenYuluoyan-2.0-Thin.ttf',
+  display: 'swap',
+  variable: '--font-chernyu',
+})
+
 export const metadata: Metadata = {
-  title: 'Artisan Coffee House - Crafted with Care',
-  description: 'Experience the finest artisanal coffee in a warm, welcoming atmosphere. Every cup tells a story.',
+  title: 'Shiguang Coffee House - Crafted with Care',
+  description: 'Experience the finest shiguangal coffee in a warm, welcoming atmosphere. Every cup tells a story.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -38,8 +46,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${crimsonText.className} font-sans antialiased`}>
+    <html lang="en" className={chenYu.variable}>
+      <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
         {children}
         <Analytics />
       </body>

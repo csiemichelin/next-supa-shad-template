@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from 'react'
 export function Gallery() {
   const images = [
     { url: '/latte-art-heart-design.jpg', alt: 'Latte art' },
-    { url: '/coffee-beans-roasting.png', alt: 'Coffee beans' },
+    { url: '/coffee-beans-roasting.jpg', alt: 'Coffee beans' },
     { url: '/espresso-machine-pouring-coffee.jpg', alt: 'Espresso brewing' },
     { url: '/coffee-shop-interior-cozy-seating.jpg', alt: 'Cafe interior' },
     { url: '/barista-pouring-milk-coffee.jpg', alt: 'Barista at work' },
-    { url: '/coffee-cup-wooden-table.png', alt: 'Coffee moment' },
+    { url: '/coffee-cup-wooden-table.jpg', alt: 'Coffee moment' },
   ]
 
   const [visibleImages, setVisibleImages] = useState<number[]>([])

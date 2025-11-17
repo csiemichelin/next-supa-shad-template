@@ -3,6 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:lang(zh),
+:lang(zh-Hant),
+:lang(zh-TW) {
+  font-family: var(--font-chernyu), system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', sans-serif;
+}
+
 :root {
   --background: oklch(0.985 0.005 89.5);
   --foreground: oklch(0.23 0.012 96.5);

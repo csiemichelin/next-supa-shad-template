@@ -3,42 +3,57 @@
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
 
-const slides = [
-  {
-    image: '/cozy-modern-coffee-shop-interior-with-natural-ligh.jpg',
-    title: 'Crafted with Care',
-    description: 'Experience the art of coffee making in our carefully curated space. Every bean tells a story, every cup creates a memory.',
-    highlight: 'Care'
-  },
-  {
-    image: '/artisan-coffee-brewing-process-close-up.jpg',
-    title: 'Expertly Brewed',
-    description: 'Our skilled baristas craft each cup with precision and passion, using only the finest single-origin beans.',
-    highlight: 'Brewed'
-  },
-  {
-    image: '/coffee-shop-cozy-reading-corner-warm-lighting.jpg',
-    title: 'Warm Atmosphere',
-    description: 'Unwind in our welcoming space designed for connection, creativity, and quiet moments of reflection.',
-    highlight: 'Atmosphere'
-  }
-]
+type Slide = {
+  id: number
+  title: string
+  description: string
+  highlight: string
+  image_url: string
+}
 
 export function HeroCarousel() {
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    async function loadSlides() {
+      const { data, error } = await supabase
+        .from("slides")
+        .select("id, title, description, highlight, image_url")
+        .order("created_at", { ascending: true });
+
+      if (error) {
+        // console.error("Supabase load error:", error);
+        return;
+      }
+
+      // console.log("Slides loaded:", data);
+      setSlides(data || []);
+    }
+
+    loadSlides();
+  }, []);
+
+  useEffect(() => {
+    // console.log('slides state updated:', slides)
+  }, [slides])
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
 
   useEffect(() => {
+    if (slides.length === 0) return
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 6000)
+
     return () => clearInterval(timer)
-  }, [])
+  }, [slides.length])
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
@@ -50,6 +65,14 @@ export function HeroCarousel() {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+  }
+
+  if (slides.length === 0) {
+    return (
+      <section className="min-h-screen flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </section>
+    );
   }
 
   return (
@@ -64,9 +87,9 @@ export function HeroCarousel() {
             }`}
           >
             <img
-              src={slide.image || "/placeholder.svg"}
+              src={slide.image_url || "/placeholder.svg"}
               alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover opacity-20 scale-105 animate-subtle-zoom"
+              className="w-full h-full object-cover opacity-60 scale-105 animate-subtle-zoom"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
           </div>
@@ -87,7 +110,7 @@ export function HeroCarousel() {
               )
             ))}
           </h1>
-          <p className={`text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
+          <p lang="zh-Hant" className={`text-2xl md:text-3xl text-muted-foreground max-w-2xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             {slides[currentSlide].description}

@@ -39,6 +39,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      slides: {
+        Row: {
+          created_at: string | null
+          description: string
+          highlight: string
+          id: number
+          image_url: string
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description: string
+          highlight: string
+          id?: never
+          image_url: string
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string
+          highlight?: string
+          id?: never
+          image_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string | null

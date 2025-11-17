@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 const features = [
   {
     icon: Coffee,
-    title: 'Artisanal Roasting',
+    title: 'Shiguang Roasting',
     description: 'Small-batch roasting ensures optimal freshness and flavor in every cup we serve.',
   },
   {
@@ -60,7 +60,7 @@ export function Features() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Why Choose Artisan
+            Why Choose Shiguang
           </h2>
           <p className="text-muted-foreground leading-relaxed">
             We believe coffee is more than a beverage—it's an experience to be savored

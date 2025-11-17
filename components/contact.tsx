@@ -62,7 +62,7 @@ export function Contact() {
       content: (
         <>
           (503) 555-CAFE<br />
-          hello@artisan.coffee
+          hello@shiguang.coffee
         </>
       ),
     },
@@ -111,7 +111,7 @@ export function Contact() {
               <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden group">
                 <img
                   src="/coffee-shop-storefront-exterior.jpg"
-                  alt="Artisan Coffee House storefront"
+                  alt="Shiguang Coffee House storefront"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>

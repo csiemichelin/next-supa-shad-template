@@ -64,7 +64,7 @@ const menuItems = [
         price: '$5.50', 
         description: 'Smooth, low-acid, steeped for 16 hours',
         details: 'Coffee grounds steeped in cold water for 16 hours, resulting in a naturally sweet, smooth, and less acidic brew.',
-        image: '/cold-brew-coffee.png'
+        image: '/cold-brew-coffee.jpg'
       },
       { 
         name: 'Nitro Cold Brew', 
