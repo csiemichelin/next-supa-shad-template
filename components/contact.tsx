@@ -38,31 +38,30 @@ export function Contact() {
   const contactCards = [
     {
       icon: MapPin,
-      title: 'Location',
+      title: '店鋪地址',
       content: (
         <>
-          123 Coffee Street<br />
-          Portland, OR 97201
+          台北市中正區咖啡街 123 號 1 樓<br />
         </>
       ),
     },
     {
       icon: Clock,
-      title: 'Hours',
+      title: '營業時間',
       content: (
         <>
-          Mon-Fri: 7am - 7pm<br />
-          Sat-Sun: 8am - 8pm
+          週一至週五｜上午 7:00 – 晚上 7:00<br />
+          週六至週日｜上午 8:00 – 晚上 8:00
         </>
       ),
     },
     {
       icon: Phone,
-      title: 'Contact',
+      title: '聯絡方式',
       content: (
         <>
-          (503) 555-CAFE<br />
-          hello@shiguang.coffee
+          電話｜(03) 1688-9457<br />
+          Email｜shiguang@gmail.com
         </>
       ),
     },
@@ -71,12 +70,12 @@ export function Contact() {
   return (
     <section ref={sectionRef} id="contact" className="py-20 md:py-32">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
+        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Visit Us
+            聯絡我們
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            We'd love to see you. Stop by for a cup and stay for the atmosphere.
+          <p className="text-2xl text-muted-foreground leading-relaxed">
+            期待你的到來，來坐下喝杯咖啡，享受屬於你的慢時光
           </p>
         </div>
 
@@ -110,7 +109,7 @@ export function Contact() {
             <CardContent className="p-0">
               <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden group">
                 <img
-                  src="/coffee-shop-storefront-exterior.jpg"
+                  src="/images/coffee-shop-storefront-exterior.jpg"
                   alt="Shiguang Coffee House storefront"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />

@@ -24,28 +24,28 @@ const menuItems = [
         price: '$3.50', 
         description: 'Rich, bold shot of pure coffee essence',
         details: 'A classic Italian-style espresso made from carefully selected Arabica beans, roasted to perfection. Enjoy the intense flavor and aromatic crema.',
-        image: '/espresso-shot-in-white-cup-close-up.jpg'
+        image: '/images/espresso-shot-in-white-cup-close-up.jpg'
       },
       { 
         name: 'Cappuccino', 
         price: '$4.50', 
         description: 'Perfect balance of espresso, steamed milk, and foam',
         details: 'Traditional Italian cappuccino with equal parts espresso, steamed milk, and velvety microfoam. Dusted with a hint of cocoa.',
-        image: '/cappuccino-with-latte-art-in-ceramic-cup.jpg'
+        image: '/images/cappuccino-with-latte-art-in-ceramic-cup.jpg'
       },
       { 
         name: 'Flat White', 
         price: '$4.75', 
         description: 'Velvety microfoam with double ristretto shots',
         details: 'Originating from Australia, this smooth beverage features double ristretto shots combined with silky steamed milk and minimal foam.',
-        image: '/flat-white-coffee-with-latte-art.jpg'
+        image: '/images/flat-white-coffee-with-latte-art.jpg'
       },
       { 
         name: 'Cortado', 
         price: '$4.25', 
         description: 'Equal parts espresso and steamed milk',
         details: 'Spanish-style coffee drink with equal proportions of espresso and warm milk, reducing the acidity while maintaining the bold coffee flavor.',
-        image: '/cortado-coffee-in-glass.jpg'
+        image: '/images/cortado-coffee-in-glass.jpg'
       },
     ],
   },
@@ -57,28 +57,28 @@ const menuItems = [
         price: '$5.00', 
         description: 'Single-origin coffee, carefully extracted',
         details: 'Meticulously brewed using the pour-over method to highlight the unique characteristics of our rotating single-origin beans.',
-        image: '/pour-over-coffee-brewing-process.jpg'
+        image: '/images/pour-over-coffee-brewing-process.jpg'
       },
       { 
         name: 'Cold Brew', 
         price: '$5.50', 
         description: 'Smooth, low-acid, steeped for 16 hours',
         details: 'Coffee grounds steeped in cold water for 16 hours, resulting in a naturally sweet, smooth, and less acidic brew.',
-        image: '/cold-brew-coffee.jpg'
+        image: '/images/cold-brew-coffee.jpg'
       },
       { 
         name: 'Nitro Cold Brew', 
         price: '$6.00', 
         description: 'Creamy, cascading nitrogen infusion',
         details: 'Cold brew infused with nitrogen gas for a creamy, Guinness-like cascade and smooth, naturally sweet taste.',
-        image: '/nitro-cold-brew-coffee-cascading.jpg'
+        image: '/images/nitro-cold-brew-coffee-cascading.jpg'
       },
       { 
         name: 'Aeropress', 
         price: '$5.25', 
         description: 'Clean, bright, full-bodied cup',
         details: 'Innovative brewing method that uses air pressure to extract a clean, bright, and full-bodied cup with complex flavor notes.',
-        image: '/aeropress-coffee-brewing-method.jpg'
+        image: '/images/aeropress-coffee-brewing-method.jpg'
       },
     ],
   },
@@ -90,28 +90,28 @@ const menuItems = [
         price: '$6.00', 
         description: 'Floral notes with natural sweetness',
         details: 'House-made lavender syrup and local honey combined with espresso and steamed milk for a uniquely aromatic and delicate experience.',
-        image: '/lavender-honey-latte-with-flowers.jpg'
+        image: '/images/lavender-honey-latte-with-flowers.jpg'
       },
       { 
         name: 'Maple Cinnamon Macchiato', 
         price: '$6.25', 
         description: 'Warm spices meet rich espresso',
         details: 'Pure maple syrup and freshly ground cinnamon blend with espresso and steamed milk, topped with a caramel drizzle and cinnamon dust.',
-        image: '/maple-cinnamon-macchiato-coffee.jpg'
+        image: '/images/maple-cinnamon-macchiato-coffee.jpg'
       },
       { 
         name: 'Cardamom Rose Coffee', 
         price: '$5.75', 
         description: 'Exotic aromatics in perfect harmony',
         details: 'Middle Eastern-inspired blend featuring cardamom spice and rose water, creating an aromatic and sophisticated coffee experience.',
-        image: '/cardamom-rose-coffee-with-rose-petals.jpg'
+        image: '/images/cardamom-rose-coffee-with-rose-petals.jpg'
       },
       { 
         name: 'Golden Turmeric Latte', 
         price: '$5.50', 
         description: 'Anti-inflammatory wellness blend',
         details: 'Turmeric, ginger, cinnamon, and black pepper blended with steamed milk and a touch of honey for a warming, health-boosting beverage.',
-        image: '/golden-turmeric-latte-with-foam-art.jpg'
+        image: '/images/golden-turmeric-latte-with-foam-art.jpg'
       },
     ],
   },
@@ -168,12 +168,12 @@ export function Menu() {
     <>
       <section ref={sectionRef} id="menu" className="py-20 md:py-32">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-2xl mx-auto">
+          <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-              Our Menu
+              精選菜單
             </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Discover our carefully curated selection of handcrafted beverages
+            <p className="text-2xl text-muted-foreground leading-relaxed">
+              品味每一杯用心手作的風味
             </p>
           </div>
 

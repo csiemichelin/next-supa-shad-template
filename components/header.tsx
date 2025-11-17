@@ -25,13 +25,31 @@ export function Header() {
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20 md:h-24">
-          <div className="text-2xl md:text-3xl font-bold text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
-            Shiguang
+          <div className="flex items-center text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
+            <img
+              src="/logo/logo.png"
+              alt="時光咖啡 Shiguang Coffee"
+              className="h-20 md:h-20 object-contain"
+            />
+            <span lang="zh-Hant" className="text-2xl md:text-3xl font-bold">
+              時光咖啡
+            </span>
           </div>
 
           <nav className="hidden md:flex items-center gap-10">
             <a href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
-              <span className="relative z-10">Home</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.1rem] md:text-[1.2rem] 
+                  transition-all 
+                  group-hover:font-bold
+                "
+              >
+                首頁
+              </span>
               <div className="coffee-cup-container">
                 <svg className="coffee-cup-icon" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23 10h2a3 3 0 0 1 0 6h-2m-5 4H10a4 4 0 0 1-4-4V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -44,7 +62,18 @@ export function Header() {
               </div>
             </a>
             <a href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
-              <span className="relative z-10">About</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.1rem] md:text-[1.2rem] 
+                  transition-all 
+                  group-hover:font-bold
+                "
+              >
+                關於我們
+              </span>
               <div className="coffee-cup-container">
                 <svg className="coffee-cup-icon" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23 10h2a3 3 0 0 1 0 6h-2m-5 4H10a4 4 0 0 1-4-4V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -57,7 +86,18 @@ export function Header() {
               </div>
             </a>
             <a href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
-              <span className="relative z-10">Menu</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.1rem] md:text-[1.2rem] 
+                  transition-all 
+                  group-hover:font-bold
+                "
+              >
+                菜單
+              </span>
               <div className="coffee-cup-container">
                 <svg className="coffee-cup-icon" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23 10h2a3 3 0 0 1 0 6h-2m-5 4H10a4 4 0 0 1-4-4V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -70,7 +110,18 @@ export function Header() {
               </div>
             </a>
             <a href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
-              <span className="relative z-10">Gallery</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.1rem] md:text-[1.2rem] 
+                  transition-all 
+                  group-hover:font-bold
+                "
+              >
+                職人匠心
+              </span>
               <div className="coffee-cup-container">
                 <svg className="coffee-cup-icon" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23 10h2a3 3 0 0 1 0 6h-2m-5 4H10a4 4 0 0 1-4-4V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -83,7 +134,18 @@ export function Header() {
               </div>
             </a>
             <a href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
-              <span className="relative z-10">Contact</span>
+              <span
+                lang="zh-Hant"
+                className="
+                  relative z-10 
+                  font-normal 
+                  text-[1.1rem] md:text-[1.2rem] 
+                  transition-all 
+                  group-hover:font-bold
+                "
+              >
+                聯絡我們
+              </span>
               <div className="coffee-cup-container">
                 <svg className="coffee-cup-icon" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M23 10h2a3 3 0 0 1 0 6h-2m-5 4H10a4 4 0 0 1-4-4V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v8a4 4 0 0 1-4 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

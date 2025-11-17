@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 
 export function Gallery() {
   const images = [
-    { url: '/latte-art-heart-design.jpg', alt: 'Latte art' },
-    { url: '/coffee-beans-roasting.jpg', alt: 'Coffee beans' },
-    { url: '/espresso-machine-pouring-coffee.jpg', alt: 'Espresso brewing' },
-    { url: '/coffee-shop-interior-cozy-seating.jpg', alt: 'Cafe interior' },
-    { url: '/barista-pouring-milk-coffee.jpg', alt: 'Barista at work' },
-    { url: '/coffee-cup-wooden-table.jpg', alt: 'Coffee moment' },
+    { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花' },
+    { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源' },
+    { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
+    { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
+    { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
+    { url: '/images/milk.jpg', alt: '鮮乳直送' },
   ]
 
   const [visibleImages, setVisibleImages] = useState<number[]>([])
@@ -42,12 +42,12 @@ export function Gallery() {
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
+        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Gallery
+            職人匠心
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            A glimpse into our world of coffee craftsmanship
+          <p className="text-2xl text-muted-foreground leading-relaxed">
+            一同探索我們的咖啡吧台、沖煮流程與店內使用的專業級咖啡設備
           </p>
         </div>
 

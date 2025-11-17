@@ -6,23 +6,23 @@ import { useEffect, useRef, useState } from 'react'
 const features = [
   {
     icon: Coffee,
-    title: 'Shiguang Roasting',
-    description: 'Small-batch roasting ensures optimal freshness and flavor in every cup we serve.',
+    title: '時光烘焙',
+    description: '小批次烘焙控制每一次風味，確保每杯咖啡都保持最佳新鮮度與香氣。',
   },
   {
     icon: Heart,
-    title: 'Made with Love',
-    description: 'Our passionate baristas craft each beverage with care and attention to detail.',
+    title: '滿懷用心',
+    description: '我們的咖啡師以熱情和細緻的態度手作每一杯飲品，用心呈現迷人的風味。',
   },
   {
     icon: Leaf,
-    title: 'Sustainable Sourcing',
-    description: 'Direct trade relationships with farmers who share our commitment to quality.',
+    title: '永續來源',
+    description: '與理念相同的咖啡農建立直接合作關係，追求品質的同時，也一起守護土地。',
   },
   {
     icon: Clock,
-    title: 'Always Fresh',
-    description: 'We brew throughout the day to guarantee you receive the freshest coffee possible.',
+    title: '永遠新鮮',
+    description: '全天現煮現萃，只為讓你每次品嚐，都能感受到最新鮮、最純粹的咖啡風味。',
   },
 ]
 
@@ -58,12 +58,12 @@ export function Features() {
   return (
     <section ref={sectionRef} id="about" className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
+        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            Why Choose Shiguang
+            為什麼來到時光咖啡
           </h2>
-          <p className="text-muted-foreground leading-relaxed">
-            We believe coffee is more than a beverage—it's an experience to be savored
+          <p className="text-2xl text-muted-foreground leading-relaxed">
+            在這裡，咖啡承載的不只是香氣與味道，更是一份讓人放慢腳步、靜靜感受的片刻。
           </p>
         </div>
 
@@ -73,6 +73,7 @@ export function Features() {
             const isVisible = visibleItems.includes(index)
             return (
               <div
+                lang="zh-Hant"
                 key={index}
                 className={`text-center space-y-4 p-6 rounded-lg hover:bg-card hover:shadow-lg hover:-translate-y-2 transition-all duration-500 ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -81,8 +82,8 @@ export function Features() {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 transition-all hover:bg-accent/20 hover:scale-110 hover:rotate-12 duration-300">
                   <Icon className="h-8 w-8 text-accent" />
                 </div>
-                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">
+                <h3 className="text-2xl font-semibold">{feature.title}</h3>
+                <p className="text-xl text-muted-foreground leading-relaxed text-sm">
                   {feature.description}
                 </p>
               </div>
