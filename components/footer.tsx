@@ -6,9 +6,18 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <h3 className="text-2xl font-bold">Shiguang</h3>
-            <p className="text-sm text-primary-foreground/80 leading-relaxed">
-              Crafting exceptional coffee experiences since 2018.
+            <div className="flex items-center">
+              <img
+                src="/logo/logo_white.png"
+                alt="Shiguang Coffee Logo"
+                className="h-20 rounded-full object-cover"
+              />
+              <h3 lang="zh-Hant" className="text-3xl md:text-4xl font-bold tracking-wide">
+                時光咖啡
+              </h3>
+            </div>
+            <p lang="zh-Hant" className="text-xl text-primary-foreground/80 leading-relaxed">
+              自 2018 年起，用一杯杯手沖與義式咖啡，陪你度過每一個日常時光。
             </p>
           </div>
 

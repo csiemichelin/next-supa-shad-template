@@ -18,25 +18,12 @@ const chenYu = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Shiguang Coffee House - Crafted with Care',
-  description: 'Experience the finest shiguangal coffee in a warm, welcoming atmosphere. Every cup tells a story.',
+  title: '時光咖啡 Shiguang Coffee House',
+  description: '在溫暖靜謐的空間裡，細細品味每一杯手作咖啡，讓時光慢一點走。',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/logo/logo_white.png',
+    apple: '/logo/logo_white.png',
   },
 }
 

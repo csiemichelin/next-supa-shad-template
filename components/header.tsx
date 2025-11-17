@@ -27,7 +27,7 @@ export function Header() {
         <div className="flex items-center justify-between h-20 md:h-24">
           <div className="flex items-center text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
             <img
-              src="/logo/logo.png"
+              src="/logo/logo_black.png"
               alt="時光咖啡 Shiguang Coffee"
               className="h-20 md:h-20 object-contain"
             />
@@ -162,7 +162,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-4">
             <CartButton />
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
-              Order Now
+              立即點餐
             </Button>
           </div>
 
@@ -221,7 +221,7 @@ export function Header() {
               <span className="relative z-10 inline-block hover:translate-x-2 transition-transform">Contact</span>
             </a>
             <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
-              Order Now
+              立即點餐
             </Button>
           </nav>
         )}
