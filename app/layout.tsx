@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/contexts/auth-context'
 import { MenuProvider } from '@/contexts/menu-context'
-import { CarouselProvider } from '@/contexts/carousel-context'
 import './globals.css'
 
 const crimsonText = Crimson_Text({ 
@@ -40,9 +39,7 @@ export default function RootLayout({
       <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
         <AuthProvider>
           <MenuProvider>
-            <CarouselProvider>
-              {children}
-            </CarouselProvider>
+            {children}
           </MenuProvider>
         </AuthProvider>
         <Analytics />

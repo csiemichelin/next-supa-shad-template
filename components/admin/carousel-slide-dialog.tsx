@@ -1,54 +1,59 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useCarousel } from '@/contexts/carousel-context'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import type { Database } from '@/types/supabase'
+
+type SlideRow = Database['public']['Tables']['slides']['Row']
+type SlidePayload = Pick<SlideRow, 'title' | 'description' | 'highlight' | 'image_url'>
 
 interface CarouselSlideDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  editingSlide: any | null
-  onSuccess: () => void
+  editingSlide: SlideRow | null
+  onSubmit: (values: SlidePayload, slideId?: number) => Promise<void>
+  isSaving: boolean
 }
 
-export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSuccess }: CarouselSlideDialogProps) {
-  const [formData, setFormData] = useState({
-    image: '',
+export function CarouselSlideDialog({
+  open,
+  onOpenChange,
+  editingSlide,
+  onSubmit,
+  isSaving,
+}: CarouselSlideDialogProps) {
+  const [formData, setFormData] = useState<SlidePayload>({
+    image_url: '',
     title: '',
     description: '',
-    highlight: ''
+    highlight: '',
   })
-  const { addSlide, updateSlide } = useCarousel()
 
   useEffect(() => {
     if (editingSlide) {
       setFormData({
-        image: editingSlide.image,
+        image_url: editingSlide.image_url,
         title: editingSlide.title,
         description: editingSlide.description,
-        highlight: editingSlide.highlight
+        highlight: editingSlide.highlight,
       })
     } else {
       setFormData({
-        image: '',
+        image_url: '',
         title: '',
         description: '',
-        highlight: ''
+        highlight: '',
       })
     }
   }, [editingSlide, open])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.title.trim() && formData.description.trim()) {
-      if (editingSlide) {
-        updateSlide(editingSlide.id, formData)
-      } else {
-        addSlide(formData)
-      }
-      onSuccess()
+    if (!formData.title.trim() || !formData.description.trim()) {
+      return
     }
+    await onSubmit(formData, editingSlide?.id)
   }
 
   return (
@@ -57,26 +62,26 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
         <DialogHeader>
           <DialogTitle>{editingSlide ? '編輯輪播圖' : '新增輪播圖'}</DialogTitle>
           <DialogDescription>
-            {editingSlide ? '更新輪播圖詳細資訊' : '建立新的首頁輪播圖'}
+            {editingSlide ? '更新輪播圖的內容與圖片' : '為首頁輪播新增一張圖片與文案'}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="image" className="text-sm font-semibold text-foreground">
+            <label htmlFor="image_url" className="text-sm font-semibold text-foreground">
               圖片網址
             </label>
             <input
-              id="image"
+              id="image_url"
               type="text"
-              value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              value={formData.image_url}
+              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="/image.jpg or https://..."
+              placeholder="/images/slide.jpg 或 https://..."
             />
-            {formData.image && (
+            {formData.image_url && (
               <div className="mt-2 relative w-full h-40 bg-secondary/20 rounded-lg overflow-hidden">
                 <img
-                  src={formData.image || "/placeholder.svg"}
+                  src={formData.image_url || '/placeholder.svg'}
                   alt="Preview"
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -97,14 +102,14 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="e.g., Crafted with Care"
+              placeholder="例如：Where Time Slows"
               required
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="highlight" className="text-sm font-semibold text-foreground">
-              強調文字
+              強調字詞
             </label>
             <input
               id="highlight"
@@ -112,23 +117,21 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
               value={formData.highlight}
               onChange={(e) => setFormData({ ...formData, highlight: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="要在標題中強調的文字 (e.g., Care)"
+              placeholder="標題中需要加強的詞 (例如：Times)"
             />
-            <p className="text-xs text-muted-foreground">
-              被強調的文字將會以重點色顯示
-            </p>
+            <p className="text-xs text-accent">強調字將以品牌色顯示</p>
           </div>
 
           <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-semibold text-foreground">
-              描述
+              內容描述
             </label>
             <textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] placeholder:text-sm"
-              placeholder="描述此輪播內容..."
+              placeholder="描述這張輪播圖想傳達的情境"
               required
             />
           </div>
@@ -137,8 +140,8 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               取消
             </Button>
-            <Button type="submit">
-              {editingSlide ? '更新' : '建立'}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? '儲存中...' : editingSlide ? '更新' : '新增'}
             </Button>
           </div>
         </form>
