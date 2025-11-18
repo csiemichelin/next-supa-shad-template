@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, LogIn } from 'lucide-react'
 import { CartButton } from './cart-button'
 import Link from "next/link"
 
@@ -40,7 +40,7 @@ export function Header() {
           </Link>
   
           <nav className="hidden md:flex items-center gap-10">
-            <a href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
                 lang="zh-Hant"
                 className="
@@ -63,8 +63,8 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </a>
-            <a href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            </Link>
+            <Link href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
                 lang="zh-Hant"
                 className="
@@ -87,8 +87,8 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </a>
-            <a href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            </Link>
+            <Link href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
                 lang="zh-Hant"
                 className="
@@ -111,8 +111,8 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </a>
-            <a href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            </Link>
+            <Link href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
                 lang="zh-Hant"
                 className="
@@ -135,8 +135,8 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </a>
-            <a href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            </Link>
+            <Link href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
                 lang="zh-Hant"
                 className="
@@ -159,7 +159,7 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </a>
+            </Link>
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
@@ -167,6 +167,12 @@ export function Header() {
             <Button className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
               立即點餐
             </Button>
+            <Link href="/login">
+              <Button variant="outline" className="flex items-center gap-2">
+                <LogIn className="w-4 h-4" />
+                Admin Login
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -188,89 +194,85 @@ export function Header() {
 
         {isMenuOpen && (
           <nav className="md:hidden py-4 space-y-4 border-t border-border animate-in slide-in-from-top duration-300">
-            <a
-              href="#home"
-              className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span
-                lang="zh-Hant"
-                className="
-                  relative z-10 
-                  font-normal 
-                  text-[1.2rem]
-                  transition-all 
-                  active:font-bold
-                "
-              >首頁</span>
-            </a>
-            <a
-              href="#about"
-              className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span
-                lang="zh-Hant"
-                className="
-                  relative z-10 
-                  font-normal 
-                  text-[1.2rem]
-                  transition-all 
-                  active:font-bold
-                "
-              >關於我們</span>
-            </a>
-            <a
-              href="#menu"
-              className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span
-                lang="zh-Hant"
-                className="
-                  relative z-10 
-                  font-normal 
-                  text-[1.2rem]
-                  transition-all 
-                  active:font-bold
-                "
-              >菜單</span>
-            </a>
-            <a
-              href="#gallery"
-              className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span
-                lang="zh-Hant"
-                className="
-                  relative z-10 
-                  font-normal 
-                  text-[1.2rem]
-                  transition-all 
-                  active:font-bold
-                "
-              >職人匠心</span>
-            </a>
-            <a
-              href="#contact"
-              className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <span
-                lang="zh-Hant"
-                className="
-                  relative z-10 
-                  font-normal 
-                  text-[1.2rem]
-                  transition-all 
-                  active:font-bold
-                "
-              >聯絡我們</span>
-            </a>
+            <Link href="#home" onClick={() => setIsMenuOpen(false)}>
+              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+                <span
+                  lang="zh-Hant"
+                  className="
+                    relative z-10 
+                    font-normal 
+                    text-[1.2rem]
+                    transition-all 
+                    active:font-bold
+                  "
+                >首頁</span>
+              </Button>
+            </Link>
+            <Link href="#about" onClick={() => setIsMenuOpen(false)}>
+              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+                <span
+                  lang="zh-Hant"
+                  className="
+                    relative z-10 
+                    font-normal 
+                    text-[1.2rem]
+                    transition-all 
+                    active:font-bold
+                  "
+                >關於我們</span>
+              </Button>
+            </Link>
+            <Link href="#menu" onClick={() => setIsMenuOpen(false)}>
+              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+                <span
+                  lang="zh-Hant"
+                  className="
+                    relative z-10 
+                    font-normal 
+                    text-[1.2rem]
+                    transition-all 
+                    active:font-bold
+                  "
+                >菜單</span>
+              </Button>
+            </Link>
+            <Link href="#gallery" onClick={() => setIsMenuOpen(false)}>
+              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+                <span
+                  lang="zh-Hant"
+                  className="
+                    relative z-10 
+                    font-normal 
+                    text-[1.2rem]
+                    transition-all 
+                    active:font-bold
+                  "
+                >職人匠心</span>
+              </Button>
+            </Link>
+            <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
+              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+                <span
+                  lang="zh-Hant"
+                  className="
+                    relative z-10 
+                    font-normal 
+                    text-[1.2rem]
+                    transition-all 
+                    active:font-bold
+                  "
+                >聯絡我們</span>
+              </Button>
+            </Link>
             <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
               立即點餐
             </Button>
+            <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+              <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                <LogIn className="w-4 h-4" />
+                系統管理登入
+              </Button>
+            </Link>
           </nav>
         )}
       </div>

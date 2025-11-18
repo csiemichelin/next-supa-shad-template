@@ -84,7 +84,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               size="lg"
             >
-              點餐
+              線上點餐
             </Button>
             <Button
               variant="outline"

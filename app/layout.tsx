@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import { Crimson_Text } from 'next/font/google'
 import localFont from "next/font/local";
 import { Analytics } from '@vercel/analytics/next'
+import { AuthProvider } from '@/contexts/auth-context'
+import { MenuProvider } from '@/contexts/menu-context'
+import { CarouselProvider } from '@/contexts/carousel-context'
 import './globals.css'
 
 const crimsonText = Crimson_Text({ 
@@ -35,7 +38,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={chenYu.variable}>
       <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
-        {children}
+        <AuthProvider>
+          <MenuProvider>
+            <CarouselProvider>
+              {children}
+            </CarouselProvider>
+          </MenuProvider>
+        </AuthProvider>
         <Analytics />
       </body>
     </html>
