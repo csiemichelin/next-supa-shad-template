@@ -39,6 +39,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      menu_categories: {
+        Row: {
+          category: string
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          category_id: string | null
+          created_at: string | null
+          description: string
+          details: string | null
+          id: string
+          image: string | null
+          name: string
+          price: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string | null
+          description: string
+          details?: string | null
+          id?: string
+          image?: string | null
+          name: string
+          price: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string | null
+          description?: string
+          details?: string | null
+          id?: string
+          image?: string | null
+          name?: string
+          price?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "menu_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       slides: {
         Row: {
           created_at: string | null

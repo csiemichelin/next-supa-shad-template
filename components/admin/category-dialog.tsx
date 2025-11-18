@@ -14,6 +14,7 @@ interface CategoryDialogProps {
 
 export function CategoryDialog({ open, onOpenChange, editingCategory, onSuccess }: CategoryDialogProps) {
   const [categoryName, setCategoryName] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
   const { addCategory, updateCategory } = useMenu()
 
   useEffect(() => {
@@ -24,16 +25,23 @@ export function CategoryDialog({ open, onOpenChange, editingCategory, onSuccess 
     }
   }, [editingCategory, open])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (categoryName.trim()) {
+    if (!categoryName.trim()) return
+
+    setIsSaving(true)
+    try {
       if (editingCategory) {
-        updateCategory(editingCategory.id, categoryName)
+        await updateCategory(editingCategory.id, categoryName)
       } else {
-        addCategory(categoryName)
+        await addCategory(categoryName)
       }
       onSuccess()
       setCategoryName('')
+    } catch (error) {
+      console.error('Failed to save category', error)
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -57,16 +65,16 @@ export function CategoryDialog({ open, onOpenChange, editingCategory, onSuccess 
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="e.g., 咖啡、糕點、飲品"
+              placeholder="例如：咖啡、甜點、飲品"
               required
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
               取消
             </Button>
-            <Button type="submit">
-              {editingCategory ? '更新' : '建立'}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? '儲存中...' : editingCategory ? '更新' : '建立'}
             </Button>
           </div>
         </form>

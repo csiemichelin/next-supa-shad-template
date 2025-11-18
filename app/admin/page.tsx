@@ -38,9 +38,9 @@ export default function AdminPage() {
     setIsCategoryDialogOpen(true)
   }
 
-  const handleDeleteCategory = (id: string, categoryName: string) => {
+  const handleDeleteCategory = async (id: string, categoryName: string) => {
     if (confirm(`是否確定刪除分類「 ${categoryName} 」?`)) {
-      deleteCategory(id)
+      await deleteCategory(id)
     }
   }
 
@@ -56,9 +56,9 @@ export default function AdminPage() {
     setIsMenuItemDialogOpen(true)
   }
 
-  const handleDeleteMenuItem = (categoryId: string, itemId: string, itemName: string) => {
+  const handleDeleteMenuItem = async (categoryId: string, itemId: string, itemName: string) => {
     if (confirm(`是否確定刪除餐點「 ${itemName} 」?`)) {
-      deleteMenuItem(categoryId, itemId)
+      await deleteMenuItem(categoryId, itemId)
     }
   }
 

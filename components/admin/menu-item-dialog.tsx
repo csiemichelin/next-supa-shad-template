@@ -19,8 +19,9 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
     price: '',
     description: '',
     details: '',
-    image: ''
+    image: '',
   })
+  const [isSaving, setIsSaving] = useState(false)
   const { addMenuItem, updateMenuItem } = useMenu()
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         price: editingItem.item.price,
         description: editingItem.item.description,
         details: editingItem.item.details || '',
-        image: editingItem.item.image || ''
+        image: editingItem.item.image || '',
       })
     } else {
       setFormData({
@@ -38,23 +39,37 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         price: '',
         description: '',
         details: '',
-        image: ''
+        image: '',
       })
     }
   }, [editingItem, open])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (formData.name.trim() && formData.price.trim() && formData.description.trim()) {
-      const targetCategoryId = editingItem?.categoryId || categoryId
-      if (targetCategoryId) {
-        if (editingItem) {
-          updateMenuItem(targetCategoryId, editingItem.item.id, formData)
-        } else {
-          addMenuItem(targetCategoryId, formData)
-        }
-        onSuccess()
+    if (!formData.name.trim() || !formData.price.trim() || !formData.description.trim()) return
+
+    const targetCategoryId = editingItem?.categoryId || categoryId
+    if (!targetCategoryId) return
+
+    setIsSaving(true)
+    try {
+      const payload = {
+        name: formData.name,
+        price: formData.price,
+        description: formData.description,
+        details: formData.details,
+        image: formData.image,
       }
+      if (editingItem) {
+        await updateMenuItem(targetCategoryId, editingItem.item.id, payload)
+      } else {
+        await addMenuItem(targetCategoryId, payload)
+      }
+      onSuccess()
+    } catch (error) {
+      console.error('Failed to save menu item', error)
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -64,7 +79,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         <DialogHeader>
           <DialogTitle>{editingItem ? '編輯餐點' : '新增餐點'}</DialogTitle>
           <DialogDescription>
-            {editingItem ? '更新餐點詳細資訊' : '在分類中新增餐點'}
+            {editingItem ? '更新餐點資訊' : '在此分類新增一筆餐點'}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +93,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="e.g., 卡布奇諾"
+              placeholder="例如：熱卡布奇諾"
               required
             />
           </div>
@@ -93,7 +108,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="e.g., NT$140"
+              placeholder="例如：$4.50 或 NT$140"
               required
             />
           </div>
@@ -108,7 +123,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="簡介"
+              placeholder="用一句話說明餐點特色"
               required
             />
           </div>
@@ -122,7 +137,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               value={formData.details}
               onChange={(e) => setFormData({ ...formData, details: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] placeholder:text-sm"
-              placeholder="於對話框中輸入完整描述"
+              placeholder="輸入更完整的介紹內容（選填）"
             />
           </div>
 
@@ -136,16 +151,16 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               value={formData.image}
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="/image.jpg 或 https://..."
+              placeholder="/images/menu-item.jpg 或 https://..."
             />
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
               取消
             </Button>
-            <Button type="submit">
-              {editingItem ? '更新' : '建立'}
+            <Button type="submit" disabled={isSaving}>
+              {isSaving ? '儲存中...' : editingItem ? '更新' : '新增'}
             </Button>
           </div>
         </form>

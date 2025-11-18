@@ -1,14 +1,16 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { supabase } from '@/lib/supabaseClient'
+import type { Database } from '@/types/supabase'
 
 export interface MenuItem {
   id: string
   name: string
   price: string
   description: string
-  details?: string
-  image?: string
+  details?: string | null
+  image?: string | null
 }
 
 export interface MenuCategory {
@@ -19,137 +21,182 @@ export interface MenuCategory {
 
 interface MenuContextType {
   categories: MenuCategory[]
-  addCategory: (category: string) => void
-  updateCategory: (id: string, category: string) => void
-  deleteCategory: (id: string) => void
-  addMenuItem: (categoryId: string, item: Omit<MenuItem, 'id'>) => void
-  updateMenuItem: (categoryId: string, itemId: string, item: Omit<MenuItem, 'id'>) => void
-  deleteMenuItem: (categoryId: string, itemId: string) => void
+  isLoading: boolean
+  refresh: () => Promise<void>
+  addCategory: (category: string) => Promise<void>
+  updateCategory: (id: string, category: string) => Promise<void>
+  deleteCategory: (id: string) => Promise<void>
+  addMenuItem: (categoryId: string, item: Omit<MenuItem, 'id'>) => Promise<void>
+  updateMenuItem: (categoryId: string, itemId: string, item: Omit<MenuItem, 'id'>) => Promise<void>
+  deleteMenuItem: (categoryId: string, itemId: string) => Promise<void>
 }
 
 const MenuContext = createContext<MenuContextType | undefined>(undefined)
 
-const defaultCategories: MenuCategory[] = [
-  {
-    id: '1',
-    category: 'Espresso Bar',
-    items: [
-      { 
-        id: '1-1',
-        name: 'Espresso', 
-        price: '$3.50', 
-        description: 'Rich, bold shot of pure coffee essence',
-        details: 'A classic Italian-style espresso made from carefully selected Arabica beans, roasted to perfection.',
-        image: '/espresso-shot-in-white-cup-close-up.jpg'
-      },
-      { 
-        id: '1-2',
-        name: 'Cappuccino', 
-        price: '$4.50', 
-        description: 'Perfect balance of espresso, steamed milk, and foam',
-        details: 'Traditional Italian cappuccino with equal parts espresso, steamed milk, and velvety microfoam.',
-        image: '/cappuccino-with-latte-art-in-ceramic-cup.jpg'
-      },
-    ],
-  },
-  {
-    id: '2',
-    category: 'Signature Brews',
-    items: [
-      { 
-        id: '2-1',
-        name: 'Pour Over', 
-        price: '$5.00', 
-        description: 'Single-origin coffee, carefully extracted',
-        details: 'Meticulously brewed using the pour-over method to highlight unique characteristics.',
-        image: '/pour-over-coffee-brewing-process.jpg'
-      },
-      { 
-        id: '2-2',
-        name: 'Cold Brew', 
-        price: '$5.50', 
-        description: 'Smooth, low-acid, steeped for 16 hours',
-        details: 'Coffee grounds steeped in cold water for 16 hours.',
-        image: '/cold-brew-coffee.png'
-      },
-    ],
-  },
-]
+type MenuCategoryRow = Database['public']['Tables']['menu_categories']['Row']
+type MenuItemRow = Database['public']['Tables']['menu_items']['Row']
+
+const mapRowsToCategories = (
+  rows: Array<MenuCategoryRow & { menu_items?: MenuItemRow[] }>
+): MenuCategory[] =>
+  rows.map((row) => ({
+    id: row.id,
+    category: row.category,
+    items: row.menu_items?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      description: item.description,
+      details: item.details,
+      image: item.image,
+    })) ?? [],
+  }))
 
 export function MenuProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<MenuCategory[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const fetchCategories = async () => {
+    setIsLoading(true)
+    const { data, error } = await supabase
+      .from('menu_categories')
+      .select(`
+        id,
+        category,
+        created_at,
+        menu_items (
+          id,
+          category_id,
+          created_at,
+          name,
+          price,
+          description,
+          details,
+          image
+        )
+      `)
+      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: true, foreignTable: 'menu_items' })
+
+    if (error) {
+      console.error('Failed to load menu categories', error)
+    } else {
+      setCategories(mapRowsToCategories(data ?? []))
+    }
+    setIsLoading(false)
+  }
 
   useEffect(() => {
-    const savedMenu = localStorage.getItem('menuData')
-    if (savedMenu) {
-      setCategories(JSON.parse(savedMenu))
-    } else {
-      setCategories(defaultCategories)
-    }
+    fetchCategories()
   }, [])
 
-  useEffect(() => {
-    if (categories.length > 0) {
-      localStorage.setItem('menuData', JSON.stringify(categories))
+  const refresh = async () => {
+    await fetchCategories()
+  }
+
+  const addCategory = async (category: string) => {
+    const { data, error } = await supabase
+      .from('menu_categories')
+      .insert({ category })
+      .select('id, category')
+      .single()
+
+    if (error) {
+      console.error('Failed to add category', error)
+      throw error
     }
-  }, [categories])
 
-  const addCategory = (category: string) => {
-    const newCategory: MenuCategory = {
-      id: Date.now().toString(),
-      category,
-      items: []
+    setCategories((prev) => [...prev, { id: data.id, category: data.category, items: [] }])
+  }
+
+  const updateCategory = async (id: string, category: string) => {
+    const { error } = await supabase.from('menu_categories').update({ category }).eq('id', id)
+    if (error) {
+      console.error('Failed to update category', error)
+      throw error
     }
-    setCategories([...categories, newCategory])
+
+    setCategories((prev) =>
+      prev.map((cat) => (cat.id === id ? { ...cat, category } : cat))
+    )
   }
 
-  const updateCategory = (id: string, category: string) => {
-    setCategories(categories.map(cat => 
-      cat.id === id ? { ...cat, category } : cat
-    ))
-  }
-
-  const deleteCategory = (id: string) => {
-    setCategories(categories.filter(cat => cat.id !== id))
-  }
-
-  const addMenuItem = (categoryId: string, item: Omit<MenuItem, 'id'>) => {
-    const newItem: MenuItem = {
-      id: `${categoryId}-${Date.now()}`,
-      ...item
+  const deleteCategory = async (id: string) => {
+    const { error } = await supabase.from('menu_categories').delete().eq('id', id)
+    if (error) {
+      console.error('Failed to delete category', error)
+      throw error
     }
-    setCategories(categories.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, items: [...cat.items, newItem] }
-        : cat
-    ))
+    setCategories((prev) => prev.filter((cat) => cat.id !== id))
   }
 
-  const updateMenuItem = (categoryId: string, itemId: string, item: Omit<MenuItem, 'id'>) => {
-    setCategories(categories.map(cat => 
-      cat.id === categoryId 
-        ? {
-            ...cat,
-            items: cat.items.map(i => 
-              i.id === itemId ? { ...i, ...item } : i
-            )
-          }
-        : cat
-    ))
+  const addMenuItem = async (categoryId: string, item: Omit<MenuItem, 'id'>) => {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .insert({
+        category_id: categoryId,
+        ...item,
+      })
+      .select('id, name, price, description, details, image, category_id')
+      .single()
+
+    if (error) {
+      console.error('Failed to add menu item', error)
+      throw error
+    }
+
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? { ...cat, items: [...cat.items, { ...item, id: data.id }] }
+          : cat
+      )
+    )
   }
 
-  const deleteMenuItem = (categoryId: string, itemId: string) => {
-    setCategories(categories.map(cat => 
-      cat.id === categoryId 
-        ? { ...cat, items: cat.items.filter(i => i.id !== itemId) }
-        : cat
-    ))
+  const updateMenuItem = async (categoryId: string, itemId: string, item: Omit<MenuItem, 'id'>) => {
+    const { error } = await supabase.from('menu_items').update(item).eq('id', itemId)
+    if (error) {
+      console.error('Failed to update menu item', error)
+      throw error
+    }
+
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? {
+              ...cat,
+              items: cat.items.map((existing) =>
+                existing.id === itemId ? { ...existing, ...item } : existing
+              ),
+            }
+          : cat
+      )
+    )
+  }
+
+  const deleteMenuItem = async (categoryId: string, itemId: string) => {
+    const { error } = await supabase.from('menu_items').delete().eq('id', itemId)
+    if (error) {
+      console.error('Failed to delete menu item', error)
+      throw error
+    }
+
+    setCategories((prev) =>
+      prev.map((cat) =>
+        cat.id === categoryId
+          ? { ...cat, items: cat.items.filter((item) => item.id !== itemId) }
+          : cat
+      )
+    )
   }
 
   return (
     <MenuContext.Provider
       value={{
         categories,
+        isLoading,
+        refresh,
         addCategory,
         updateCategory,
         deleteCategory,
