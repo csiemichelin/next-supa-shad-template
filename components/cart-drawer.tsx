@@ -24,7 +24,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
       <SheetContent className="flex flex-col h-full">
         <SheetHeader lang="zh-Hant">
           <SheetTitle className="text-3xl md:text-4xl font-bold text-primary">購物車</SheetTitle>
-          <SheetDescription className='text-2xl'>
+          <SheetDescription className="text-2xl">
             {items.length === 0 ? '你的購物車是空的' : `你的購物車中有 ${items.length} 件商品`}
           </SheetDescription>
         </SheetHeader>
@@ -35,11 +35,24 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               key={item.name}
               className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg"
             >
-              <div className="flex-1">
+              <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-background">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center text-xs text-muted-foreground">
+                    無圖片
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
                 <h4 className="font-semibold text-foreground">{item.name}</h4>
                 <p className="text-sm text-muted-foreground">{item.price}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 flex-shrink-0 w-32 justify-end">
                 <Button
                   size="icon"
                   variant="outline"

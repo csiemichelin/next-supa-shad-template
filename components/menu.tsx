@@ -158,7 +158,8 @@ export function Menu() {
       addItem({
         name: selectedItem.name,
         price: selectedItem.price,
-        quantity: 1
+        quantity: 1,
+        image: selectedItem.image
       })
       setIsDialogOpen(false)
     }
