@@ -23,7 +23,7 @@ export function CarouselSlideManager() {
   }
 
   const handleDeleteSlide = (id: string, title: string) => {
-    if (confirm(`Are you sure you want to delete the slide "${title}"?`)) {
+    if (confirm(`是否確定刪除輪播圖「 ${title} 」?`)) {
       deleteSlide(id)
     }
   }
@@ -33,12 +33,12 @@ export function CarouselSlideManager() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Carousel Slides</h2>
-            <p className="text-muted-foreground">Manage the main hero carousel slides</p>
+            <h2 lang="zh-Hant" className="text-3xl font-bold text-foreground">輪播圖管理</h2>
+            <p lang="zh-Hant" className="text-2xl text-muted-foreground">管理首頁主視覺輪播圖</p>
           </div>
           <Button onClick={handleAddSlide} className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
-            Add Slide
+            新增輪播圖
           </Button>
         </div>
 
@@ -75,7 +75,7 @@ export function CarouselSlideManager() {
                     className="flex-1"
                   >
                     <Pencil className="w-4 h-4 mr-1" />
-                    Edit
+                    編輯
                   </Button>
                   <Button
                     variant="outline"
@@ -84,7 +84,7 @@ export function CarouselSlideManager() {
                     className="flex-1"
                   >
                     <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
+                    刪除
                   </Button>
                 </div>
               </CardContent>

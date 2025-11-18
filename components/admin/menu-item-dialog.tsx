@@ -62,90 +62,90 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editingItem ? 'Edit Menu Item' : 'Add Menu Item'}</DialogTitle>
+          <DialogTitle>{editingItem ? '編輯餐點' : '新增餐點'}</DialogTitle>
           <DialogDescription>
-            {editingItem ? 'Update menu item details' : 'Add a new item to the menu'}
+            {editingItem ? '更新餐點詳細資訊' : '在分類中新增餐點'}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="name" className="text-sm font-semibold text-foreground">
-              Item Name
+              餐點名稱
             </label>
             <input
               id="name"
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="e.g., Cappuccino"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="e.g., 卡布奇諾"
               required
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="price" className="text-sm font-semibold text-foreground">
-              Price
+              價格
             </label>
             <input
               id="price"
               type="text"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="e.g., $4.50"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="e.g., NT$140"
               required
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-semibold text-foreground">
-              Short Description
+              簡短描述
             </label>
             <input
               id="description"
               type="text"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Brief description"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="簡介"
               required
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="details" className="text-sm font-semibold text-foreground">
-              Detailed Description
+              詳細描述
             </label>
             <textarea
               id="details"
               value={formData.details}
               onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px]"
-              placeholder="Full description shown in dialog"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] placeholder:text-sm"
+              placeholder="於對話框中輸入完整描述"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="image" className="text-sm font-semibold text-foreground">
-              Image URL
+              圖片網址
             </label>
             <input
               id="image"
               type="text"
               value={formData.image}
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="/image.jpg or https://..."
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="/image.jpg 或 https://..."
             />
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              取消
             </Button>
             <Button type="submit">
-              {editingItem ? 'Update Item' : 'Add Item'}
+              {editingItem ? '更新' : '建立'}
             </Button>
           </div>
         </form>

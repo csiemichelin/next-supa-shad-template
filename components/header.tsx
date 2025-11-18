@@ -170,7 +170,7 @@ export function Header() {
             <Link href="/login">
               <Button variant="outline" className="flex items-center gap-2">
                 <LogIn className="w-4 h-4" />
-                Admin Login
+                管理者登入
               </Button>
             </Link>
           </div>
@@ -194,8 +194,11 @@ export function Header() {
 
         {isMenuOpen && (
           <nav className="md:hidden py-4 space-y-4 border-t border-border animate-in slide-in-from-top duration-300">
-            <Link href="#home" onClick={() => setIsMenuOpen(false)}>
-              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link className="block" href="#home" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-foreground hover:text-primary transition-all"
+              >
                 <span
                   lang="zh-Hant"
                   className="
@@ -208,8 +211,11 @@ export function Header() {
                 >首頁</span>
               </Button>
             </Link>
-            <Link href="#about" onClick={() => setIsMenuOpen(false)}>
-              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link className="block" href="#about" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-foreground hover:text-primary transition-all"
+              >
                 <span
                   lang="zh-Hant"
                   className="
@@ -222,8 +228,11 @@ export function Header() {
                 >關於我們</span>
               </Button>
             </Link>
-            <Link href="#menu" onClick={() => setIsMenuOpen(false)}>
-              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link className="block" href="#menu" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-foreground hover:text-primary transition-all"
+              >
                 <span
                   lang="zh-Hant"
                   className="
@@ -236,8 +245,11 @@ export function Header() {
                 >菜單</span>
               </Button>
             </Link>
-            <Link href="#gallery" onClick={() => setIsMenuOpen(false)}>
-              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link className="block" href="#gallery" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-foreground hover:text-primary transition-all"
+              >
                 <span
                   lang="zh-Hant"
                   className="
@@ -250,8 +262,11 @@ export function Header() {
                 >職人匠心</span>
               </Button>
             </Link>
-            <Link href="#contact" onClick={() => setIsMenuOpen(false)}>
-              <Button className="nav-link-mobile group relative block text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link className="block" href="#contact" onClick={() => setIsMenuOpen(false)}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-foreground hover:text-primary transition-all"
+              >
                 <span
                   lang="zh-Hant"
                   className="
@@ -270,7 +285,7 @@ export function Header() {
             <Link href="/login" onClick={() => setIsMenuOpen(false)}>
               <Button variant="outline" className="w-full flex items-center justify-center gap-2">
                 <LogIn className="w-4 h-4" />
-                系統管理登入
+                管理者登入
               </Button>
             </Link>
           </nav>

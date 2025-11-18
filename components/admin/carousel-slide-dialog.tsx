@@ -55,22 +55,22 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{editingSlide ? 'Edit Carousel Slide' : 'Add Carousel Slide'}</DialogTitle>
+          <DialogTitle>{editingSlide ? '編輯輪播圖' : '新增輪播圖'}</DialogTitle>
           <DialogDescription>
-            {editingSlide ? 'Update the slide details' : 'Create a new hero carousel slide'}
+            {editingSlide ? '更新輪播圖詳細資訊' : '建立新的首頁輪播圖'}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="image" className="text-sm font-semibold text-foreground">
-              Image URL
+              圖片網址
             </label>
             <input
               id="image"
               type="text"
               value={formData.image}
               onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
               placeholder="/image.jpg or https://..."
             />
             {formData.image && (
@@ -89,14 +89,14 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
 
           <div className="space-y-2">
             <label htmlFor="title" className="text-sm font-semibold text-foreground">
-              Title
+              標題
             </label>
             <input
               id="title"
               type="text"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
               placeholder="e.g., Crafted with Care"
               required
             />
@@ -104,41 +104,41 @@ export function CarouselSlideDialog({ open, onOpenChange, editingSlide, onSucces
 
           <div className="space-y-2">
             <label htmlFor="highlight" className="text-sm font-semibold text-foreground">
-              Highlight Word
+              強調文字
             </label>
             <input
               id="highlight"
               type="text"
               value={formData.highlight}
               onChange={(e) => setFormData({ ...formData, highlight: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Word from title to highlight (e.g., Care)"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="要在標題中強調的文字 (e.g., Care)"
             />
             <p className="text-xs text-muted-foreground">
-              The highlighted word will appear in accent color
+              被強調的文字將會以重點色顯示
             </p>
           </div>
 
           <div className="space-y-2">
             <label htmlFor="description" className="text-sm font-semibold text-foreground">
-              Description
+              描述
             </label>
             <textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px]"
-              placeholder="Describe the slide..."
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary min-h-[100px] placeholder:text-sm"
+              placeholder="描述此輪播內容..."
               required
             />
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              取消
             </Button>
             <Button type="submit">
-              {editingSlide ? 'Update Slide' : 'Add Slide'}
+              {editingSlide ? '更新' : '建立'}
             </Button>
           </div>
         </form>

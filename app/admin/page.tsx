@@ -39,7 +39,7 @@ export default function AdminPage() {
   }
 
   const handleDeleteCategory = (id: string, categoryName: string) => {
-    if (confirm(`Are you sure you want to delete the category "${categoryName}"?`)) {
+    if (confirm(`是否確定刪除分類「 ${categoryName} 」?`)) {
       deleteCategory(id)
     }
   }
@@ -57,7 +57,7 @@ export default function AdminPage() {
   }
 
   const handleDeleteMenuItem = (categoryId: string, itemId: string, itemName: string) => {
-    if (confirm(`Are you sure you want to delete "${itemName}"?`)) {
+    if (confirm(`是否確定刪除餐點「 ${itemName} 」?`)) {
       deleteMenuItem(categoryId, itemId)
     }
   }
@@ -65,7 +65,7 @@ export default function AdminPage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        Loading dashboard...
+        後台載入中…
       </div>
     )
   }
@@ -85,18 +85,18 @@ export default function AdminPage() {
                 <Coffee className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Admin Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Manage your coffee shop</p>
+                <h1 lang="zh-Hant" className="text-3xl font-bold text-foreground">系統管理後台</h1>
+                <p lang="zh-Hant" className="text-xl text-muted-foreground">管理您的咖啡店</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right hidden md:block">
                 <p className="text-sm font-semibold text-foreground">{user.email}</p>
-                <p className="text-xs text-muted-foreground">Administrator</p>
+                <p className="text-xs text-muted-foreground">系統管理者</p>
               </div>
               <Button variant="outline" onClick={handleLogout} className="flex items-center gap-2">
                 <LogOut className="w-4 h-4" />
-                Logout
+                  登出
               </Button>
             </div>
           </div>
@@ -106,24 +106,24 @@ export default function AdminPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <Tabs defaultValue="menu" className="space-y-6">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-            <TabsTrigger value="menu">Menu Management</TabsTrigger>
-            <TabsTrigger value="carousel">Carousel Slides</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 max-w-md">
+            <TabsTrigger className="w-full" value="menu">菜單管理</TabsTrigger>
+            <TabsTrigger className="w-full" value="carousel">輪播圖管理</TabsTrigger>
           </TabsList>
 
           {/* Menu Management Tab */}
           <TabsContent value="menu" className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-foreground">Menu Categories</h2>
-                <p className="text-muted-foreground">Manage your menu categories and items</p>
+                <h2 lang="zh-Hant" className="text-3xl font-bold text-foreground">菜單管理</h2>
+                <p lang="zh-Hant" className="text-2xl text-muted-foreground">管理菜單分類與餐點</p>
               </div>
               <Button onClick={() => {
                 setEditingCategory(null)
                 setIsCategoryDialogOpen(true)
               }} className="flex items-center gap-2">
                 <Plus className="w-4 h-4" />
-                Add Category
+                新增分類
               </Button>
             </div>
 
@@ -134,7 +134,7 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle className="text-2xl text-primary">{category.category}</CardTitle>
-                        <CardDescription>{category.items.length} items</CardDescription>
+                        <CardDescription>{category.items.length} 種餐點</CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
@@ -161,7 +161,7 @@ export default function AdminPage() {
                       onClick={() => handleAddMenuItem(category.id)}
                     >
                       <Plus className="w-4 h-4 mr-2" />
-                      Add Menu Item
+                      新增餐點
                     </Button>
                     
                     <div className="space-y-3">
@@ -196,7 +196,7 @@ export default function AdminPage() {
                         </div>
                       ))}
                       {category.items.length === 0 && (
-                        <p className="text-center text-muted-foreground py-8">No items in this category</p>
+                        <p className="text-center text-muted-foreground py-8">此分類尚無餐點</p>
                       )}
                     </div>
                   </CardContent>
@@ -207,7 +207,7 @@ export default function AdminPage() {
                 <Card className="border-border">
                   <CardContent className="flex flex-col items-center justify-center py-12">
                     <Coffee className="w-12 h-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground text-center">No categories yet. Create your first one!</p>
+                    <p className="text-muted-foreground text-center">目前沒有分類，趕快新增一個吧！</p>
                   </CardContent>
                 </Card>
               )}

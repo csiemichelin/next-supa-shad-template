@@ -41,32 +41,32 @@ export function CategoryDialog({ open, onOpenChange, editingCategory, onSuccess 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{editingCategory ? 'Edit Category' : 'Add Category'}</DialogTitle>
+          <DialogTitle>{editingCategory ? '編輯分類' : '新增分類'}</DialogTitle>
           <DialogDescription>
-            {editingCategory ? 'Update the category name' : 'Create a new menu category'}
+            {editingCategory ? '更新分類名稱' : '建立新的菜單分類'}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="categoryName" className="text-sm font-semibold text-foreground">
-              Category Name
+              分類名稱
             </label>
             <input
               id="categoryName"
               type="text"
               value={categoryName}
               onChange={(e) => setCategoryName(e.target.value)}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="e.g., Coffee, Pastries, Beverages"
+              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+              placeholder="e.g., 咖啡、糕點、飲品"
               required
             />
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              取消
             </Button>
             <Button type="submit">
-              {editingCategory ? 'Update' : 'Create'}
+              {editingCategory ? '更新' : '建立'}
             </Button>
           </div>
         </form>

@@ -24,7 +24,7 @@ export default function LoginPage() {
     if (success) {
       router.push('/admin')
     } else {
-      setError('Invalid email or password')
+      setError('電子郵件或密碼錯誤')
     }
     
     setIsLoading(false)
@@ -43,33 +43,33 @@ export default function LoginPage() {
 
           {/* Title */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2 text-balance">
-              Welcome Back
+            <h1 lang="zh-Hant" className="text-3xl font-bold text-foreground mb-2 text-balance">
+              歡迎回來
             </h1>
-            <p className="text-muted-foreground">
-              Sign in to manage your coffee shop
+            <p lang="zh-Hant" className="text-muted-foreground">
+              登入開始管理您的咖啡店
             </p>
           </div>
 
           {/* Demo Credentials */}
-          <div className="bg-accent/20 border border-accent/30 rounded-lg p-4 mb-6 text-sm">
+          {/* <div className="bg-accent/20 border border-accent/30 rounded-lg p-4 mb-6 text-sm">
             <p className="font-semibold text-foreground mb-1">Demo Credentials:</p>
             <p className="text-muted-foreground">Email: admin@coffee.com</p>
             <p className="text-muted-foreground">Password: admin123</p>
-          </div>
+          </div> */}
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-semibold text-foreground">
-                Email
+                信箱
               </label>
               <input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-sm"
                 placeholder="admin@coffee.com"
                 required
               />
@@ -77,15 +77,15 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-semibold text-foreground">
-                Password
+                密碼
               </label>
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-                placeholder="Enter your password"
+                className="w-full px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-sm"
+                placeholder="請輸入密碼"
                 required
               />
             </div>
@@ -101,13 +101,13 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? '登入中' : '登入'}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
             <a href="/" className="text-sm text-primary hover:underline">
-              Back to Home
+              回到首頁
             </a>
           </div>
         </div>
