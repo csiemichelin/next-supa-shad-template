@@ -153,6 +153,18 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
               className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
               placeholder="/images/menu-item.jpg 或 https://..."
             />
+            {formData.image && (
+              <div className="mt-2 relative w-full h-40 bg-secondary/20 rounded-lg overflow-hidden">
+                <img
+                  src={formData.image || '/placeholder.svg'}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4">
