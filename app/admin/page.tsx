@@ -7,14 +7,14 @@ import { useMenu } from '@/contexts/menu-context'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LogOut, Plus, Pencil, Trash2, Coffee } from 'lucide-react'
+import { LogOut, Plus, Pencil, Trash2, Coffee, ArrowUp, ArrowDown } from 'lucide-react'
 import { CategoryDialog } from '@/components/admin/category-dialog'
 import { MenuItemDialog } from '@/components/admin/menu-item-dialog'
 import { CarouselSlideManager } from '@/components/admin/carousel-slide-manager'
 
 export default function AdminPage() {
   const { user, logout, isAdmin, isLoading } = useAuth()
-  const { categories, deleteCategory, deleteMenuItem } = useMenu()
+  const { categories, deleteCategory, deleteMenuItem, moveCategory, moveMenuItem } = useMenu()
   const router = useRouter()
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false)
   const [isMenuItemDialogOpen, setIsMenuItemDialogOpen] = useState(false)
@@ -128,7 +128,7 @@ export default function AdminPage() {
             </div>
 
             <div className="grid gap-6">
-              {categories.map((category) => (
+              {categories.map((category, categoryIndex) => (
                 <Card key={category.id} className="border-border">
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -137,6 +137,24 @@ export default function AdminPage() {
                         <CardDescription>{category.items.length} 種餐點</CardDescription>
                       </div>
                       <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => void moveCategory(category.id, 'up')}
+                          disabled={categoryIndex === 0}
+                          title="向上移動"
+                        >
+                          <ArrowUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => void moveCategory(category.id, 'down')}
+                          disabled={categoryIndex === categories.length - 1}
+                          title="向下移動"
+                        >
+                          <ArrowDown className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"
@@ -165,7 +183,7 @@ export default function AdminPage() {
                     </Button>
                     
                     <div className="space-y-3">
-                      {category.items.map((item) => (
+                      {category.items.map((item, itemIndex) => (
                         <div
                           key={item.id}
                           className="flex items-center justify-between p-4 bg-secondary/20 rounded-lg border border-border hover:border-accent/50 transition-all"
@@ -178,6 +196,24 @@ export default function AdminPage() {
                             <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
                           </div>
                           <div className="flex items-center gap-2 ml-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => void moveMenuItem(category.id, item.id, 'up')}
+                              disabled={itemIndex === 0}
+                              title="向上移動"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => void moveMenuItem(category.id, item.id, 'down')}
+                              disabled={itemIndex === category.items.length - 1}
+                              title="向下移動"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </Button>
                             <Button
                               variant="ghost"
                               size="sm"

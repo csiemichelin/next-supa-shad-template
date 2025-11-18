@@ -55,7 +55,8 @@ export const useCart = create<CartStore>()(
       getTotal: () => {
         const items = get().items
         return items.reduce((total, item) => {
-          const price = parseFloat(item.price.replace('$', ''))
+          const price_nt_replaced = item.price.replace('NT$', '')
+          const price = parseFloat(price_nt_replaced.replace('$', ''))
           return total + price * item.quantity
         }, 0)
       },

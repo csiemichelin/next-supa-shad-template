@@ -44,16 +44,19 @@ export type Database = {
           category: string
           created_at: string | null
           id: string
+          order_index: number
         }
         Insert: {
           category: string
           created_at?: string | null
           id?: string
+          order_index?: number
         }
         Update: {
           category?: string
           created_at?: string | null
           id?: string
+          order_index?: number
         }
         Relationships: []
       }
@@ -66,6 +69,7 @@ export type Database = {
           id: string
           image: string | null
           name: string
+          order_index: number
           price: string
         }
         Insert: {
@@ -76,6 +80,7 @@ export type Database = {
           id?: string
           image?: string | null
           name: string
+          order_index?: number
           price: string
         }
         Update: {
@@ -86,6 +91,7 @@ export type Database = {
           id?: string
           image?: string | null
           name?: string
+          order_index?: number
           price?: string
         }
         Relationships: [
