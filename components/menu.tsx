@@ -97,7 +97,7 @@ export function Menu() {
                     }`}
                   >
                     <CardHeader>
-                      <CardTitle className="text-2xl font-bold text-primary">
+                      <CardTitle lang="zh-Hant" className="text-2xl font-bold text-primary">
                         {category.category}
                       </CardTitle>
                     </CardHeader>
@@ -136,7 +136,7 @@ export function Menu() {
                 <DialogTitle className="text-3xl font-bold text-primary">
                   {selectedItem.name}
                 </DialogTitle>
-                <DialogDescription className="text-lg text-muted-foreground">
+                <DialogDescription lang="zh-Hant" className="text-xl text-muted-foreground">
                   {selectedItem.description}
                 </DialogDescription>
               </DialogHeader>
@@ -152,7 +152,7 @@ export function Menu() {
                 )}
                 <div className="space-y-4">
                   {selectedItem.details && (
-                    <p className="text-foreground leading-relaxed">
+                    <p lang="zh-Hant" className="text-xl text-foreground leading-relaxed">
                       {selectedItem.details}
                     </p>
                   )}
