@@ -214,7 +214,7 @@ export function Menu() {
 
                       {/* 手機上要能左右滑動切換頁數 */}
                       <CardContent
-                        className="space-y-12 md:pb-14"
+                        className="space-y-4 md:pb-14"
                         onTouchStart={handleTouchStart(category.id)} // mobile swipe start
                         onTouchEnd={handleTouchEnd(category.id, totalPages)} // mobile swipe end
                       >
