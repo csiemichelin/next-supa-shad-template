@@ -17,6 +17,59 @@ export function Menu() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const sectionRef = useRef<HTMLDivElement>(null)
 
+  const [currentPages, setCurrentPages] = useState<Record<string, number>>({});
+  const touchStartXRef = useRef<number | null>(null);
+
+  const ITEMS_PER_PAGE = 5;
+  const getCurrentPage = (categoryId: string, totalPages: number) => {
+    const page = currentPages[categoryId] ?? 0;
+    if (page >= totalPages) return totalPages - 1;
+    if (page < 0) return 0;
+    return page;
+  };
+  const goToPage = (categoryId: string, page: number, totalPages: number) => {
+    const safePage = Math.max(0, Math.min(page, totalPages - 1));
+    setCurrentPages((prev) => ({
+      ...prev,
+      [categoryId]: safePage,
+    }));
+  };
+  const goNextPage = (categoryId: string, totalPages: number) => {
+    setCurrentPages((prev) => {
+      const current = getCurrentPage(categoryId, totalPages);
+      const next = current + 1 >= totalPages ? current : current + 1;
+      return { ...prev, [categoryId]: next };
+    });
+  };
+  const goPrevPage = (categoryId: string, totalPages: number) => {
+    setCurrentPages((prev) => {
+      const current = getCurrentPage(categoryId, totalPages);
+      const next = current - 1 < 0 ? 0 : current - 1;
+      return { ...prev, [categoryId]: next };
+    });
+  };
+  // --- 手機左右滑動用 handler ---
+  const handleTouchStart =
+    (categoryId: string) => (e: React.TouchEvent<HTMLDivElement>) => {
+      touchStartXRef.current = e.touches[0].clientX;
+    };
+  const handleTouchEnd =
+    (categoryId: string, totalPages: number) =>
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      if (touchStartXRef.current === null) return;
+      const endX = e.changedTouches[0].clientX;
+      const distance = touchStartXRef.current - endX;
+      const threshold = 40; // 滑動靈敏度，數值越小越敏感
+
+      if (distance > threshold) {
+        goNextPage(categoryId, totalPages);
+      } else if (distance < -threshold) {
+        goPrevPage(categoryId, totalPages);
+      }
+
+      touchStartXRef.current = null;
+    };
+
   useEffect(() => {
     setVisibleCards([])
 
@@ -89,20 +142,36 @@ export function Menu() {
             ) : (
               categories.map((category, categoryIndex) => {
                 const isVisible = visibleCards.includes(categoryIndex)
+                const totalPages = Math.ceil(category.items.length / ITEMS_PER_PAGE);
+                const currentPage = getCurrentPage(category.id, totalPages);
+                const start = currentPage * ITEMS_PER_PAGE;
+                const visibleItems = category.items.slice(start, start + ITEMS_PER_PAGE);
+
                 return (
                   <Card
                     key={category.id}
-                    className={`border-border hover:shadow-xl hover:-translate-y-1 hover:border-accent/50 transition-all duration-500 ${
-                      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-                    }`}
-                  >
+                    className={`
+                        relative                       
+                        flex flex-col                 
+                        md:h-[630px]            
+                        border-border hover:shadow-xl hover:-translate-y-1 hover:border-accent/50
+                        transition-all duration-500
+                        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}
+                      `}
+                    >
                     <CardHeader>
                       <CardTitle lang="zh-Hant" className="text-2xl font-bold text-primary">
                         {category.category}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      {category.items.map((item) => (
+
+                    {/* 手機上要能左右滑動切換頁數 */}
+                    <CardContent
+                      className="space-y-12 md:pb-14"
+                      onTouchStart={handleTouchStart(category.id)}               // mobile swipe start
+                      onTouchEnd={handleTouchEnd(category.id, totalPages)}       // mobile swipe end
+                    >
+                      {visibleItems.map((item) => (
                         <div
                           key={item.id}
                           className="space-y-1 hover:translate-x-2 transition-transform duration-300 cursor-pointer group"
@@ -114,14 +183,63 @@ export function Menu() {
                             </h4>
                             <span className="text-accent font-semibold">{item.price}</span>
                           </div>
-                          <CardDescription className="text-sm leading-relaxed">
+                          <CardDescription lang="the-Peak" className="text-sm leading-relaxed">
                             {item.description}
                           </CardDescription>
                         </div>
-                      ))}
+                      ))}    
                     </CardContent>
+                    {/* 分頁控制：桌機版顯示 / 手機隱藏 */}
+                    {totalPages > 1 && (
+                      <div className="hidden md:flex justify-between items-center p-3 px-6 md:absolute md:left-0 md:right-0 md:bottom-[15px]">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-sm text-muted-foreground disabled:opacity-40"
+                          onClick={() => goPrevPage(category.id, totalPages)}
+                          disabled={currentPage === 0}
+                        >
+                          上一頁
+                        </Button>
+
+                        <div className="flex items-center gap-2">
+                          {Array.from({ length: totalPages }).map((_, i) => (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => goToPage(category.id, i, totalPages)}
+                              className={`h-2 w-2 rounded-full transition-all ${
+                                i === currentPage
+                                  ? 'w-4 bg-accent'
+                                  : 'bg-accent/30 hover:bg-accent/60'
+                              }`}
+                            />
+                          ))}
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-sm text-muted-foreground disabled:opacity-40"
+                          onClick={() => goNextPage(category.id, totalPages)}
+                          disabled={currentPage === totalPages - 1}
+                        >
+                          下一頁
+                        </Button>
+                      </div>
+                    )}
+                    {/* 手機提示 */}
+                    {totalPages > 1 && (
+                      <div className="flex md:hidden justify-center p-3">
+                        <span className="text-xs text-accent">
+                          左右滑動查看更多品項（{currentPage + 1}/{totalPages}）
+                        </span>
+                      </div>
+                    )}
                   </Card>
-                )
+                );
               })
             )}
           </div>

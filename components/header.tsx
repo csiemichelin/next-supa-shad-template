@@ -46,7 +46,7 @@ export function Header() {
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1rem] md:text-[1.1rem] 
+                  text-[1.1rem]
                   transition-all 
                   group-hover:font-bold
                 "
@@ -204,7 +204,7 @@ export function Header() {
                   className="
                     relative z-10 
                     font-normal 
-                    text-[1.2rem]
+                    text-[1.1rem]
                     transition-all 
                     active:font-bold
                   "
@@ -221,7 +221,7 @@ export function Header() {
                   className="
                     relative z-10 
                     font-normal 
-                    text-[1.2rem]
+                    text-[1.1rem]
                     transition-all 
                     active:font-bold
                   "
@@ -238,7 +238,7 @@ export function Header() {
                   className="
                     relative z-10 
                     font-normal 
-                    text-[1.2rem]
+                    text-[1.1rem]
                     transition-all 
                     active:font-bold
                   "
@@ -255,7 +255,7 @@ export function Header() {
                   className="
                     relative z-10 
                     font-normal 
-                    text-[1.2rem]
+                    text-[1.1rem]
                     transition-all 
                     active:font-bold
                   "
@@ -272,7 +272,7 @@ export function Header() {
                   className="
                     relative z-10 
                     font-normal 
-                    text-[1.2rem]
+                    text-[1.1rem]
                     transition-all 
                     active:font-bold
                   "
