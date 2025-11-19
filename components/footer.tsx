@@ -41,7 +41,7 @@ export function Footer() {
               </li>
               <li>
                 <a href="#contact" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
-                  聯絡我們
+                  店面資訊
                 </a>
               </li>
             </ul>

@@ -73,7 +73,7 @@ export function Contact() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            聯絡我們
+            店面資訊
           </h2>
           <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
             期待你的到來，來坐下喝杯咖啡，享受屬於你的慢時光
