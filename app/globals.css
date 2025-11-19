@@ -3,11 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:lang(zh),
-:lang(zh-Hant),
-:lang(zh-TW) {
-  font-family: var(--font-chernyu), system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', sans-serif;
+:lang(zh-Hant) {
+  font-family: var(--font-chernyu), system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+:lang(the-Peak) {
+  font-family: var(--font-thepeak), system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 :root {

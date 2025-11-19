@@ -92,7 +92,7 @@ export function CarouselSlideManager() {
             <h2 lang="zh-Hant" className="text-3xl font-bold text-foreground">
               輪播管理
             </h2>
-            <p lang="zh-Hant" className="text-2xl text-muted-foreground">
+            <p lang="the-Peak" className="text-lg text-muted-foreground">
               管理首頁主視覺的輪播內容
             </p>
           </div>

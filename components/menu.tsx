@@ -68,11 +68,11 @@ export function Menu() {
     <>
       <section ref={sectionRef} id="menu" className="py-20 md:py-32">
         <div className="container mx-auto px-4">
-          <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+          <div className="text-center mb-16 max-w-4xl mx-auto">
+            <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
               精選菜單
             </h2>
-            <p className="text-2xl text-muted-foreground leading-relaxed">
+            <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
               品味每一杯用心手作的風味
             </p>
           </div>
@@ -133,10 +133,10 @@ export function Menu() {
           {selectedItem && (
             <>
               <DialogHeader>
-                <DialogTitle className="text-3xl font-bold text-primary">
+                <DialogTitle lang="zh-Hant" className="text-3xl font-bold text-primary">
                   {selectedItem.name}
                 </DialogTitle>
-                <DialogDescription lang="zh-Hant" className="text-xl text-muted-foreground">
+                <DialogDescription lang="the-Peak" className="text-lg text-muted-foreground">
                   {selectedItem.description}
                 </DialogDescription>
               </DialogHeader>
@@ -152,7 +152,7 @@ export function Menu() {
                 )}
                 <div className="space-y-4">
                   {selectedItem.details && (
-                    <p lang="zh-Hant" className="text-xl text-foreground leading-relaxed">
+                    <p lang="the-Peak" className="text-base text-foreground leading-relaxed">
                       {selectedItem.details}
                     </p>
                   )}

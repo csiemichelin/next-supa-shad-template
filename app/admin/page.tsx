@@ -104,7 +104,7 @@ export default function AdminPage() {
               </div>
               <div>
                 <h1 lang="zh-Hant" className="text-3xl font-bold text-foreground">系統管理後台</h1>
-                <p lang="zh-Hant" className="text-xl text-muted-foreground">管理您的咖啡店</p>
+                <p lang="the-Peak" className="text-lg text-muted-foreground">管理您的咖啡店</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -134,7 +134,7 @@ export default function AdminPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 lang="zh-Hant" className="text-3xl font-bold text-foreground">菜單管理</h2>
-                <p lang="zh-Hant" className="text-2xl text-muted-foreground">管理菜單分類與餐點</p>
+                <p lang="the-Peak" className="text-lg text-muted-foreground">管理菜單分類與餐點</p>
               </div>
               <Button onClick={() => {
                 setEditingCategory(null)

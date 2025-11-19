@@ -60,11 +60,11 @@ export function Gallery() {
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+        <div className="text-center mb-16 max-w-4xl mx-auto">
+          <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             職人匠心
           </h2>
-          <p className="text-2xl text-muted-foreground leading-relaxed">
+          <p  lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
             一同探索我們的咖啡吧台、沖煮流程與店內使用的專業級咖啡設備
           </p>
         </div>

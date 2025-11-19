@@ -71,11 +71,11 @@ export function Contact() {
   return (
     <section ref={sectionRef} id="contact" className="py-20 md:py-32">
       <div className="container mx-auto px-4">
-        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+        <div className="text-center mb-16 max-w-4xl mx-auto">
+          <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             聯絡我們
           </h2>
-          <p className="text-2xl text-muted-foreground leading-relaxed">
+          <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
             期待你的到來，來坐下喝杯咖啡，享受屬於你的慢時光
           </p>
         </div>

@@ -58,11 +58,11 @@ export function Features() {
   return (
     <section ref={sectionRef} id="about" className="py-20 md:py-32 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div lang="zh-Hant" className="text-center mb-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-balance">
+        <div className="text-center mb-16 max-w-4xl mx-auto">
+          <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             為什麼來到時光咖啡
           </h2>
-          <p className="text-2xl text-muted-foreground leading-relaxed">
+          <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
             在這裡，咖啡承載的不只是香氣與味道，更是一份讓人放慢腳步、靜靜感受的片刻。
           </p>
         </div>
@@ -73,7 +73,6 @@ export function Features() {
             const isVisible = visibleItems.includes(index)
             return (
               <div
-                lang="zh-Hant"
                 key={index}
                 className={`text-center space-y-4 p-6 rounded-lg hover:bg-card hover:shadow-lg hover:-translate-y-2 transition-all duration-500 ${
                   isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -82,8 +81,8 @@ export function Features() {
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 transition-all hover:bg-accent/20 hover:scale-110 hover:rotate-12 duration-300">
                   <Icon className="h-8 w-8 text-accent" />
                 </div>
-                <h3 className="text-2xl font-semibold">{feature.title}</h3>
-                <p className="text-xl text-muted-foreground leading-relaxed text-sm">
+                <h3 lang="zh-Hant" className="text-2xl font-semibold">{feature.title}</h3>
+                <p lang="the-Peak" className="text-[1.1rem] text-muted-foreground leading-relaxed">
                   {feature.description}
                 </p>
               </div>

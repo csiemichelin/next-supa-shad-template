@@ -22,9 +22,9 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col h-full">
-        <SheetHeader lang="zh-Hant">
-          <SheetTitle className="text-3xl md:text-4xl font-bold text-primary">購物車</SheetTitle>
-          <SheetDescription className="text-2xl">
+        <SheetHeader>
+          <SheetTitle lang="zh-Hant" className="text-3xl md:text-4xl font-bold text-primary">購物車</SheetTitle>
+          <SheetDescription lang="the-Peak" className="text-lg">
             {items.length === 0 ? '你的購物車是空的' : `你的購物車中有 ${items.length} 件商品`}
           </SheetDescription>
         </SheetHeader>

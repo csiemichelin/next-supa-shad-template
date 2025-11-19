@@ -19,6 +19,13 @@ const chenYu = localFont({
   variable: '--font-chernyu',
 })
 
+// 加入隨峰體
+const thePeak = localFont({
+  src: '../public/fonts/ThePeakFontBeta_V0_102.ttf',
+  display: 'swap',
+  variable: '--font-thepeak',
+})
+
 export const metadata: Metadata = {
   title: '時光咖啡 Shiguang Coffee',
   description: '在溫暖靜謐的空間裡，細細品味每一杯手作咖啡，讓時光慢一點走。',
@@ -35,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={chenYu.variable}>
+    <html lang="en" className={`${chenYu.variable} ${thePeak.variable}`}>
       <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
         <AuthProvider>
           <MenuProvider>

@@ -42,11 +42,11 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-10">
             <Link href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
-                lang="zh-Hant"
+                lang="the-Peak" 
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1.1rem] md:text-[1.2rem] 
+                  text-[1rem] md:text-[1.1rem] 
                   transition-all 
                   group-hover:font-bold
                 "
@@ -66,11 +66,11 @@ export function Header() {
             </Link>
             <Link href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
-                lang="zh-Hant"
+                lang="the-Peak"
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1.1rem] md:text-[1.2rem] 
+                  text-[1.1rem]
                   transition-all 
                   group-hover:font-bold
                 "
@@ -90,11 +90,11 @@ export function Header() {
             </Link>
             <Link href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
-                lang="zh-Hant"
+                lang="the-Peak"
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1.1rem] md:text-[1.2rem] 
+                  text-[1.1rem]
                   transition-all 
                   group-hover:font-bold
                 "
@@ -114,11 +114,11 @@ export function Header() {
             </Link>
             <Link href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
-                lang="zh-Hant"
+                lang="the-Peak"
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1.1rem] md:text-[1.2rem] 
+                  text-[1.1rem]
                   transition-all 
                   group-hover:font-bold
                 "
@@ -138,11 +138,11 @@ export function Header() {
             </Link>
             <Link href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
               <span
-                lang="zh-Hant"
+                lang="the-Peak"
                 className="
                   relative z-10 
                   font-normal 
-                  text-[1.1rem] md:text-[1.2rem] 
+                  text-[1.1rem]
                   transition-all 
                   group-hover:font-bold
                 "
@@ -200,7 +200,7 @@ export function Header() {
                 className="w-full justify-start text-foreground hover:text-primary transition-all"
               >
                 <span
-                  lang="zh-Hant"
+                  lang="the-Peak"
                   className="
                     relative z-10 
                     font-normal 
@@ -217,7 +217,7 @@ export function Header() {
                 className="w-full justify-start text-foreground hover:text-primary transition-all"
               >
                 <span
-                  lang="zh-Hant"
+                  lang="the-Peak"
                   className="
                     relative z-10 
                     font-normal 
@@ -234,7 +234,7 @@ export function Header() {
                 className="w-full justify-start text-foreground hover:text-primary transition-all"
               >
                 <span
-                  lang="zh-Hant"
+                  lang="the-Peak"
                   className="
                     relative z-10 
                     font-normal 
@@ -251,7 +251,7 @@ export function Header() {
                 className="w-full justify-start text-foreground hover:text-primary transition-all"
               >
                 <span
-                  lang="zh-Hant"
+                  lang="the-Peak"
                   className="
                     relative z-10 
                     font-normal 
@@ -268,7 +268,7 @@ export function Header() {
                 className="w-full justify-start text-foreground hover:text-primary transition-all"
               >
                 <span
-                  lang="zh-Hant"
+                  lang="the-Peak"
                   className="
                     relative z-10 
                     font-normal 

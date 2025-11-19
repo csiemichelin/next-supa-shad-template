@@ -111,7 +111,7 @@ export function HeroCarousel() {
               )
             ))}
           </h1>
-          <p lang="zh-Hant" className={`text-2xl md:text-3xl text-muted-foreground max-w-2xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
+          <p lang="the-Peak" className={`text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             {slides[currentSlide].description}

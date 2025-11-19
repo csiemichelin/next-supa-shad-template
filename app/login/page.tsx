@@ -46,7 +46,7 @@ export default function LoginPage() {
             <h1 lang="zh-Hant" className="text-3xl font-bold text-foreground mb-2 text-balance">
               歡迎回來
             </h1>
-            <p lang="zh-Hant" className="text-muted-foreground">
+            <p lang="the-Peak" className="text-muted-foreground">
               登入開始管理您的咖啡店
             </p>
           </div>
