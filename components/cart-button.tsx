@@ -16,7 +16,7 @@ export function CartButton() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="relative bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all"
+        className="relative bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all"
       >
         <ShoppingCart className="h-5 w-5" />
         {itemCount > 0 && (

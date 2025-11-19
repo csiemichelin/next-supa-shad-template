@@ -163,7 +163,7 @@ export function HeroCarousel() {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all group">
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all group">
               瀏覽菜單
               <Image
                 src="/icons/mug-hot-solid-full.png"
@@ -173,7 +173,7 @@ export function HeroCarousel() {
                 className="h-5 w-5 group-hover:translate-x-1 transition-transform"
               />
             </Button>
-            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 hover:scale-105 hover:text-primary transition-all">
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 active:bg-primary/10 hover:scale-105 active:scale-105 hover:text-primary active:text-primary transition-all">
               造訪我們
               <Image
                 src="/icons/hand-pointer-regular-full.svg"
@@ -190,14 +190,14 @@ export function HeroCarousel() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background active:bg-background p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-6 w-6 text-foreground" />
       </button>
       <button
         onClick={nextSlide}
-        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background active:bg-background p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
         aria-label="Next slide"
       >
         <ChevronRight className="h-6 w-6 text-foreground" />
@@ -212,7 +212,7 @@ export function HeroCarousel() {
             className={`h-2 rounded-full transition-all duration-300 ${
               currentSlide === index
                 ? 'w-8 bg-primary'
-                : 'w-2 bg-primary/30 hover:bg-primary/50'
+                : 'w-2 bg-primary/30 hover:bg-primary/50 active:bg-primary/50'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

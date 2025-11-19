@@ -77,7 +77,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="h-8 w-8 text-destructive hover:text-destructive active:text-destructive hover:bg-destructive/10 active:bg-destructive/10"
                   onClick={() => removeItem(item.name)}
                 >
                   <Trash2 className="h-4 w-4" />
@@ -94,7 +94,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
               <span className="text-accent">${getTotal().toFixed(2)}</span>
             </div>
             <Button
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90"
               size="lg"
             >
               線上點餐

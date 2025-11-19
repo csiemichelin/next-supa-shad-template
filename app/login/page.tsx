@@ -99,14 +99,14 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 py-6 text-lg font-semibold shadow-lg hover:shadow-xl active:shadow-xl transition-all disabled:opacity-50"
             >
               {isLoading ? '登入中' : '登入'}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <a href="/" className="text-sm text-primary hover:underline">
+            <a href="/" className="text-sm text-primary hover:underline active:underline">
               回到首頁
             </a>
           </div>

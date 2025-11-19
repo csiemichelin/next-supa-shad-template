@@ -164,7 +164,7 @@ export default function AdminPage() {
                             aria-expanded={isExpanded}
                             aria-controls={`category-items-${category.id}`}
                             title={isExpanded ? '收合餐點列表' : '展開餐點列表'}
-                            className="hidden sm:flex items-center gap-1 text-muted-foreground hover:text-white"
+                            className="hidden sm:flex items-center gap-1 text-muted-foreground hover:text-white active:text-white"
                           >
                             <ChevronDown
                               className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -225,7 +225,7 @@ export default function AdminPage() {
                         onClick={() => toggleCategoryVisibility(category.id)}
                         aria-expanded={isExpanded}
                         aria-controls={`category-items-${category.id}`}
-                        className="sm:hidden w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground my-0"
+                        className="sm:hidden w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground active:text-foreground my-0"
                       >
                         <ChevronDown
                           className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
@@ -242,7 +242,7 @@ export default function AdminPage() {
                         {category.items.map((item, itemIndex) => (
                           <div
                             key={item.id}
-                            className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-4 bg-secondary/20 rounded-lg border border-border hover:border-accent/50 transition-all"
+                            className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between p-4 bg-secondary/20 rounded-lg border border-border hover:border-accent/50 active:border-accent/50 transition-all"
                           >
                             <div className="flex-1">
                               {/* 上半部：手機版 name+price + 按鈕 各佔 50% 寬，桌機只顯示左半（右半隱藏） */}

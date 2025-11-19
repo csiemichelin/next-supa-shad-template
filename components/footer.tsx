@@ -25,22 +25,22 @@ export function Footer() {
             <h4 className="font-semibold mb-4">常用連結</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#home" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#home" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   首頁
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#about" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   關於我們
                 </a>
               </li>
               <li>
-                <a href="#menu" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#menu" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   菜單
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#contact" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   店面資訊
                 </a>
               </li>
@@ -51,17 +51,17 @@ export function Footer() {
             <h4 className="font-semibold mb-4">聯絡我們</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   活動企劃
                 </a>
               </li>
               <li>
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   人才招募
                 </a>
               </li>
               <li>
-                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                <a href="#" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   加入我們
                 </a>
               </li>
@@ -73,21 +73,21 @@ export function Footer() {
             <div className="flex gap-4">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 active:bg-primary-foreground/20 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 active:bg-primary-foreground/20 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+                className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 active:bg-primary-foreground/20 transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter className="h-5 w-5" />

@@ -27,7 +27,7 @@ export function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20 md:h-24">
           <Link href="/" className="inline-flex">
-            <div className="flex items-center text-primary hover:scale-105 transition-transform duration-300 cursor-pointer">
+            <div className="flex items-center text-primary hover:scale-105 active:scale-105 transition-transform duration-300 cursor-pointer">
               <img
                 src="/logo/logo_black.png"
                 alt="時光咖啡 Shiguang Coffee"
@@ -40,7 +40,7 @@ export function Header() {
           </Link>
   
           <nav className="hidden md:flex items-center gap-10">
-            <Link href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak" 
                 className="
@@ -64,7 +64,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -88,7 +88,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -112,7 +112,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -136,7 +136,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary transition-all">
+            <Link href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -164,7 +164,7 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-4">
             <CartButton />
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
+            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all">
               立即點餐
             </Button>
             <Link href="/login">
@@ -179,7 +179,7 @@ export function Header() {
           <div className="md:hidden flex items-center gap-2">
             <CartButton />
             <button
-              className="p-2 hover:scale-110 transition-transform"
+              className="p-2 hover:scale-110 active:scale-110 transition-transform"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -197,7 +197,7 @@ export function Header() {
             <Link className="block" href="#home" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -214,7 +214,7 @@ export function Header() {
             <Link className="block" href="#about" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -231,7 +231,7 @@ export function Header() {
             <Link className="block" href="#menu" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -248,7 +248,7 @@ export function Header() {
             <Link className="block" href="#gallery" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -265,7 +265,7 @@ export function Header() {
             <Link className="block" href="#contact" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -279,7 +279,7 @@ export function Header() {
                 >店面資訊</span>
               </Button>
             </Link>
-            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
+            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all">
               立即點餐
             </Button>
             <Link href="/login" onClick={() => setIsMenuOpen(false)}>

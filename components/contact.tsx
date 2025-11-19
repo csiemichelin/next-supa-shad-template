@@ -88,12 +88,12 @@ export function Contact() {
               return (
                 <Card 
                   key={index} 
-                  className={`border-border hover:shadow-lg hover:-translate-y-2 transition-all duration-500 ${
+                  className={`border-border hover:shadow-lg active:shadow-lg hover:-translate-y-2 active:-translate-y-2 transition-all duration-500 ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                   }`}
                 >
                   <CardContent className="pt-6 text-center space-y-2">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 mb-2 transition-all hover:bg-accent/20 hover:scale-110 hover:rotate-12 duration-300">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 mb-2 transition-all hover:bg-accent/20 active:bg-accent/20 hover:scale-110 active:scale-110 hover:rotate-12 active:rotate-12 duration-300">
                       <Icon className="h-6 w-6 text-accent" />
                     </div>
                     <h3 className="font-semibold text-foreground">{card.title}</h3>
@@ -106,7 +106,7 @@ export function Contact() {
             })}
           </div>
 
-          <Card className="border-border overflow-hidden hover:shadow-xl transition-shadow duration-500">
+          <Card className="border-border overflow-hidden hover:shadow-xl active:shadow-xl transition-shadow duration-500">
             <CardContent className="p-0">
               <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden group">
                 <img
@@ -121,7 +121,7 @@ export function Contact() {
           <div className={`text-center mt-12 transition-all duration-700 ${
             isButtonVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
           }`}>
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-105 transition-all">
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all">
               查看路線
               <Image
                 src="/icons/map-location-dot-solid-full.png"
