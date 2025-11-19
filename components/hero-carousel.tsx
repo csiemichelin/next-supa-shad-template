@@ -16,8 +16,35 @@ type Slide = {
 
 export function HeroCarousel() {
   const [slides, setSlides] = useState<Slide[]>([]);
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchEndX(null);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX === null || touchEndX === null) return;
+
+    const distance = touchStartX - touchEndX;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance) {
+      nextSlide();
+    } else if (distance < -minSwipeDistance) {
+      prevSlide();
+    }
+
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
 
   useEffect(() => {
     async function loadSlides() {
@@ -77,24 +104,39 @@ export function HeroCarousel() {
   }
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center pt-16 md:pt-20">
+    <section 
+      id="home"
+      className="relative min-h-screen flex items-center justify-center pt-16 md:pt-20"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Background Images with Transition */}
       <div className="absolute inset-0 z-0">
-        {slides.map((slide, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              currentSlide === index ? 'opacity-100' : 'opacity-0'
-            }`}
-          >
-            <img
-              src={slide.image_url || "/placeholder.svg"}
-              alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover opacity-60 scale-105 animate-subtle-zoom"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
-          </div>
-        ))}
+        {/* 底層：會左右滑動且縮放的圖片列 */}
+        <div
+          className="absolute inset-0 flex h-full transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+        >
+          {slides.map((slide, index) => (
+            <div
+              key={index}
+              className="relative w-full h-full flex-shrink-0 overflow-hidden"
+            >
+              {/* 只讓這一層做縮放動畫 */}
+              <div className="absolute inset-0 scale-105 animate-subtle-zoom">
+                <img
+                  src={slide.image_url || "/placeholder.svg"}
+                  alt={`Slide ${index + 1}`}
+                  className="w-full h-full object-cover opacity-60"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 最上層：固定的半透明漸層（不跟著縮放或滑動） */}
+        <div className="pointer-events-none absolute inset-0 bottom-[15px] bg-gradient-to-b from-background/50 via-background/80 to-background" />
       </div>
 
       {/* Content */}
@@ -148,14 +190,14 @@ export function HeroCarousel() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-6 w-6 text-foreground" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-background/80 hover:bg-background p-3 rounded-full hover:scale-110 transition-all backdrop-blur-sm"
         aria-label="Next slide"
       >
         <ChevronRight className="h-6 w-6 text-foreground" />
