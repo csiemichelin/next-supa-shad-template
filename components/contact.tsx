@@ -96,8 +96,8 @@ export function Contact() {
                     <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent/10 mb-2 transition-all hover:bg-accent/20 active:bg-accent/20 hover:scale-110 active:scale-110 hover:rotate-12 active:rotate-12 duration-300">
                       <Icon className="h-6 w-6 text-accent" />
                     </div>
-                    <h3 className="font-semibold text-foreground">{card.title}</h3>
-                    <p className="text-sm text-muted-foreground">
+                    <h3 lang="zh-Hant" className="text-xl font-semibold text-foreground">{card.title}</h3>
+                    <p lang="the-Peak" className="text-sm text-muted-foreground">
                       {card.content}
                     </p>
                   </CardContent>
