@@ -100,18 +100,20 @@ export function HeroCarousel() {
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
-          <h1 className={`text-5xl md:text-7xl lg:text-8xl font-bold text-balance leading-tight transition-all duration-1000 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            {slides[currentSlide].title.split(' ').map((word, i) => (
-              word === slides[currentSlide].highlight ? (
-                <span key={i} className="text-accent">{word} </span>
-              ) : (
-                <span key={i}>{word} </span>
-              )
-            ))}
-          </h1>
-          <p lang="the-Peak" className={`text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-200 ${
+          <div className="min-h-[120px] md:min-h-[240px] flex items-end">
+            <h1 className={`w-full text-center text-5xl md:text-7xl lg:text-8xl font-bold text-balance leading-tight transition-all duration-1000 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+              {slides[currentSlide].title.split(' ').map((word, i) => (
+                word === slides[currentSlide].highlight ? (
+                  <span key={i} className="text-accent">{word} </span>
+                ) : (
+                  <span key={i}>{word} </span>
+                )
+              ))}
+            </h1>
+          </div>
+          <p lang="the-Peak" className={`text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed transition-all duration-1000 delay-200 min-h-[120px] md:min-h-[90px] ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             {slides[currentSlide].description}
