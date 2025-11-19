@@ -18,6 +18,7 @@ interface CartDrawerProps {
 
 export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, clearCart, getTotal } = useCart()
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -25,7 +26,7 @@ export function CartDrawer({ open, onOpenChange }: CartDrawerProps) {
         <SheetHeader>
           <SheetTitle lang="zh-Hant" className="text-3xl md:text-4xl font-bold text-primary">購物車</SheetTitle>
           <SheetDescription lang="the-Peak" className="text-lg">
-            {items.length === 0 ? '你的購物車是空的' : `你的購物車中有 ${items.length} 件商品`}
+            {totalQuantity === 0 ? '你的購物車是空的' : `你的購物車中有 ${totalQuantity} 件商品`}
           </SheetDescription>
         </SheetHeader>
 
