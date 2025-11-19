@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useMenu } from '@/contexts/menu-context'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { LoadingIndicator } from '@/components/loading-indicator'
+import { cn } from '@/lib/utils'
 
 interface MenuItemDialogProps {
   open: boolean
@@ -22,6 +24,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
     image: '',
   })
   const [isSaving, setIsSaving] = useState(false)
+  const [isPreviewLoaded, setIsPreviewLoaded] = useState(false)
   const { addMenuItem, updateMenuItem } = useMenu()
 
   useEffect(() => {
@@ -42,7 +45,14 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         image: '',
       })
     }
+    setIsPreviewLoaded(false)
   }, [editingItem, open])
+
+  useEffect(() => {
+    if (formData.image) {
+      setIsPreviewLoaded(false)
+    }
+  }, [formData.image])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -155,11 +165,23 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
             />
             {formData.image && (
               <div className="mt-2 relative w-full h-40 bg-secondary/20 rounded-lg overflow-hidden">
+                {!isPreviewLoaded && (
+                  <LoadingIndicator
+                    size={120}
+                    imageClassName="text-amber-700 dark:text-amber-300"
+                    wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                  />
+                )}
                 <img
                   src={formData.image || '/placeholder.svg'}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  className={cn(
+                    'w-full h-full object-cover transition-opacity duration-300',
+                    isPreviewLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                  onLoad={() => setIsPreviewLoaded(true)}
                   onError={(e) => {
+                    setIsPreviewLoaded(true)
                     e.currentTarget.style.display = 'none'
                   }}
                 />

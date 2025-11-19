@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import Image from "next/image"
+import { LoadingIndicator } from '@/components/loading-indicator'
 
 type Slide = {
   id: number
@@ -98,7 +99,11 @@ export function HeroCarousel() {
   if (slides.length === 0) {
     return (
       <section className="min-h-screen flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <LoadingIndicator
+          size={120}
+          imageClassName="text-amber-700 dark:text-amber-300"
+          wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+        />
       </section>
     );
   }

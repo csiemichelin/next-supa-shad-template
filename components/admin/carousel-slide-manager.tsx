@@ -7,6 +7,7 @@ import { Plus, Pencil, Trash2, ImageIcon } from 'lucide-react'
 import { CarouselSlideDialog } from './carousel-slide-dialog'
 import { supabase } from '@/lib/supabaseClient'
 import type { Database } from '@/types/supabase'
+import { LoadingIndicator } from '@/components/loading-indicator'
 
 type SlideRow = Database['public']['Tables']['slides']['Row']
 type SlidePayload = Pick<SlideRow, 'title' | 'description' | 'highlight' | 'image_url'>
@@ -111,7 +112,13 @@ export function CarouselSlideManager() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {isLoading ? (
             <Card className="border-border col-span-full">
-              <CardContent className="py-16 text-center text-muted-foreground">載入中...</CardContent>
+              <CardContent className="py-16">
+                <LoadingIndicator
+                  size={120}
+                  imageClassName="text-amber-700 dark:text-amber-300"
+                  wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                />
+              </CardContent>
             </Card>
           ) : slides.length === 0 ? (
             <Card className="border-border col-span-full">

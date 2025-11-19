@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button'
 import { ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react'
 import { useCart } from '@/hooks/use-cart'
 import { useMenu } from '@/contexts/menu-context'
+import { LoadingIndicator } from '@/components/loading-indicator'
 import type { MenuItem as MenuItemType } from '@/contexts/menu-context'
+import { cn } from '@/lib/utils'
 
 export function Menu() {
   const { addItem } = useCart()
@@ -21,6 +23,7 @@ export function Menu() {
   const touchStartXRef = useRef<number | null>(null)
   const [isDesktop, setIsDesktop] = useState(false)
   const [desktopPage, setDesktopPage] = useState(0)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
   const ITEMS_PER_PAGE = 5
   const DESKTOP_CARDS_PER_PAGE = 3
@@ -161,6 +164,10 @@ export function Menu() {
     }
   }
 
+  useEffect(() => {
+    setIsImageLoaded(false)
+  }, [selectedItem?.image])
+
   const desktopStartIndex = isDesktop ? desktopPage * DESKTOP_CARDS_PER_PAGE : 0
   const categoriesToRender = isDesktop
     ? categories.slice(desktopStartIndex, desktopStartIndex + DESKTOP_CARDS_PER_PAGE)
@@ -180,7 +187,11 @@ export function Menu() {
           </div>
 
           {isLoading ? (
-            <div className="text-center text-muted-foreground">菜單載入中…</div>
+            <LoadingIndicator
+              size={120}
+              imageClassName="text-amber-700 dark:text-amber-300"
+              wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+            />
           ) : categories.length === 0 ? (
             <div className="text-center text-muted-foreground">尚未建立任何菜單內容</div>
           ) : (
@@ -328,10 +339,25 @@ export function Menu() {
               <div className="space-y-6">
                 {selectedItem.image && (
                   <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                    {!isImageLoaded && (
+                      <LoadingIndicator
+                        size={120}
+                        imageClassName="text-amber-700 dark:text-amber-300"
+                        wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                      />
+                    )}
                     <img
                       src={selectedItem.image || '/placeholder.svg'}
                       alt={selectedItem.name}
-                      className="w-full h-full object-cover"
+                      className={cn(
+                        'w-full h-full object-cover transition-opacity duration-300',
+                        isImageLoaded ? 'opacity-100' : 'opacity-0'
+                      )}
+                      onLoad={() => setIsImageLoaded(true)}
+                      onError={(e) => {
+                        setIsImageLoaded(true)
+                        e.currentTarget.style.display = 'none'
+                      }}
                     />
                   </div>
                 )}

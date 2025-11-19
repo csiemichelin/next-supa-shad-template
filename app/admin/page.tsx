@@ -11,6 +11,7 @@ import { LogOut, Plus, Pencil, Trash2, Coffee, ArrowUp, ArrowDown, ChevronDown }
 import { CategoryDialog } from '@/components/admin/category-dialog'
 import { MenuItemDialog } from '@/components/admin/menu-item-dialog'
 import { CarouselSlideManager } from '@/components/admin/carousel-slide-manager'
+import { LoadingIndicator } from '@/components/loading-indicator'
 
 export default function AdminPage() {
   const { user, logout, isAdmin, isLoading } = useAuth()
@@ -82,9 +83,11 @@ export default function AdminPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-muted-foreground">
-        後台載入中…
-      </div>
+      <LoadingIndicator
+        size={120}
+        imageClassName="text-amber-700 dark:text-amber-300"
+        wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+      />
     )
   }
 
