@@ -20,7 +20,6 @@ export function Menu() {
   const sectionRef = useRef<HTMLDivElement>(null)
 
   const [currentPages, setCurrentPages] = useState<Record<string, number>>({})
-  const touchStartXRef = useRef<number | null>(null)
   const [isDesktop, setIsDesktop] = useState(false)
   const [desktopPage, setDesktopPage] = useState(0)
   const [isImageLoaded, setIsImageLoaded] = useState(false)
@@ -55,27 +54,6 @@ export function Menu() {
       return { ...prev, [categoryId]: next }
     })
   }
-  // --- 手機左右滑動用 handler ---
-  const handleTouchStart =
-    (categoryId: string) => (e: React.TouchEvent<HTMLDivElement>) => {
-      touchStartXRef.current = e.touches[0].clientX
-    }
-  const handleTouchEnd =
-    (categoryId: string, totalPages: number) =>
-    (e: React.TouchEvent<HTMLDivElement>) => {
-      if (touchStartXRef.current === null) return
-      const endX = e.changedTouches[0].clientX
-      const distance = touchStartXRef.current - endX
-      const threshold = 40 // 滑動靈敏度，數值越小越敏感
-
-      if (distance > threshold) {
-        goNextPage(categoryId, totalPages)
-      } else if (distance < -threshold) {
-        goPrevPage(categoryId, totalPages)
-      }
-
-      touchStartXRef.current = null
-    }
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -200,10 +178,14 @@ export function Menu() {
                 {categoriesToRender.map((category, index) => {
                   const originalIndex = isDesktop ? desktopStartIndex + index : index
                   const isVisible = visibleCards.includes(originalIndex)
-                  const totalPages = Math.ceil(category.items.length / ITEMS_PER_PAGE)
-                  const currentPage = getCurrentPage(category.id, totalPages)
+                  const totalPages = isDesktop
+                    ? Math.ceil(category.items.length / ITEMS_PER_PAGE)
+                    : 1
+                  const currentPage = isDesktop ? getCurrentPage(category.id, totalPages) : 0
                   const start = currentPage * ITEMS_PER_PAGE
-                  const visibleItems = category.items.slice(start, start + ITEMS_PER_PAGE)
+                  const visibleItems = isDesktop
+                    ? category.items.slice(start, start + ITEMS_PER_PAGE)
+                    : category.items
 
                   return (
                     <Card
@@ -224,11 +206,7 @@ export function Menu() {
                       </CardHeader>
 
                       {/* 手機上要能左右滑動切換頁數 */}
-                      <CardContent
-                        className="space-y-4 md:pb-14"
-                        onTouchStart={handleTouchStart(category.id)} // mobile swipe start
-                        onTouchEnd={handleTouchEnd(category.id, totalPages)} // mobile swipe end
-                      >
+                      <CardContent className="space-y-4 md:pb-14">
                         {visibleItems.map((item) => (
                           <div
                             key={item.id}
@@ -248,7 +226,7 @@ export function Menu() {
                         ))}
                       </CardContent>
                       {/* 分頁控制：桌機版顯示 / 手機隱藏 */}
-                      {totalPages > 1 && (
+                      {isDesktop && totalPages > 1 && (
                         <div className="hidden md:flex justify-between items-center p-3 px-6 md:absolute md:left-0 md:right-0 md:bottom-[15px]">
                           <Button
                             type="button"
@@ -286,14 +264,6 @@ export function Menu() {
                           >
                             下一頁
                           </Button>
-                        </div>
-                      )}
-                      {/* 手機提示 */}
-                      {totalPages > 1 && (
-                        <div className="flex md:hidden justify-center p-3">
-                          <span className="text-xs text-accent">
-                            左右滑動查看更多品項（{currentPage + 1}/{totalPages}）
-                          </span>
                         </div>
                       )}
                     </Card>
