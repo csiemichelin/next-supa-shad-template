@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 export function Gallery() {
   const images = [
@@ -14,9 +15,17 @@ export function Gallery() {
 
   const [visibleImages, setVisibleImages] = useState<number[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
-  
-  const [activeIndex, setActiveIndex] = useState(0)
+
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [isDesktop, setIsDesktop] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const isAdjustingRef = useRef(false)
+  const extendedImages = useMemo(() => {
+    if (images.length === 0) return []
+    return [images[images.length - 1], ...images, images[0]]
+  }, [images])
+  const carouselImages = isDesktop ? images : extendedImages
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,19 +52,90 @@ export function Gallery() {
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
+    const applyMatch = (matches: boolean) => {
+      setIsDesktop(matches)
+      setActiveIndex(matches ? -1 : 0)
+    }
+
+    applyMatch(mediaQuery.matches)
+
+    const handleChange = (event: MediaQueryListEvent) => applyMatch(event.matches)
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
+
+  useEffect(() => {
     const el = containerRef.current
     if (!el) return
 
     const handleScroll = () => {
+      if (isDesktop) return
       const width = el.clientWidth
       if (!width) return
-      const index = Math.round(el.scrollLeft / width)
-      setActiveIndex(index)
+      let scrollLeft = el.scrollLeft
+      const minBoundary = width * 0.5
+      const maxBoundary = width * (images.length + 0.5)
+
+      if (!isAdjustingRef.current && scrollLeft <= minBoundary) {
+        isAdjustingRef.current = true
+        
+        // 暫時禁用 scroll snap
+        el.style.scrollSnapType = 'none'
+        el.style.scrollBehavior = 'auto'
+        
+        el.scrollLeft = scrollLeft + width * images.length
+        
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // 恢復 scroll snap
+            el.style.scrollSnapType = 'x mandatory'
+            isAdjustingRef.current = false
+          })
+        })
+        return
+      }
+
+      if (!isAdjustingRef.current && scrollLeft >= maxBoundary) {
+        isAdjustingRef.current = true
+        
+        // 暫時禁用 scroll snap
+        el.style.scrollSnapType = 'none'
+        el.style.scrollBehavior = 'auto'
+        
+        el.scrollLeft = scrollLeft - width * images.length
+        
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            // 恢復 scroll snap
+            el.style.scrollSnapType = 'x mandatory'
+            isAdjustingRef.current = false
+          })
+        })
+        return
+      }
+
+      const rawIndex = Math.round(scrollLeft / width) - 1
+      const normalizedIndex = ((rawIndex % images.length) + images.length) % images.length
+      setActiveIndex(normalizedIndex)
     }
 
-    el.addEventListener("scroll", handleScroll, { passive: true })
-    return () => el.removeEventListener("scroll", handleScroll)
-  }, [])
+    el.addEventListener('scroll', handleScroll, { passive: true })
+    return () => el.removeEventListener('scroll', handleScroll)
+  }, [images.length, isDesktop])
+
+  useEffect(() => {
+    if (isDesktop) return
+    const el = containerRef.current
+    if (!el) return
+    const width = el.clientWidth
+    isAdjustingRef.current = true
+    el.scrollLeft = width
+    requestAnimationFrame(() => {
+      isAdjustingRef.current = false
+    })
+  }, [isDesktop])
 
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32 bg-secondary/30">
@@ -69,53 +149,67 @@ export function Gallery() {
           </p>
         </div>
 
-        <div
-          ref={containerRef}
-          className="
-            grid max-w-6xl mx-auto gap-4
-            grid-flow-col auto-cols-[100%] overflow-x-auto snap-x snap-mandatory
-            md:grid-flow-row md:auto-cols-auto md:grid-cols-2 lg:grid-cols-3 md:overflow-visible
-            no-scrollbar
-          "
-        >
-          {images.map((image, index) => {
-            const isVisible = visibleImages.includes(index)
-            return (
-              <div
-                key={index}
-                className={`
-                  relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
-                  transition-all duration-700
-                  snap-center min-w-full md:min-w-0
-                  ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-                `}
-              >
-                <img
-                  src={image.url || "/placeholder.svg"}
-                  alt={image.alt}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span
-                    className={`
-                      text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
-                      transition-all duration-[1200ms] ease-out
-                      ${
-                        activeIndex === index
-                          ? "opacity-100 translate-y-0"
-                          : "opacity-0 translate-y-6"
-                      }
-                      md:opacity-0 md:translate-y-6
-                      md:group-hover:opacity-100 md:group-hover:translate-y-0
-                    `}
-                  >
-                    {image.alt}
-                  </span>
+        <div className="relative">
+          <div
+            ref={containerRef}
+            className="
+              grid max-w-6xl mx-auto gap-4
+              grid-flow-col auto-cols-[100%] overflow-x-auto snap-x snap-mandatory
+              md:grid-flow-row md:auto-cols-auto md:grid-cols-2 lg:grid-cols-3 md:overflow-visible
+              no-scrollbar
+            "
+          >
+            {carouselImages.map((image, index) => {
+              const actualIndex = isDesktop
+                ? index
+                : index === 0
+                  ? images.length - 1
+                  : index === images.length + 1
+                    ? 0
+                    : index - 1
+              const isVisible = visibleImages.includes(actualIndex)
+              const showCaption = isDesktop ? hoveredIndex === actualIndex : activeIndex === actualIndex
+              return (
+                <div
+                  key={`${image.alt}-${index}`}
+                  className={`
+                    relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
+                    transition-all duration-700
+                    snap-center min-w-full md:min-w-0
+                    ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+                  `}
+                  onMouseEnter={() => isDesktop && setHoveredIndex(actualIndex)}
+                  onMouseLeave={() => isDesktop && setHoveredIndex(null)}
+                >
+                  <img
+                    src={image.url || "/placeholder.svg"}
+                    alt={image.alt}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      className={`
+                        text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
+                        transition-all duration-[1200ms] ease-out
+                        ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                      `}
+                    >
+                      {image.alt}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
+
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center md:hidden">
+            <div className="flex items-center justify-between gap-6 w-[150px] rounded-full bg-black/40 text-white px-4 py-2 text-xs font-semibold tracking-wide backdrop-blur">
+              <ChevronLeft className="h-4 w-4 swipe-left-indicator" />
+              <div className="h-1 w-full max-w-[40px] rounded-full bg-white/30" />
+              <ChevronRight className="h-4 w-4 swipe-right-indicator" />
+            </div>
+          </div>
         </div>
       </div>
     </section>

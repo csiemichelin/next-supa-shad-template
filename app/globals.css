@@ -171,6 +171,44 @@
   animation: float 3s ease-in-out infinite;
 }
 
+.swipe-left-indicator {
+  animation: swipe-left 1.5s ease-in-out infinite;
+}
+
+.swipe-right-indicator {
+  animation: swipe-right 1.5s ease-in-out infinite;
+}
+
+@keyframes swipe-left {
+  0% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-6px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+}
+
+@keyframes swipe-right {
+  0% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(6px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+}
+
 /* Updated steam animations to be lighter and more realistic, rising from coffee cups */
 
 /* Lighter, more realistic steam animations with natural turbulence */
