@@ -210,7 +210,7 @@ export function Menu() {
                         {visibleItems.map((item) => (
                           <div
                             key={item.id}
-                            className="space-y-1 hover:translate-x-2 active:translate-x-2 transition-transform duration-300 cursor-pointer group"
+                            className="space-y-1 hover:translate-x-2 transition-transform duration-300 cursor-pointer group"
                             onClick={() => handleItemClick(item)}
                           >
                             <div className="flex justify-between items-baseline">

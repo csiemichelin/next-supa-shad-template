@@ -4,24 +4,24 @@ export function Footer() {
   return (
     <footer className="bg-primary text-primary-foreground py-12 md:py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          <div className="space-y-4">
+        <div className="flex flex-wrap md:grid md:grid-cols-4 gap-9 mb-8">
+          <div className="space-y-4 w-full md:w-auto">
             <div className="flex items-center">
               <img
                 src="/logo/logo_white.png"
                 alt="Shiguang Coffee Logo"
                 className="h-25 rounded-full object-cover"
               />
-              <h3 lang="zh-Hant" className="text-3xl md:text-4xl font-bold tracking-wide">
+              <h3 lang="zh-Hant" className="text-3xl xl:text-4xl font-bold tracking-wide">
                 時光咖啡
               </h3>
             </div>
-            <p lang="zh-Hant" className="text-2xl text-primary-foreground/80 leading-relaxed">
+            <p lang="zh-Hant" className="px-5 text-xl xl:text-2xl text-primary-foreground/80 leading-relaxed">
               自 2018 年起，用咖啡陪你走過每個日常
             </p>
           </div>
 
-          <div>
+          <div className="w-40 md:w-auto px-5">
             <h4 className="font-semibold mb-4">常用連結</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -47,7 +47,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="w-40 md:w-auto px-5">
             <h4 className="font-semibold mb-4">聯絡我們</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -68,7 +68,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
+          <div className="w-auto px-5">
             <h4 className="font-semibold mb-4">關注我們</h4>
             <div className="flex gap-4">
               <a
