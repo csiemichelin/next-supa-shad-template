@@ -202,7 +202,7 @@ export function Header() {
             <Link className="block" href="#home" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -219,7 +219,7 @@ export function Header() {
             <Link className="block" href="#about" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -236,7 +236,7 @@ export function Header() {
             <Link className="block" href="#menu" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -253,7 +253,7 @@ export function Header() {
             <Link className="block" href="#gallery" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
               >
                 <span
                   lang="the-Peak"
@@ -270,7 +270,7 @@ export function Header() {
             <Link className="block" href="#contact" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
-                className="w-full justify-start text-foreground hover:text-primary active:text-primary transition-all"
+                className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
               >
                 <span
                   lang="the-Peak"
