@@ -276,7 +276,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
         </DialogContent>
       </Dialog>
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-        <DialogContent className="w-full text-center px-4 py-8 overflow-y-auto custom-scrollbar" showCloseButton={false}>
+        <DialogContent className="w-full text-center px-4 py-8" showCloseButton={false}>
           <div className="flex flex-col items-center gap-4">
             <div className="relative h-40 w-40 overflow-hidden rounded-full bg-[#FCEBD9]">
               <Image

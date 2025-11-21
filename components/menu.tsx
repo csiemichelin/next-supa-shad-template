@@ -295,7 +295,7 @@ export function Menu() {
       </section>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl overflow-y-auto custom-scrollbar">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
           {selectedItem && (
             <>
               <DialogHeader>
