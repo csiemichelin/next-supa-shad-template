@@ -69,59 +69,60 @@ export function Gallery() {
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
+    let scrollEndTimer: NodeJS.Timeout | null = null
 
     const handleScroll = () => {
-      if (isDesktop) return
+      if (isDesktop || isAdjustingRef.current) return
       const width = el.clientWidth
       if (!width) return
 
-      let scrollLeft = el.scrollLeft
-
-      const firstRealPos = width 
-      const lastRealPos = width * images.length 
-
-      const minBoundary = firstRealPos - width * 0.5
-      const maxBoundary = lastRealPos + width * 0.5
-
-      if (!isAdjustingRef.current && scrollLeft <= minBoundary) {
-        isAdjustingRef.current = true
-
-        el.style.scrollSnapType = 'none'
-        el.style.scrollBehavior = 'auto'
-        el.scrollLeft = lastRealPos
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.style.scrollSnapType = 'x mandatory'
-            isAdjustingRef.current = false
-          })
-        })
-        return
+      const scrollLeft = el.scrollLeft
+      
+      // 清除之前的計時器
+      if (scrollEndTimer) {
+        clearTimeout(scrollEndTimer)
       }
 
-      if (!isAdjustingRef.current && scrollLeft >= maxBoundary) {
-        isAdjustingRef.current = true
-
-        el.style.scrollSnapType = 'none'
-        el.style.scrollBehavior = 'auto'
-        el.scrollLeft = firstRealPos
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            el.style.scrollSnapType = 'x mandatory'
-            isAdjustingRef.current = false
-          })
-        })
-        return
-      }
+      // 更新顯示的索引
       const rawIndex = Math.round(scrollLeft / width) - 1
       const normalizedIndex =
         ((rawIndex % images.length) + images.length) % images.length
       setActiveIndex(normalizedIndex)
+
+      // 設置新的計時器，只有在真正停止滑動後才執行跳轉
+      scrollEndTimer = setTimeout(() => {
+        const currentIndex = Math.round(el.scrollLeft / width)
+        
+        // 當停在第一個複製圖片（index 0）時，跳到真實的最後一張
+        if (currentIndex === 0) {
+          isAdjustingRef.current = true
+          el.style.scrollBehavior = 'auto'
+          el.scrollLeft = width * images.length
+          setTimeout(() => {
+            el.style.scrollBehavior = ''
+            isAdjustingRef.current = false
+          }, 50)
+        }
+        // 當停在最後一個複製圖片時，跳到真實的第一張
+        else if (currentIndex === images.length + 1) {
+          isAdjustingRef.current = true
+          el.style.scrollBehavior = 'auto'
+          el.scrollLeft = width
+          setTimeout(() => {
+            el.style.scrollBehavior = ''
+            isAdjustingRef.current = false
+          }, 50)
+        }
+      }, 150) // 150ms 的延遲，確保滑動真的結束了
     }
 
     el.addEventListener('scroll', handleScroll, { passive: true })
-    return () => el.removeEventListener('scroll', handleScroll)
+    return () => {
+      el.removeEventListener('scroll', handleScroll)
+      if (scrollEndTimer) {
+        clearTimeout(scrollEndTimer)
+      }
+    }
   }, [images.length, isDesktop])
 
   useEffect(() => {
