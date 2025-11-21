@@ -74,22 +74,24 @@ export function Gallery() {
       if (isDesktop) return
       const width = el.clientWidth
       if (!width) return
+
       let scrollLeft = el.scrollLeft
-      const minBoundary = width * 0.5
-      const maxBoundary = width * (images.length + 0.5)
+
+      const firstRealPos = width 
+      const lastRealPos = width * images.length 
+
+      const minBoundary = firstRealPos - width * 0.5
+      const maxBoundary = lastRealPos + width * 0.5
 
       if (!isAdjustingRef.current && scrollLeft <= minBoundary) {
         isAdjustingRef.current = true
-        
-        // 暫時禁用 scroll snap
+
         el.style.scrollSnapType = 'none'
         el.style.scrollBehavior = 'auto'
-        
-        el.scrollLeft = scrollLeft + width * images.length
-        
+        el.scrollLeft = lastRealPos
+
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            // 恢復 scroll snap
             el.style.scrollSnapType = 'x mandatory'
             isAdjustingRef.current = false
           })
@@ -99,25 +101,22 @@ export function Gallery() {
 
       if (!isAdjustingRef.current && scrollLeft >= maxBoundary) {
         isAdjustingRef.current = true
-        
-        // 暫時禁用 scroll snap
+
         el.style.scrollSnapType = 'none'
         el.style.scrollBehavior = 'auto'
-        
-        el.scrollLeft = scrollLeft - width * images.length
-        
+        el.scrollLeft = firstRealPos
+
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            // 恢復 scroll snap
             el.style.scrollSnapType = 'x mandatory'
             isAdjustingRef.current = false
           })
         })
         return
       }
-
       const rawIndex = Math.round(scrollLeft / width) - 1
-      const normalizedIndex = ((rawIndex % images.length) + images.length) % images.length
+      const normalizedIndex =
+        ((rawIndex % images.length) + images.length) % images.length
       setActiveIndex(normalizedIndex)
     }
 
