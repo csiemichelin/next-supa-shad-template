@@ -7,25 +7,25 @@ const features = [
   {
     icon: Coffee,
     title: '時光烘焙',
-    description: '小批次烘焙控制每一次風味，確保每杯咖啡都保持最佳新鮮度與香氣。',
+    description: '小批次烘焙控制每一次風味，確保每杯咖啡都保持最佳新鮮度與香氣',
     gradient: 'from-orange-200/40 via-amber-100/10 to-transparent',
   },
   {
     icon: Heart,
     title: '滿懷用心',
-    description: '我們的咖啡師以熱情和細緻的態度手作每一杯飲品，用心呈現迷人的風味。',
+    description: '我們的咖啡師以熱情和細緻的態度手作每一杯飲品，用心呈現迷人的風味',
     gradient: 'from-rose-200/40 via-pink-100/15 to-transparent',
   },
   {
     icon: Leaf,
     title: '永續來源',
-    description: '與理念相同的咖啡農建立直接合作關係，追求品質的同時，也一起守護土地。',
+    description: '與理念相同的咖啡農建立直接合作關係，追求品質的同時，也一起守護土地',
     gradient: 'from-emerald-200/35 via-green-100/10 to-transparent',
   },
   {
     icon: Clock,
     title: '永遠新鮮',
-    description: '全天現煮現萃，只為讓你每次品嚐，都能感受到最新鮮、最純粹的咖啡風味。',
+    description: '全天現煮現萃，只為讓你每次品嚐，都能感受到最新鮮、最純粹的咖啡風味',
     gradient: 'from-sky-200/40 via-cyan-100/10 to-transparent',
   },
 ]
@@ -67,7 +67,7 @@ export function Features() {
             為什麼來到時光咖啡
           </h2>
           <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
-            在這裡，咖啡承載的不只是香氣與味道，更是一份讓人放慢腳步、靜靜感受的片刻。
+            在這裡，咖啡承載的不只是香氣與味道，更是一份讓人放慢腳步、靜靜感受的片刻
           </p>
         </div>
 

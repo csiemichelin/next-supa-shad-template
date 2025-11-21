@@ -29,7 +29,7 @@ export function CarouselSlideManager() {
 
     if (error) {
       console.error('Failed to load slides', error)
-      setError('無法載入輪播資料，請稍後再試。')
+      setError('無法載入輪播資料，請稍後再試')
     } else {
       setSlides(data ?? [])
       setError(null)
@@ -56,7 +56,7 @@ export function CarouselSlideManager() {
       setEditingSlide(null)
     } catch (err) {
       console.error('Failed to save slide', err)
-      setError('儲存輪播資料時發生錯誤，請再試一次。')
+      setError('儲存輪播資料時發生錯誤，請再試一次')
     } finally {
       setIsSaving(false)
     }
@@ -69,7 +69,7 @@ export function CarouselSlideManager() {
     const { error } = await supabase.from('slides').delete().eq('id', id)
     if (error) {
       console.error('Failed to delete slide', error)
-      setError('刪除輪播失敗，請稍後再試。')
+      setError('刪除輪播失敗，請稍後再試')
       return
     }
     await loadSlides()

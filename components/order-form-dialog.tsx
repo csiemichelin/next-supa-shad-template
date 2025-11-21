@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/hooks/use-cart'
+import { ChevronDown } from 'lucide-react'
 
 interface OrderFormDialogProps {
   open: boolean
@@ -21,7 +22,7 @@ const ICE_OPTIONS = ['正常冰', '少冰', '微冰', '去冰', '熱飲']
 const SWEETNESS_OPTIONS = ['正常糖', '少糖', '半糖', '微糖', '無糖']
 
 export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
-  const { items, getTotal } = useCart()
+  const { items, getTotal, clearCart } = useCart()
   const [orderType, setOrderType] = useState<'dine-in' | 'takeout'>('dine-in')
   const [tableNumber, setTableNumber] = useState('')
   const [iceLevel, setIceLevel] = useState(ICE_OPTIONS[0])
@@ -49,12 +50,12 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
     setErrorMessage(null)
 
     if (!hasItems) {
-      setErrorMessage('購物車目前沒有商品，請先選擇您想要的飲品。')
+      setErrorMessage('購物車為空，請先選擇餐點')
       return
     }
 
     if (orderType === 'dine-in' && !tableNumber.trim()) {
-      setErrorMessage('請輸入桌號，讓我們能夠快速為您送上飲品。')
+      setErrorMessage('內用請輸入桌號')
       return
     }
 
@@ -73,7 +74,8 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
 
     console.info('[OrderFormDialog] 客戶送出線上點餐資料', payload)
 
-    setStatusMessage('收到您的需求囉！店內夥伴會盡快確認並與您連繫。')
+    setStatusMessage('收到您的需求囉！餐點準備中')
+    clearCart()
     setIsSubmitting(false)
   }
 
@@ -94,6 +96,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
           -translate-x-1/2 -translate-y-1/2
           max-h-[calc(100vh-2rem)]
           overflow-y-auto
+          custom-scrollbar
         "
       >
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -103,18 +106,18 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
             </DialogTitle>
             <DialogDescription lang="the-Peak" className="text-base">
               {hasItems
-                ? `已選擇 ${items.length} 種飲品，請填寫取餐方式與備註。`
-                : '購物車目前沒有商品，先挑選飲品後再提交表單。'}
+                ? `已選擇 ${items.length} 種餐點，請填寫取餐方式與備註`
+                : '購物車為空，請先選擇餐點'}
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
             <section className="rounded-xl border border-border/60 bg-muted/30 p-4 md:p-6 space-y-4">
               <div>
-                <h3 className="text-lg font-semibold">已選擇的飲品</h3>
+                <h3 className="text-lg font-semibold">已選擇的餐點</h3>
               </div>
               {hasItems ? (
-                <ul className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                <ul className="space-y-3 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
                   {items.map((item) => (
                     <li key={item.name} className="flex items-start justify-between gap-3 bg-background rounded-lg p-3 shadow-sm">
                       <div>
@@ -134,7 +137,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                 </ul>
               ) : (
                 <div className="rounded-md border border-dashed border-border/70 bg-background/60 p-4 text-center text-sm text-muted-foreground">
-                  購物車為空，請先選擇商品再送出需求。
+                  購物車為空
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-border/60 pt-3">
@@ -178,7 +181,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                       name="tableNumber"
                       value={tableNumber}
                       onChange={(event) => setTableNumber(event.target.value)}
-                      placeholder="例如：A3 或 12"
+                      placeholder="例如：A3 或 B1"
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                     />
                   </div>
@@ -187,44 +190,26 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="ice" className="text-sm font-medium">
-                    冰塊
-                  </label>
-                  <select
-                    id="ice"
+                  <label className="text-sm font-medium">冰塊</label>
+                  <InlineSelect
                     value={iceLevel}
-                    onChange={(event) => setIceLevel(event.target.value)}
-                    className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  >
-                    {ICE_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                    options={ICE_OPTIONS}
+                    onChange={setIceLevel}
+                  />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="sweetness" className="text-sm font-medium">
-                    甜度
-                  </label>
-                  <select
-                    id="sweetness"
+                  <label className="text-sm font-medium">甜度</label>
+                  <InlineSelect
                     value={sweetness}
-                    onChange={(event) => setSweetness(event.target.value)}
-                    className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                  >
-                    {SWEETNESS_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                    options={SWEETNESS_OPTIONS}
+                    onChange={setSweetness}
+                  />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="contact" className="text-sm font-medium">
-                  聯絡人 / 取餐名稱
+                  聯繫資訊
                 </label>
                 <input
                   id="contact"
@@ -246,7 +231,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                   rows={4}
                   value={specialRequest}
                   onChange={(event) => setSpecialRequest(event.target.value)}
-                  placeholder="例如：希望提早 10 分鐘取餐、去奶、備註過敏食材..."
+                  placeholder="例如：預計 13:00 取餐、去奶、備註過敏食材..."
                   className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                 />
               </div>
@@ -255,10 +240,10 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
 
           {(errorMessage || statusMessage) && (
             <div
-              className={`rounded-md border px-4 py-3 text-sm ${
+              className={`rounded-md border px-4 py-2 text-sm ${
                 errorMessage
                   ? 'border-destructive/40 text-destructive bg-destructive/10'
-                  : 'border-primary/30 text-primary bg-primary/5'
+                  : 'border-green-5 text-green-700 bg-green-50'
               }`}
             >
               {errorMessage ?? statusMessage}
@@ -272,11 +257,80 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
               className="w-full md:w-auto"
               disabled={isSubmitting || !hasItems}
             >
-              {isSubmitting ? '送出中...' : '送出需求'}
+              {isSubmitting ? '送出中...' : '送出訂單'}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+interface InlineSelectProps {
+  value: string
+  options: string[]
+  onChange: (value: string) => void
+}
+
+function InlineSelect({ value, options, onChange }: InlineSelectProps) {
+  const [open, setOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!open) {
+      return
+    }
+    const handleClick = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+    }
+  }, [open])
+
+  return (
+    <div className="relative w-full" ref={containerRef}>
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="
+          flex w-full items-center justify-between
+          rounded-md border border-input bg-background
+          px-3 py-2 text-left text-sm
+          focus-visible:outline-none
+          focus-visible:ring-2 focus-visible:ring-primary/40
+        "
+      >
+        <span>{value}</span>
+        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full z-20 mt-1 w-full rounded-md border border-border bg-background shadow-md">
+          {options.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors ${
+                option === value
+                  ? 'bg-primary/5 font-semibold text-primary'
+                  : 'text-foreground hover:bg-accent hover:text-accent-foreground'
+              }`}
+              onClick={() => {
+                onChange(option)
+                setOpen(false)
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
