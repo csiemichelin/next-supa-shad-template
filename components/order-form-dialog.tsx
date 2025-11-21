@@ -12,6 +12,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/hooks/use-cart'
 import { ChevronDown } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 interface OrderFormDialogProps {
   open: boolean
@@ -23,6 +25,7 @@ const SWEETNESS_OPTIONS = ['正常糖', '少糖', '半糖', '微糖', '無糖']
 
 export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const { items, getTotal, clearCart } = useCart()
+  const router = useRouter()
   const [orderType, setOrderType] = useState<'dine-in' | 'takeout'>('dine-in')
   const [tableNumber, setTableNumber] = useState('')
   const [iceLevel, setIceLevel] = useState(ICE_OPTIONS[0])
@@ -32,6 +35,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
 
   const hasItems = items.length > 0
   const totalCost = useMemo(() => getTotal(), [getTotal, items])
@@ -77,6 +81,13 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
     setStatusMessage('收到您的需求囉！餐點準備中')
     clearCart()
     setIsSubmitting(false)
+    setIsSuccessModalOpen(true)
+    onOpenChange(false)
+  }
+
+  const handleSuccessConfirm = () => {
+    setIsSuccessModalOpen(false)
+    router.push('/')
   }
 
   const handleOrderTypeChange = (type: 'dine-in' | 'takeout') => {
@@ -87,19 +98,20 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="
-          max-w-3xl
-          md:max-w-4xl
-          fixed left-1/2 top-1/2
-          -translate-x-1/2 -translate-y-1/2
-          max-h-[calc(100vh-2rem)]
-          overflow-y-auto
-          custom-scrollbar
-        "
-      >
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent
+          className="
+            max-w-3xl
+            md:max-w-4xl
+            fixed left-1/2 top-1/2
+            -translate-x-1/2 -translate-y-1/2
+            max-h-[calc(100vh-2rem)]
+            overflow-y-auto
+            custom-scrollbar
+          "
+        >
+          <form onSubmit={handleSubmit} className="space-y-6">
           <DialogHeader>
             <DialogTitle lang="zh-Hant" className="text-3xl font-bold">
               線上點餐單
@@ -260,9 +272,35 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
               {isSubmitting ? '送出中...' : '送出訂單'}
             </Button>
           </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          </form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+        <DialogContent className="w-full text-center px-4 py-8" showCloseButton={false}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative h-40 w-40 overflow-hidden rounded-full bg-[#FCEBD9]">
+              <Image
+                src="/gif/coffee-preparing-v2.gif"
+                alt="咖啡製作中"
+                fill
+                className="object-cover"
+                sizes="160px"
+                priority
+              />
+            </div>
+            <DialogTitle lang="zh-Hant" className="text-3xl font-bold text-primary">
+              收到您的需求囉！
+            </DialogTitle>
+            <DialogDescription lang="the-Peak" className="text-base leading-relaxed text-muted-foreground">
+              餐點準備中，請稍候，精彩風味即將送上
+            </DialogDescription>
+            <Button className="mt-2 px-8" onClick={handleSuccessConfirm}>
+              OK
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

@@ -5,6 +5,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import Image from "next/image"
+import Link from 'next/link'
 import { LoadingIndicator } from '@/components/loading-indicator'
 
 type Slide = {
@@ -168,15 +169,21 @@ export function HeroCarousel() {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1000 delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all group">
-              瀏覽菜單
-              <Image
-                src="/icons/mug-hot-solid-full.png"
-                alt="瀏覽菜單"
-                width={20}
-                height={20}
-                className="h-5 w-5 group-hover:translate-x-1 transition-transform"
-              />
+            <Button
+              asChild
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all group"
+            >
+              <Link href="/#menu">
+                瀏覽菜單
+                <Image
+                  src="/icons/mug-hot-solid-full.png"
+                  alt="瀏覽菜單"
+                  width={20}
+                  height={20}
+                  className="h-5 w-5 group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
             </Button>
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 active:bg-primary/10 hover:scale-105 active:scale-105 hover:text-primary active:text-primary transition-all">
               造訪我們
