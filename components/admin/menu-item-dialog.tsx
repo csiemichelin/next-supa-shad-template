@@ -1,6 +1,6 @@
-'use client'
+﻿'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { useMenu } from '@/contexts/menu-context'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -25,6 +25,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
   })
   const [isSaving, setIsSaving] = useState(false)
   const [isPreviewLoaded, setIsPreviewLoaded] = useState(false)
+  const [previewSource, setPreviewSource] = useState('')
   const { addMenuItem, updateMenuItem } = useMenu()
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         details: editingItem.item.details || '',
         image: editingItem.item.image || '',
       })
+      setPreviewSource(editingItem.item.image || '')
     } else {
       setFormData({
         name: '',
@@ -44,6 +46,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         details: '',
         image: '',
       })
+      setPreviewSource('')
     }
     setIsPreviewLoaded(false)
   }, [editingItem, open])
@@ -83,9 +86,29 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
     }
   }
 
+  const handleImageUrlChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, image: value }))
+    setPreviewSource(value)
+    setIsPreviewLoaded(false)
+  }
+
+  const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const result = typeof reader.result === 'string' ? reader.result : ''
+      setPreviewSource(result)
+      setFormData((prev) => ({ ...prev, image: result }))
+      setIsPreviewLoaded(false)
+    }
+    reader.readAsDataURL(file)
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
         <DialogHeader>
           <DialogTitle>{editingItem ? '編輯餐點' : '新增餐點'}</DialogTitle>
           <DialogDescription>
@@ -94,7 +117,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="name" className="text-sm font-semibold text-foreground">
+            <label htmlFor="name" className="text-base font-semibold text-foreground">
               餐點名稱
             </label>
             <input
@@ -109,7 +132,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="price" className="text-sm font-semibold text-foreground">
+            <label htmlFor="price" className="text-base font-semibold text-foreground">
               價格
             </label>
             <input
@@ -124,7 +147,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-semibold text-foreground">
+            <label htmlFor="description" className="text-base font-semibold text-foreground">
               簡短描述
             </label>
             <input
@@ -139,7 +162,7 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="details" className="text-sm font-semibold text-foreground">
+            <label htmlFor="details" className="text-base font-semibold text-foreground">
               詳細描述
             </label>
             <textarea
@@ -151,42 +174,60 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="image" className="text-sm font-semibold text-foreground">
-              圖片網址
+          <div className="space-y-3">
+            <label className="text-base font-semibold text-foreground">
+              上傳圖片
             </label>
-            <input
-              id="image"
-              type="text"
-              value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="/images/menu-item.jpg 或 https://..."
-            />
-            {formData.image && (
-              <div className="mt-2 relative w-full h-40 bg-secondary/20 rounded-lg overflow-hidden">
-                {!isPreviewLoaded && (
-                  <LoadingIndicator
-                    size={120}
-                    imageClassName="text-amber-700 dark:text-amber-300"
-                    wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
-                  />
-                )}
-                <img
-                  src={formData.image || '/placeholder.svg'}
-                  alt="Preview"
-                  className={cn(
-                    'w-full h-full object-cover transition-opacity duration-300',
-                    isPreviewLoaded ? 'opacity-100' : 'opacity-0'
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageFileChange}
+                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60"
+              />
+              <input
+                id="image"
+                type="text"
+                value={formData.image}
+                onChange={(e) => handleImageUrlChange(e.target.value)}
+                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+                placeholder="輸入圖片網址 /images/menu-item.jpg 或 https://..."
+              />
+            </div>
+            <div className="mt-2 relative w-full h-45 bg-secondary/20 border border-dashed border-border rounded-lg overflow-hidden flex items-center justify-center text-sm text-muted-foreground">
+              {previewSource ? (
+                <>
+                  {!isPreviewLoaded && (
+                    <LoadingIndicator
+                      size={120}
+                      imageClassName="text-amber-700 dark:text-amber-300"
+                      wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                    />
                   )}
-                  onLoad={() => setIsPreviewLoaded(true)}
-                  onError={(e) => {
-                    setIsPreviewLoaded(true)
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-              </div>
-            )}
+                  <img
+                    src={previewSource}
+                    alt="Preview"
+                    className={cn(
+                      'w-full h-full object-cover transition-opacity duration-300',
+                      isPreviewLoaded ? 'opacity-100' : 'opacity-0'
+                    )}
+                    onLoad={() => setIsPreviewLoaded(true)}
+                    onError={() => {
+                      setIsPreviewLoaded(true)
+                      setPreviewSource('')
+                    }}
+                  />
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <img
+                    src="/icons/image-regular.png"
+                    alt="placeholder illustration"
+                    className="h-35 w-40 opacity-80"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-4">

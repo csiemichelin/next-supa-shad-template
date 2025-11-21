@@ -259,7 +259,7 @@ export default function AdminPage() {
                                 </div>
 
                                 {/* 右側：手機版的按鈕群（50% 寬），桌機隱藏 */}
-                                <div className="flex items-center justify-end gap-1 w-1/2 sm:hidden">
+                                <div className="flex items-center justify-end w-1/2 sm:hidden">
                                   <Button
                                     variant="ghost"
                                     size="sm"

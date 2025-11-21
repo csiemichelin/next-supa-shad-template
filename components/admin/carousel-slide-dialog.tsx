@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import type { Database } from '@/types/supabase'
@@ -29,6 +29,7 @@ export function CarouselSlideDialog({
     description: '',
     highlight: '',
   })
+  const [previewSource, setPreviewSource] = useState('')
 
   useEffect(() => {
     if (editingSlide) {
@@ -38,6 +39,7 @@ export function CarouselSlideDialog({
         description: editingSlide.description,
         highlight: editingSlide.highlight,
       })
+      setPreviewSource(editingSlide.image_url || '')
     } else {
       setFormData({
         image_url: '',
@@ -45,6 +47,7 @@ export function CarouselSlideDialog({
         description: '',
         highlight: '',
       })
+      setPreviewSource('')
     }
   }, [editingSlide, open])
 
@@ -56,9 +59,27 @@ export function CarouselSlideDialog({
     await onSubmit(formData, editingSlide?.id)
   }
 
+  const handleImageUrlChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, image_url: value }))
+    setPreviewSource(value)
+  }
+
+  const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const result = typeof reader.result === 'string' ? reader.result : ''
+      setPreviewSource(result)
+      setFormData((prev) => ({ ...prev, image_url: result }))
+    }
+    reader.readAsDataURL(file)
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl custom-scrollbar">
         <DialogHeader>
           <DialogTitle>{editingSlide ? '編輯輪播圖' : '新增輪播圖'}</DialogTitle>
           <DialogDescription>
@@ -66,34 +87,47 @@ export function CarouselSlideDialog({
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="image_url" className="text-sm font-semibold text-foreground">
-              圖片網址
+          <div className="space-y-3">
+            <label className="text-base font-semibold text-foreground">
+              上傳圖片
             </label>
-            <input
-              id="image_url"
-              type="text"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
-              placeholder="/images/slide.jpg 或 https://..."
-            />
-            {formData.image_url && (
-              <div className="mt-2 relative w-full h-40 bg-secondary/20 rounded-lg overflow-hidden">
+            <div className="space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageFileChange}
+                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60"
+              />
+              <input
+                type="text"
+                value={formData.image_url}
+                onChange={(e) => handleImageUrlChange(e.target.value)}
+                className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
+                placeholder="輸入圖片網址 /images/slide.jpg 或 https://..."
+              />
+            </div>
+            <div className="mt-2 relative w-full h-45 bg-secondary/20 border border-dashed border-border rounded-lg overflow-hidden flex items-center justify-center text-sm text-muted-foreground">
+              {previewSource ? (
                 <img
-                  src={formData.image_url || '/placeholder.svg'}
+                  src={previewSource}
                   alt="Preview"
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none'
-                  }}
+                  onError={() => setPreviewSource('')}
                 />
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                  <img
+                    src="/icons/image-regular.png"
+                    alt="placeholder illustration"
+                    className="h-35 w-40 opacity-80"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="title" className="text-sm font-semibold text-foreground">
+            <label htmlFor="title" className="text-base font-semibold text-foreground">
               標題
             </label>
             <input
@@ -108,7 +142,7 @@ export function CarouselSlideDialog({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="highlight" className="text-sm font-semibold text-foreground">
+            <label htmlFor="highlight" className="text-base font-semibold text-foreground">
               強調字詞
             </label>
             <input
@@ -123,7 +157,7 @@ export function CarouselSlideDialog({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description" className="text-sm font-semibold text-foreground">
+            <label htmlFor="description" className="text-base font-semibold text-foreground">
               內容描述
             </label>
             <textarea
