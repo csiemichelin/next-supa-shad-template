@@ -21,7 +21,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="w-40 md:w-auto px-5">
+          <div className="w-3/7 md:w-auto px-5">
             <h4 className="font-semibold mb-4">常用連結</h4>
             <ul className="space-y-2 text-sm">
               <li>
@@ -47,7 +47,7 @@ export function Footer() {
             </ul>
           </div>
 
-          <div className="w-40 md:w-auto px-5">
+          <div className="w-3/7 md:w-auto px-5">
             <h4 className="font-semibold mb-4">聯絡我們</h4>
             <ul className="space-y-2 text-sm">
               <li>
