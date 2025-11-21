@@ -47,7 +47,7 @@ export function CategoryDialog({ open, onOpenChange, editingCategory, onSuccess 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="custom-scrollbar">
+      <DialogContent className="overflow-y-auto custom-scrollbar">
         <DialogHeader>
           <DialogTitle>{editingCategory ? '編輯分類' : '新增分類'}</DialogTitle>
           <DialogDescription>
