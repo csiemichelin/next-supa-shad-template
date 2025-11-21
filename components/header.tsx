@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Menu, X, LogIn } from 'lucide-react'
 import { CartButton } from './cart-button'
+import { OrderFormDialog } from './order-form-dialog'
 import Link from "next/link"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -164,7 +166,10 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-4">
             <CartButton />
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all">
+            <Button
+              className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all"
+              onClick={() => setIsOrderFormOpen(true)}
+            >
               立即點餐
             </Button>
             <Link href="/login">
@@ -279,7 +284,13 @@ export function Header() {
                 >店面資訊</span>
               </Button>
             </Link>
-            <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all">
+            <Button
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 hover:scale-105 active:scale-105 transition-all"
+              onClick={() => {
+                setIsOrderFormOpen(true)
+                setIsMenuOpen(false)
+              }}
+            >
               立即點餐
             </Button>
             <Link href="/login" onClick={() => setIsMenuOpen(false)}>
@@ -291,6 +302,10 @@ export function Header() {
           </nav>
         )}
       </div>
+      <OrderFormDialog
+        open={isOrderFormOpen}
+        onOpenChange={setIsOrderFormOpen}
+      />
     </header>
   )
 }
