@@ -219,11 +219,13 @@ export function CarouselSlideDialog({
               {previewSource ? (
                 <>
                   {!isPreviewLoaded && (
-                    <LoadingIndicator
-                      size={120}
-                      imageClassName="text-amber-700 dark:text-amber-300"
-                      wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
-                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/30">
+                      <LoadingIndicator
+                        size={120}
+                        imageClassName="text-amber-700 dark:text-amber-300"
+                        wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                      />
+                    </div>
                   )}
                   <img
                     src={previewSource}

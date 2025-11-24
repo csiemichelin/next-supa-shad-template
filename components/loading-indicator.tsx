@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 
 type LoadingIndicatorProps = {
@@ -9,10 +9,12 @@ type LoadingIndicatorProps = {
 }
 
 export function LoadingIndicator({ wrapperClassName, imageClassName, size = 96 }: LoadingIndicatorProps) {
-  const cacheBusterRef = useRef<number | null>(null)
-  if (cacheBusterRef.current === null) {
-    cacheBusterRef.current = Date.now()
-  }
+  const [cacheBuster, setCacheBuster] = useState<number | null>(null)
+
+  
+  useEffect(() => {
+    setCacheBuster(Date.now())
+  }, [])
 
   return (
     <div
@@ -24,7 +26,9 @@ export function LoadingIndicator({ wrapperClassName, imageClassName, size = 96 }
       }
     >
       <img
-        src={`/gif/coffee-loading.gif?reload=${cacheBusterRef.current}`}
+        src={cacheBuster
+          ? `/gif/coffee-loading.gif?reload=${cacheBuster}`
+          : `/gif/coffee-loading.gif`}
         alt="Loading animation"
         className={cn('h-[var(--loader-size)] w-[var(--loader-size)] object-contain', imageClassName)}
       />
