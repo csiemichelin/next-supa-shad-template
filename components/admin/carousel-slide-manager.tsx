@@ -62,16 +62,33 @@ export function CarouselSlideManager() {
     }
   }
 
-  const handleDeleteSlide = async (id: number, title: string) => {
-    const confirmed = confirm(`確定要刪除輪播「${title}」嗎？`)
+  const deleteSlideImage = async (imageUrl?: string | null) => {
+    if (!imageUrl) return
+    try {
+      const response = await fetch(
+        `/api/slides/upload-image?imageUrl=${encodeURIComponent(imageUrl)}`,
+        { method: 'DELETE' }
+      )
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Failed to delete slide image', errorData)
+      }
+    } catch (err) {
+      console.error('Failed to call delete slide API', err)
+    }
+  }
+
+  const handleDeleteSlide = async (slide: SlideRow) => {
+    const confirmed = confirm(`確定要刪除輪播「${slide.title}」嗎？`)
     if (!confirmed) return
 
-    const { error } = await supabase.from('slides').delete().eq('id', id)
+    const { error } = await supabase.from('slides').delete().eq('id', slide.id)
     if (error) {
       console.error('Failed to delete slide', error)
       setError('刪除輪播失敗，請稍後再試')
       return
     }
+    await deleteSlideImage(slide.image_url)
     await loadSlides()
   }
 
@@ -161,7 +178,7 @@ export function CarouselSlideManager() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleDeleteSlide(slide.id, slide.title)}
+                      onClick={() => handleDeleteSlide(slide)}
                       className="flex-1"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />

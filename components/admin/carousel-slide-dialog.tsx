@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect, ChangeEvent, useRef } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { LoadingIndicator } from '@/components/loading-indicator'
+import { cn } from '@/lib/utils'
 import type { Database } from '@/types/supabase'
 
 type SlideRow = Database['public']['Tables']['slides']['Row']
@@ -30,6 +32,11 @@ export function CarouselSlideDialog({
     highlight: '',
   })
   const [previewSource, setPreviewSource] = useState('')
+  const [isPreviewLoaded, setIsPreviewLoaded] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const previewObjectUrlRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (editingSlide) {
@@ -49,32 +56,128 @@ export function CarouselSlideDialog({
       })
       setPreviewSource('')
     }
+    setPendingFile(null)
+    setIsPreviewLoaded(false)
+    revokePreviewObjectUrl()
+    setUploadError(null)
   }, [editingSlide, open])
+
+  useEffect(() => {
+    return () => {
+      revokePreviewObjectUrl()
+    }
+  }, [])
+
+  const revokePreviewObjectUrl = () => {
+    if (previewObjectUrlRef.current) {
+      URL.revokeObjectURL(previewObjectUrlRef.current)
+      previewObjectUrlRef.current = null
+    }
+  }
+
+  const deleteImageFromStorage = async (imageUrl?: string | null) => {
+    if (!imageUrl) return
+    try {
+      const response = await fetch(
+        `/api/slides/upload-image?imageUrl=${encodeURIComponent(imageUrl)}`,
+        { method: 'DELETE' }
+      )
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Failed to delete slide image', errorData)
+      }
+    } catch (error) {
+      console.error('Failed to call delete slide image API', error)
+    }
+  }
+
+  const uploadPendingImage = async () => {
+    if (!pendingFile) return null
+    const payload = new FormData()
+    payload.append('file', pendingFile)
+    setIsUploading(true)
+    setUploadError(null)
+    try {
+      const response = await fetch('/api/slides/upload-image', {
+        method: 'POST',
+        body: payload,
+      })
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData?.message || '圖片上傳失敗')
+      }
+      const data = await response.json()
+      return data.url as string
+    } catch (error) {
+      console.error('Slide image upload failed', error)
+      setUploadError(error instanceof Error ? error.message : '圖片上傳失敗，請稍後再試')
+      return null
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.title.trim() || !formData.description.trim()) {
       return
     }
-    await onSubmit(formData, editingSlide?.id)
+
+    try {
+      let imageUrl = formData.image_url
+      if (pendingFile) {
+        const uploadedUrl = await uploadPendingImage()
+        if (!uploadedUrl) return
+        imageUrl = uploadedUrl
+        revokePreviewObjectUrl()
+        setPendingFile(null)
+        setPreviewSource(uploadedUrl)
+        setIsPreviewLoaded(false)
+        setFormData((prev) => ({ ...prev, image_url: uploadedUrl }))
+      }
+
+      const payload: SlidePayload = {
+        image_url: imageUrl,
+        title: formData.title,
+        description: formData.description,
+        highlight: formData.highlight,
+      }
+
+      await onSubmit(payload, editingSlide?.id)
+
+      if (editingSlide && editingSlide.image_url && editingSlide.image_url !== imageUrl) {
+        await deleteImageFromStorage(editingSlide.image_url)
+      }
+    } catch (error) {
+      console.error('Failed to submit slide', error)
+      if (!uploadError) {
+        setUploadError('儲存輪播資料時發生錯誤，請再試一次')
+      }
+    }
   }
 
   const handleImageUrlChange = (value: string) => {
+    revokePreviewObjectUrl()
+    setPendingFile(null)
     setFormData((prev) => ({ ...prev, image_url: value }))
     setPreviewSource(value)
+    setIsUploading(false)
+    setUploadError(null)
+    setIsPreviewLoaded(false)
   }
 
   const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      const result = typeof reader.result === 'string' ? reader.result : ''
-      setPreviewSource(result)
-      setFormData((prev) => ({ ...prev, image_url: result }))
-    }
-    reader.readAsDataURL(file)
+    revokePreviewObjectUrl()
+    const previewUrl = URL.createObjectURL(file)
+    previewObjectUrlRef.current = previewUrl
+    setPreviewSource(previewUrl)
+    setPendingFile(file)
+    setFormData((prev) => ({ ...prev, image_url: '' }))
+    setUploadError(null)
+    setIsPreviewLoaded(false)
   }
 
   return (
@@ -96,8 +199,12 @@ export function CarouselSlideDialog({
                 type="file"
                 accept="image/*"
                 onChange={handleImageFileChange}
-                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60"
+                disabled={isSaving || isUploading}
+                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60 disabled:cursor-not-allowed"
               />
+              <p className="text-xs text-muted-foreground">
+                選擇檔案先預覽，送出後會自動上傳到 Storage 的 slides 資料夾。
+              </p>
               <input
                 type="text"
                 value={formData.image_url}
@@ -105,15 +212,35 @@ export function CarouselSlideDialog({
                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
                 placeholder="輸入圖片網址 /images/slide.jpg 或 https://..."
               />
+              {isUploading && <p className="text-xs text-muted-foreground">圖片上傳中...</p>}
+              {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
             </div>
             <div className="mt-2 relative w-full h-45 bg-secondary/20 border border-dashed border-border rounded-lg overflow-hidden flex items-center justify-center text-sm text-muted-foreground">
               {previewSource ? (
-                <img
-                  src={previewSource}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                  onError={() => setPreviewSource('')}
-                />
+                <>
+                  {!isPreviewLoaded && (
+                    <LoadingIndicator
+                      size={120}
+                      imageClassName="text-amber-700 dark:text-amber-300"
+                      wrapperClassName="py-8 scale-[0.67] sm:scale-100 origin-top"
+                    />
+                  )}
+                  <img
+                    src={previewSource}
+                    alt="Preview"
+                    className={cn(
+                      'w-full h-full object-cover transition-opacity duration-300',
+                      isPreviewLoaded ? 'opacity-100' : 'opacity-0'
+                    )}
+                    onLoad={() => setIsPreviewLoaded(true)}
+                    onError={() => {
+                      setIsPreviewLoaded(true)
+                      revokePreviewObjectUrl()
+                      setPendingFile(null)
+                      setPreviewSource('')
+                    }}
+                  />
+                </>
               ) : (
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
                   <img
@@ -174,8 +301,8 @@ export function CarouselSlideDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               取消
             </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? '儲存中...' : editingSlide ? '更新' : '新增'}
+            <Button type="submit" disabled={isSaving || isUploading}>
+              {isSaving ? '儲存中...' : isUploading ? '圖片上傳中...' : editingSlide ? '更新' : '新增'}
             </Button>
           </div>
         </form>
