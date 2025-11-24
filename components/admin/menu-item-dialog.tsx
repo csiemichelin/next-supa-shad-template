@@ -1,6 +1,6 @@
-﻿'use client'
+'use client'
 
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect, ChangeEvent, useRef } from 'react'
 import { useMenu } from '@/contexts/menu-context'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -26,7 +26,44 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
   const [isSaving, setIsSaving] = useState(false)
   const [isPreviewLoaded, setIsPreviewLoaded] = useState(false)
   const [previewSource, setPreviewSource] = useState('')
-  const { addMenuItem, updateMenuItem } = useMenu()
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [pendingFile, setPendingFile] = useState<File | null>(null)
+  const previewObjectUrlRef = useRef<string | null>(null)
+  const { addMenuItem, updateMenuItem, categories } = useMenu()
+
+
+  const revokePreviewObjectUrl = () => {
+    if (previewObjectUrlRef.current) {
+      URL.revokeObjectURL(previewObjectUrlRef.current)
+      previewObjectUrlRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      revokePreviewObjectUrl()
+    }
+  }, [])
+
+  const getTargetCategory = (targetId: string | null) =>
+    targetId ? categories.find((cat) => cat.id === targetId) : undefined
+
+  const deleteImageFromStorage = async (imageUrl?: string | null) => {
+    if (!imageUrl) return
+    try {
+      const response = await fetch(
+        `/api/menu/upload-image?imageUrl=${encodeURIComponent(imageUrl)}`,
+        { method: 'DELETE' }
+      )
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Failed to delete old image', errorData)
+      }
+    } catch (error) {
+      console.error('Failed to call delete image API', error)
+    }
+  }
 
   useEffect(() => {
     if (editingItem) {
@@ -48,6 +85,8 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
       })
       setPreviewSource('')
     }
+    setPendingFile(null)
+    revokePreviewObjectUrl()
     setIsPreviewLoaded(false)
   }, [editingItem, open])
 
@@ -63,30 +102,70 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
 
     const targetCategoryId = editingItem?.categoryId || categoryId
     if (!targetCategoryId) return
+    const targetCategory = getTargetCategory(targetCategoryId)
 
     setIsSaving(true)
+    setUploadError(null)
     try {
+      let imageUrl = formData.image
+
+      if (pendingFile) {
+        if (!targetCategory) {
+          throw new Error('找不到對應分類，請重新整理後再試')
+        }
+        setIsUploading(true)
+        const payload = new FormData()
+        payload.append('file', pendingFile)
+        payload.append('categoryName', targetCategory.category)
+
+        const response = await fetch('/api/menu/upload-image', {
+          method: 'POST',
+          body: payload,
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData?.message || '圖片上傳失敗')
+        }
+
+        const data = await response.json()
+        console.log('Menu category folder id:', data.categoryId)
+        imageUrl = data.url
+        revokePreviewObjectUrl()
+        setPreviewSource(data.url)
+        setIsPreviewLoaded(false)
+        setFormData((prev) => ({ ...prev, image: data.url }))
+        setPendingFile(null)
+      }
+
       const payload = {
         name: formData.name,
         price: formData.price,
         description: formData.description,
         details: formData.details,
-        image: formData.image,
+        image: imageUrl,
       }
       if (editingItem) {
         await updateMenuItem(targetCategoryId, editingItem.item.id, payload)
+        if ((editingItem.item.image || '') !== (imageUrl || '')) {
+          await deleteImageFromStorage(editingItem.item.image)
+        }
       } else {
         await addMenuItem(targetCategoryId, payload)
       }
       onSuccess()
     } catch (error) {
       console.error('Failed to save menu item', error)
+      setUploadError(error instanceof Error ? error.message : '儲存失敗，請稍後再試')
     } finally {
       setIsSaving(false)
+      setIsUploading(false)
     }
   }
 
   const handleImageUrlChange = (value: string) => {
+    revokePreviewObjectUrl()
+    setPendingFile(null)
     setFormData((prev) => ({ ...prev, image: value }))
     setPreviewSource(value)
     setIsPreviewLoaded(false)
@@ -96,14 +175,14 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
     const file = event.target.files?.[0]
     if (!file) return
 
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      const result = typeof reader.result === 'string' ? reader.result : ''
-      setPreviewSource(result)
-      setFormData((prev) => ({ ...prev, image: result }))
-      setIsPreviewLoaded(false)
-    }
-    reader.readAsDataURL(file)
+    revokePreviewObjectUrl()
+    const previewUrl = URL.createObjectURL(file)
+    previewObjectUrlRef.current = previewUrl
+    setPreviewSource(previewUrl)
+    setPendingFile(file)
+    setFormData((prev) => ({ ...prev, image: '' }))
+    setIsPreviewLoaded(false)
+    setUploadError(null)
   }
 
   return (
@@ -183,8 +262,12 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
                 type="file"
                 accept="image/*"
                 onChange={handleImageFileChange}
-                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60"
+                disabled={isSaving || isUploading}
+                className="w-full cursor-pointer rounded-lg border border-dashed border-border bg-muted/40 px-4 py-2 text-sm file:mr-4 file:cursor-pointer file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary hover:border-primary/60 disabled:cursor-not-allowed"
               />
+              <p className="text-xs text-muted-foreground">
+                選擇檔案僅供預覽，點擊「{editingItem ? '更新' : '新增'}」後才會上傳到 <code>menu/[id]/</code>。
+              </p>
               <input
                 id="image"
                 type="text"
@@ -193,6 +276,8 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
                 className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-sm"
                 placeholder="輸入圖片網址 /images/menu-item.jpg 或 https://..."
               />
+              {isUploading && <p className="text-xs text-muted-foreground">圖片上傳中...</p>}
+              {uploadError && <p className="text-sm text-destructive">{uploadError}</p>}
             </div>
             <div className="mt-2 relative w-full h-45 bg-secondary/20 border border-dashed border-border rounded-lg overflow-hidden flex items-center justify-center text-sm text-muted-foreground">
               {previewSource ? (
@@ -214,6 +299,8 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
                     onLoad={() => setIsPreviewLoaded(true)}
                     onError={() => {
                       setIsPreviewLoaded(true)
+                      revokePreviewObjectUrl()
+                      setPendingFile(null)
                       setPreviewSource('')
                     }}
                   />
@@ -234,8 +321,8 @@ export function MenuItemDialog({ open, onOpenChange, categoryId, editingItem, on
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
               取消
             </Button>
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? '儲存中...' : editingItem ? '更新' : '新增'}
+            <Button type="submit" disabled={isSaving || isUploading}>
+              {isSaving ? '儲存中...' : isUploading ? '圖片上傳中...' : editingItem ? '更新' : '新增'}
             </Button>
           </div>
         </form>

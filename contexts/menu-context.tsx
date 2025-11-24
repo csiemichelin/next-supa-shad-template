@@ -89,6 +89,61 @@ const mapRowsToCategories = (
       return orderA - orderB
     })
 
+const ensureMenuCategoryFolder = async (categoryId: string) => {
+  const placeholder = new Blob(['folder placeholder'], { type: 'text/plain' })
+  const { error } = await supabase.storage
+    .from('menu')
+    .upload(`${categoryId}/.keep`, placeholder, { upsert: true })
+
+  if (error) {
+    console.error('Failed to ensure menu folder', error)
+  }
+}
+
+const deleteCategoryFolder = async (categoryId: string) => {
+  try {
+    const response = await fetch(`/api/menu/category-storage?categoryId=${categoryId}`, {
+      method: 'DELETE',
+    })
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Failed to delete category folder', errorData)
+    }
+  } catch (error) {
+    console.error('Failed to call delete category folder API', error)
+  }
+}
+
+const extractMenuStoragePath = (imageUrl?: string | null) => {
+  if (!imageUrl) return null
+  try {
+    const url = new URL(imageUrl)
+    const match = url.pathname.match(/\/storage\/v1\/object\/(?:sign|public)\/menu\/(.+)/)
+    if (match?.[1]) {
+      return decodeURIComponent(match[1])
+    }
+  } catch (error) {
+    console.error('Failed to parse image url for deletion', error)
+  }
+  return null
+}
+
+const deleteImageFromStorage = async (imageUrl?: string | null) => {
+  if (!imageUrl) return
+  try {
+    const response = await fetch(
+      `/api/menu/upload-image?imageUrl=${encodeURIComponent(imageUrl)}`,
+      { method: 'DELETE' }
+    )
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Failed to delete image via API', errorData)
+    }
+  } catch (error) {
+    console.error('Failed to call delete image API', error)
+  }
+}
+
 export function MenuProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<MenuCategory[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -153,6 +208,8 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       throw error
     }
 
+    await ensureMenuCategoryFolder(data.id)
+
     setCategories((prev) => [
       ...prev,
       {
@@ -183,6 +240,7 @@ export function MenuProvider({ children }: { children: ReactNode }) {
       console.error('Failed to delete category', error)
       throw error
     }
+    await deleteCategoryFolder(id)
     setCategories((prev) => prev.filter((cat) => cat.id !== id))
   }
 
@@ -254,11 +312,16 @@ export function MenuProvider({ children }: { children: ReactNode }) {
   }
 
   const deleteMenuItem = async (categoryId: string, itemId: string) => {
+    const category = categories.find((cat) => cat.id === categoryId)
+    const targetItem = category?.items.find((item) => item.id === itemId)
+
     const { error } = await supabase.from('menu_items').delete().eq('id', itemId)
     if (error) {
       console.error('Failed to delete menu item', error)
       throw error
     }
+
+    await deleteImageFromStorage(targetItem?.image)
 
     setCategories((prev) =>
       prev.map((cat) =>
