@@ -25,22 +25,22 @@ export function Footer() {
             <h4 className="font-semibold mb-4">常用連結</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#home" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
+                <a href="/#home" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   首頁
                 </a>
               </li>
               <li>
-                <a href="#about" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
+                <a href="/#about" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   關於我們
                 </a>
               </li>
               <li>
-                <a href="#menu" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
+                <a href="/#menu" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   菜單
                 </a>
               </li>
               <li>
-                <a href="#contact" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
+                <a href="/#contact" className="text-primary-foreground/80 hover:text-primary-foreground active:text-primary-foreground transition-colors">
                   店面資訊
                 </a>
               </li>

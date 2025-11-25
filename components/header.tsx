@@ -42,7 +42,7 @@ export function Header() {
           </Link>
   
           <nav className="hidden md:flex items-center gap-10">
-            <Link href="#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <Link href="/#home" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak" 
                 className="
@@ -66,7 +66,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <Link href="/#about" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -90,7 +90,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <Link href="/#menu" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -114,7 +114,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <Link href="/#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -138,7 +138,7 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <Link href="/#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
                 className="
@@ -199,7 +199,7 @@ export function Header() {
 
         {isMenuOpen && (
           <nav className="md:hidden py-4 space-y-4 border-t border-border animate-in slide-in-from-top duration-300">
-            <Link className="block" href="#home" onClick={() => setIsMenuOpen(false)}>
+            <Link className="block" href="/#home" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
@@ -216,7 +216,7 @@ export function Header() {
                 >首頁</span>
               </Button>
             </Link>
-            <Link className="block" href="#about" onClick={() => setIsMenuOpen(false)}>
+            <Link className="block" href="/#about" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
@@ -233,7 +233,7 @@ export function Header() {
                 >關於我們</span>
               </Button>
             </Link>
-            <Link className="block" href="#menu" onClick={() => setIsMenuOpen(false)}>
+            <Link className="block" href="/#menu" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
@@ -250,7 +250,7 @@ export function Header() {
                 >菜單</span>
               </Button>
             </Link>
-            <Link className="block" href="#gallery" onClick={() => setIsMenuOpen(false)}>
+            <Link className="block" href="/#gallery" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
@@ -267,7 +267,7 @@ export function Header() {
                 >職人匠心</span>
               </Button>
             </Link>
-            <Link className="block" href="#contact" onClick={() => setIsMenuOpen(false)}>
+            <Link className="block" href="/#contact" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"

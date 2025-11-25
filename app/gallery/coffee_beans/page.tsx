@@ -240,7 +240,7 @@ export default function OriginsPage() {
                   aria-label={`View ${origin.country} coffee information`}
                 >
                     <div
-                        className="relative w-10 h-10 hover:scale-125 active:scale-125 transition-transform duration-300"
+                        className="relative w-6 h-6 md:w-10 md:h-10 hover:scale-125 active:scale-125 transition-transform duration-300"
                         style={{ "--pin-delay": `${pinDelays[index] ?? 0}s` } as CSSProperties}
                     >
                         <div className="absolute z-10 inset-0 drop-shadow-lg">
@@ -377,7 +377,7 @@ export default function OriginsPage() {
 
                 <div className="space-y-3">
                   <p lang="the-Peak" className="text-base font-bold uppercase tracking-[0.4em] text-muted-foreground">採用此咖啡豆的餐點</p>
-              <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1 custom-scrollbar">
+              <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1 custom-scrollbar md:max-h-[45vh] md:overflow-y-auto max-h-none overflow-visible">
                 {menuError ? (
                   <div className="text-destructive text-sm text-center py-6 rounded-2xl border border-destructive/30 bg-destructive/10">
                     {menuError}
