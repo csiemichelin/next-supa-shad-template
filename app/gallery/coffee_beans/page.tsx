@@ -9,7 +9,6 @@ import Image from "next/image"
 interface CoffeeOrigin {
   id: string
   country: string
-  flag: string
   position: { x: string; y: string }
   introduction: string
   roastingStyle: string
@@ -26,7 +25,6 @@ const coffeeOrigins: CoffeeOrigin[] = [
   {
     id: "kenya",
     country: "肯亞",
-    flag: "🇰🇪",
     position: { x: "54%", y: "59%" },
     introduction:
       "這批肯亞咖啡採自中央高地 1,800 公尺的火山土壤，以黑醋栗、葡萄酒般酸度與明亮花香見長。穩定的日夜溫差讓酸質層次純淨鮮明。",
@@ -38,13 +36,12 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "尼耶利 Nyeri 高地",
       description:
         "第三代農夫 Mary Wanjiru 與家族在梯田小農場栽種 SL28 / SL34。手採後送往合作社進行雙重水洗與棚架日曬，讓黑醋栗與柑橘調風味完好保留。",
-      image: "/images/farmers/kenya-wanjiru.jpg",
+      image: "/images/kenya-wanjiru.jpg",
     },
   },
   {
     id: "colombia",
     country: "哥倫比亞",
-    flag: "🇨🇴",
     position: { x: "31%", y: "57%" },
     introduction:
       "來自安地斯山脈 1,700 公尺的小農批次，火山土壤與終年雲霧帶來柔和卻有存在感的酸質，風味以紅蘋果、焦糖與牛奶巧克力為主調。",
@@ -56,13 +53,12 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "威拉 Huila 山區",
       description:
         "García 家族以小規模精緻化經營聞名，主種卡杜拉與卡斯提優。採用水洗處理搭配慢速日曬，使甜感與乾淨度達到穩定的高水準。",
-      image: "/images/farmers/colombia-garcia.jpg",
+      image: "/images/colombia-garcia.jpg",
     },
   },
   {
     id: "ethiopia",
     country: "衣索比亞",
-    flag: "🇪🇹",
     position: { x: "55%", y: "54%" },
     introduction:
       "誕生於咖啡發源地之一的耶加雪菲高地，海拔約 2,000 公尺。此批次充滿茉莉花香、檸檬皮與白葡萄般的清甜，是最能代表衣索比亞印象的風味之一。",
@@ -74,13 +70,12 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "耶加雪菲 Yirgacheffe",
       description:
         "由當地數十位小農組成的合作社，統一採用手工精選、日曬處理，並以傳統棚架慢速乾燥，保留茶感與花果香的細膩表現。",
-      image: "/images/farmers/ethiopia-kebede.jpg",
+      image: "/images/ethiopia-kebede.jpg",
     },
   },
   {
     id: "brazil",
     country: "巴西",
-    flag: "🇧🇷",
     position: { x: "36%", y: "65%" },
     introduction:
       "來自塞拉多高原的大型莊園批次，以均勻日照與溫和氣候孕育出堅果、可可與焦糖的厚實底蘊，是許多配方與奶咖的靈魂基底。",
@@ -92,13 +87,12 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "米納斯吉拉斯 Minas Gerais",
       description:
         "莊園採用機械與手工並行採收，並以自然日曬與蜂蜜處理為主軸，在穩定產量的同時追求更高甜感與潔淨度。",
-      image: "/images/farmers/brazil-horizonte.jpg",
+      image: "/images/brazil-horizonte.jpg",
     },
   },
   {
     id: "indonesia",
     country: "印尼",
-    flag: "🇮🇩",
     position: { x: "77%", y: "59%" },
     introduction:
       "來自蘇門答臘林東地區，典型濕剝法處理帶來厚重口感與香料、泥土、黑巧克力的深沉風味，是重口味咖啡愛好者的首選之一。",
@@ -110,13 +104,12 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "蘇門答臘林東 Lintong",
       description:
         "Siregar 家族與周邊小農共同運作處理站，以傳統濕剝法搭配高海拔種植，造就獨特泥土與香料調性，並逐步導入更乾淨的乾燥流程。",
-      image: "/images/farmers/indonesia-siregar.jpg",
+      image: "/images/indonesia-siregar.jpg",
     },
   },
   {
     id: "costa-rica",
     country: "哥斯大黎加",
-    flag: "🇨🇷",
     position: { x: "27.5%", y: "52%" },
     introduction:
       "來自塔拉珠高地的精品批次，以乾淨明亮的酸質和柑橘、紅糖風味聞名。高海拔與嚴謹處理讓杯中風味層次清晰分明。",
@@ -128,7 +121,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       region: "塔拉珠 Tarrazú",
       description:
         "Rodríguez 家族經營的微型處理廠強調批次追溯與精準控溫日曬，選用紅櫻桃進行黃蜜處理，使咖啡同時兼具明亮酸質與柔和甜感。",
-      image: "/images/farmers/costa-rica-rodriguez.jpg",
+      image: "/images/costa-rica-rodriguez.jpg",
     },
   },
 ];
@@ -191,7 +184,7 @@ export default function OriginsPage() {
                         <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/30">
                           <Image
                             src={`/images/${origin.id}.png`}
-                            alt={`${origin.country} flag`}
+                            alt={`${origin.country}`}
                             fill
                             className="object-cover"
                             sizes="40px"
@@ -225,7 +218,7 @@ export default function OriginsPage() {
                     <div className="relative h-16 w-16 overflow-hidden rounded-full border border-white/20 shadow-lg flex-shrink-0">
                       <Image
                         src={`/images/${selectedOrigin.id}.png`}
-                        alt={`${selectedOrigin.country} flag`}
+                        alt={`${selectedOrigin.country}`}
                         fill
                         className="object-cover"
                         sizes="64px"
@@ -260,13 +253,13 @@ export default function OriginsPage() {
                   <div lang="the-Peak" className="text-sm font-bold flex flex-wrap items-center uppercase tracking-[0.1em] text-accent/80">
                     <span>{selectedOrigin.farmer.region} • {selectedOrigin.farmer.name}</span>
                   </div>
-                  <div className="relative h-48 w-full overflow-hidden rounded-xl">
+                  <div className="relative h-[280px] w-full overflow-hidden rounded-xl">
                     <Image
                       src={selectedOrigin.farmer.image}
                       alt={`${selectedOrigin.country} 小農 ${selectedOrigin.farmer.name}`}
                       fill
-                      className="object-cover"
-                      sizes="(min-width: 1024px) 40vw, 80vw"
+                      className="object-cover object-top"
+                      sizes="(min-width: 1024px) 60vw, 90vw"
                     />
                   </div>
                   <p lang="the-Peak" className="text-sm text-muted-foreground leading-snug">
