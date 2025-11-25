@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { X } from "lucide-react"
 import Image from "next/image"
+import { supabase } from "@/lib/supabaseClient"
 
 interface CoffeeOrigin {
   id: string
@@ -30,7 +31,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "這批肯亞咖啡採自中央高地 1,800 公尺的火山土壤，以黑醋栗、葡萄酒般酸度與明亮花香見長。穩定的日夜溫差讓酸質層次純淨鮮明。",
     roastingStyle:
       "採用淺至中烘（City），保留奔放果酸與黑醋栗甜感，尾韻帶出葡萄酒般的圓潤質地。",
-    menuItems: ["單品濃縮", "冷萃"],
+    menuItems: ["職人手沖咖啡", "冷萃咖啡", "氮氣冷萃咖啡"],
     farmer: {
       name: "Wanjiru 家族",
       region: "尼耶利 Nyeri 高地",
@@ -47,7 +48,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "來自安地斯山脈 1,700 公尺的小農批次，火山土壤與終年雲霧帶來柔和卻有存在感的酸質，風味以紅蘋果、焦糖與牛奶巧克力為主調。",
     roastingStyle:
       "採用中焙（City+），在保留果酸的同時加深焦糖與堅果甜感，適合作為單品與配奶基底。",
-    menuItems: ["拿鐵", "美式", "手沖單品"],
+    menuItems: ["拿鐵咖啡", "美式咖啡", "濃縮咖啡"],
     farmer: {
       name: "García 家族",
       region: "威拉 Huila 山區",
@@ -64,7 +65,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "誕生於咖啡發源地之一的耶加雪菲高地，海拔約 2,000 公尺。此批次充滿茉莉花香、檸檬皮與白葡萄般的清甜，是最能代表衣索比亞印象的風味之一。",
     roastingStyle:
       "採用淺焙（Light），讓花香與柑橘果酸完整綻放，入口輕盈卻層次豐富。",
-    menuItems: ["手沖單品", "冰手沖"],
+    menuItems: ["職人手沖咖啡", "小豆蔻玫瑰咖啡"],
     farmer: {
       name: "Kebede 小農合作社",
       region: "耶加雪菲 Yirgacheffe",
@@ -81,7 +82,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "來自塞拉多高原的大型莊園批次，以均勻日照與溫和氣候孕育出堅果、可可與焦糖的厚實底蘊，是許多配方與奶咖的靈魂基底。",
     roastingStyle:
       "採用中深焙（Full City），加強可可與堅果調，降低酸度，帶出順口耐喝的口感。",
-    menuItems: ["拿鐵", "卡布奇諾", "摩卡"],
+    menuItems: ["卡布奇諾", "白咖啡", "可朵朵", "經典提拉米蘇"],
     farmer: {
       name: "Fazenda Horizonte 莊園",
       region: "米納斯吉拉斯 Minas Gerais",
@@ -98,7 +99,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "來自蘇門答臘林東地區，典型濕剝法處理帶來厚重口感與香料、泥土、黑巧克力的深沉風味，是重口味咖啡愛好者的首選之一。",
     roastingStyle:
       "採用中深至深焙（Full City+），突顯煙燻、香料與黑巧克力調性，讓餘韻綿長濃郁。",
-    menuItems: ["深焙手沖", "義式濃縮"],
+    menuItems: ["濃縮咖啡", "可朵朵"],
     farmer: {
       name: "Siregar 小農群",
       region: "蘇門答臘林東 Lintong",
@@ -115,7 +116,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
       "來自塔拉珠高地的精品批次，以乾淨明亮的酸質和柑橘、紅糖風味聞名。高海拔與嚴謹處理讓杯中風味層次清晰分明。",
     roastingStyle:
       "採用淺中焙（Between Light & City），在保持柑橘酸質的同時加入一點紅糖甜感與圓潤口感。",
-    menuItems: ["手沖單品", "美式咖啡"],
+    menuItems: ["抹茶拿鐵", "黃金薑黃拿鐵"],
     farmer: {
       name: "Rodríguez 家族微型處理廠",
       region: "塔拉珠 Tarrazú",
@@ -129,10 +130,57 @@ const coffeeOrigins: CoffeeOrigin[] = [
 export default function OriginsPage() {
   const [selectedOrigin, setSelectedOrigin] = useState<CoffeeOrigin | null>(null)
   const [pinDelays, setPinDelays] = useState<number[]>([])
+  const [menuDetails, setMenuDetails] = useState<Record<string, { name: string; price: string; image: string | null }>>({})
+  const [isMenuLoading, setIsMenuLoading] = useState(false)
+  const [menuError, setMenuError] = useState<string | null>(null)
 
   useEffect(() => {
     setPinDelays(coffeeOrigins.map(() => Math.random() * 0.6 + 0.1))
   }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchMenuItems = async () => {
+      if (!selectedOrigin || selectedOrigin.menuItems.length === 0) {
+        if (isMounted) {
+          setMenuDetails({})
+          setMenuError(null)
+        }
+        return
+      }
+      setIsMenuLoading(true)
+      setMenuError(null)
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('name, price, image')
+        .in('name', selectedOrigin.menuItems)
+
+      if (!isMounted) return
+
+      if (error) {
+        console.error('Failed to load menu items for origin', error)
+        setMenuError('無法載入餐點資訊，請稍後再試')
+        setMenuDetails({})
+      } else {
+        const mapped: Record<string, { name: string; price: string; image: string | null }> = {}
+        data?.forEach((item) => {
+          mapped[item.name] = {
+            name: item.name,
+            price: item.price,
+            image: item.image,
+          }
+        })
+        setMenuDetails(mapped)
+      }
+      setIsMenuLoading(false)
+    }
+
+    fetchMenuItems()
+
+    return () => {
+      isMounted = false
+    }
+  }, [selectedOrigin])
 
   return (
     <div className="min-h-screen bg-background">
@@ -145,6 +193,34 @@ export default function OriginsPage() {
             <p lang="the-Peak" className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
               本店嚴選世界各地咖啡豆，帶你品味其豐富傳承與獨特風味
             </p>
+          </div>
+
+          <div className="md:hidden mb-8 flex flex-wrap gap-3 justify-center">
+            {coffeeOrigins.map((origin) => (
+              <button
+                key={`mobile-${origin.id}`}
+                onClick={() => setSelectedOrigin(origin)}
+                className={`w-36 rounded-2xl border overflow-hidden transition-all duration-300 ${
+                  selectedOrigin?.id === origin.id
+                    ? 'border-white/80 shadow-lg scale-[1.02]'
+                    : 'border-white/30 hover:scale-[1.02]'
+                }`}
+                aria-label={`快速查看${origin.country}`}
+              >
+                <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-2 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
+                  <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/40">
+                    <Image
+                      src={`/images/${origin.id}.png`}
+                      alt={`${origin.country}`}
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  </div>
+                  <span>{origin.country}</span>
+                </div>
+              </button>
+            ))}
           </div>
 
           <div className="relative max-w-6xl mx-auto">
@@ -164,7 +240,7 @@ export default function OriginsPage() {
                   aria-label={`View ${origin.country} coffee information`}
                 >
                     <div
-                        className="relative w-9 h-9 hover:scale-110 active:scale-110 transition-transform duration-300"
+                        className="relative w-10 h-10 hover:scale-125 active:scale-125 transition-transform duration-300"
                         style={{ "--pin-delay": `${pinDelays[index] ?? 0}s` } as CSSProperties}
                     >
                         <div className="absolute z-10 inset-0 drop-shadow-lg">
@@ -179,8 +255,8 @@ export default function OriginsPage() {
                         </div>
                     </div>
 
-                  <div className="absolute z-20 top-full left-1/2 -translate-x-1/2 mt-1 w-35 rounded-2xl border border-white/40 overflow-hidden opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 pointer-events-none">
-                      <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-1 text-xs font-semibold text-primary-foreground flex items-center justify-center gap-2">
+                  <div className="absolute z-20 top-full left-1/2 -translate-x-1/2 mt-1 w-35 rounded-2xl border border-white/40 overflow-hidden opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 pointer-events-none hidden md:block">
+                      <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-1 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
                         <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/30">
                           <Image
                             src={`/images/${origin.id}.png`}
@@ -212,7 +288,7 @@ export default function OriginsPage() {
               <div className="absolute top-10 -left-16 h-60 w-60 rounded-full bg-accent/25 blur-3xl" />
             </div>
             <div className="relative grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] max-h-[92vh] overflow-y-auto custom-scrollbar">
-              <div className="p-8 space-y-8">
+              <div className="p-8 space-y-8 bg-background">
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5">
                   <div className="flex items-center gap-8">
                     <div className="relative h-16 w-16 overflow-hidden rounded-full border border-white/20 shadow-lg flex-shrink-0">
@@ -231,7 +307,19 @@ export default function OriginsPage() {
                   </div>
                   <button
                     onClick={() => setSelectedOrigin(null)}
-                    className="h-10 w-10 rounded-full border border-white/30 text-white flex items-center justify-center bg-white/10 hover:bg-white/20 active:bg-white/20 transition-colors"
+                    className="
+                      h-10 w-10 rounded-full
+                      flex items-center justify-center
+                      border border-border
+                      bg-background/80
+                      text-muted-foreground
+                      hover:bg-accent
+                      hover:text-accent-foreground
+                      active:bg-accent/80
+                      active:text-white
+                      shadow-sm
+                      transition-colors
+                    "
                     aria-label="Close origin details"
                   >
                     <X className="w-5 h-5" />
@@ -269,33 +357,77 @@ export default function OriginsPage() {
               </div>
 
               <div className="relative border-l border-white/10 bg-black/15 p-8 flex flex-col gap-6">
-                <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-white/0 p-5 text-center shadow-inner">
-                  <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground mb-1">Harvest Altitude</p>
-                  <p className="text-4xl font-serif text-foreground">1,800m</p>
-                  <p className="text-xs text-muted-foreground">Above sea level</p>
+                <div className="rounded-[1.75rem] border border-white/5 p-6 text-center shadow-sm relative overflow-hidden">
+                  <Image
+                    src="/images/mountain.png"
+                    alt="mountain backdrop"
+                    fill
+                    className="object-cover translate-y-7 opacity-70 scale-[1.2]"
+                    sizes="(min-width: 1024px) 50vw, 90vw"
+                  />
+                  <div className="absolute inset-0 bg-white/35" />
+                  <div className="relative space-y-2">
+                    <p lang="the-Peak" className="text-base font-bold uppercase tracking-[0.4em] text-muted-foreground drop-shadow">
+                      海拔高度
+                    </p>
+                    <p className="text-5xl font-serif text-foreground/40 drop-shadow-lg">1,800m</p>
+                    <p lang="the-Peak" className="text-base text-muted-foreground drop-shadow">高於海平面</p>
+                  </div>
                 </div>
 
                 <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">Menu Highlights</p>
-                  <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1 custom-scrollbar">
-                    {selectedOrigin.menuItems.length > 0 ? (
-                      selectedOrigin.menuItems.map((item, index) => (
-                        <div
-                          key={index}
-                          className="rounded-2xl border border-white/10 bg-gradient-to-r from-primary/15 via-primary/5 to-transparent p-4"
-                        >
-                          <p className="font-semibold text-white">{item}</p>
-                          <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                            Signature Beverage
-                          </p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-muted-foreground text-sm text-center py-6 rounded-2xl border border-white/10 bg-white/5">
-                        No menu items currently use beans from this origin
-                      </div>
-                    )}
+                  <p lang="the-Peak" className="text-base font-bold uppercase tracking-[0.4em] text-muted-foreground">採用此咖啡豆的餐點</p>
+              <div className="space-y-3 max-h-[45vh] overflow-y-auto pr-1 custom-scrollbar">
+                {menuError ? (
+                  <div className="text-destructive text-sm text-center py-6 rounded-2xl border border-destructive/30 bg-destructive/10">
+                    {menuError}
                   </div>
+                ) : selectedOrigin.menuItems.length === 0 ? (
+                  <div className="text-muted-foreground text-sm text-center py-6 rounded-2xl border border-white/10 bg-white/5">
+                    No menu items currently use beans from this origin
+                  </div>
+                ) : isMenuLoading ? (
+                  Array.from({ length: selectedOrigin.menuItems.length }).map((_, index) => (
+                    <div
+                      key={`skeleton-${index}`}
+                      className="rounded-[1.75rem] border border-white/5 bg-white/5 p-4 flex items-center gap-4 animate-pulse"
+                    >
+                      <div className="h-16 w-16 rounded-xl bg-white/10" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 w-1/2 rounded bg-white/10" />
+                        <div className="h-3 w-1/3 rounded bg-white/5" />
+                      </div>
+                      <div className="h-4 w-12 rounded bg-white/10" />
+                    </div>
+                  ))
+                ) : (
+                  selectedOrigin.menuItems.map((itemName, index) => {
+                    const detail = menuDetails[itemName]
+                    return (
+                      <div
+                        key={`${itemName}-${index}`}
+                        className="rounded-[1.75rem] border bg-gradient-to-r from-primary/10 via-primary/5 to-background/40 p-4 flex items-center gap-4 shadow-sm"
+                      >
+                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-white/10 bg-background/40">
+                          {detail?.image ? (
+                            <img src={detail.image} alt={detail.name} className="h-full w-full object-cover" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center text-[0.7rem] text-muted-foreground">
+                              無圖
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-base font-semibold text-white truncate">{detail?.name ?? itemName}</p>
+                        </div>
+                        <div className="text-accent font-bold text-lg">
+                          {detail?.price ?? 'N/A'}
+                        </div>
+                      </div>
+                    )
+                  })
+                )}
+              </div>
                 </div>
               </div>
             </div>
@@ -307,4 +439,3 @@ export default function OriginsPage() {
     </div>
   )
 }
-
