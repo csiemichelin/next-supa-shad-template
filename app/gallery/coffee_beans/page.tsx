@@ -133,6 +133,8 @@ export default function OriginsPage() {
   const [menuDetails, setMenuDetails] = useState<Record<string, { name: string; price: string; image: string | null }>>({})
   const [isMenuLoading, setIsMenuLoading] = useState(false)
   const [menuError, setMenuError] = useState<string | null>(null)
+  const [farmerImageLoaded, setFarmerImageLoaded] = useState(false)
+  const [menuImageLoaded, setMenuImageLoaded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     setPinDelays(coffeeOrigins.map(() => Math.random() * 0.6 + 0.1))
@@ -141,10 +143,12 @@ export default function OriginsPage() {
   useEffect(() => {
     let isMounted = true
     const fetchMenuItems = async () => {
+      setFarmerImageLoaded(false)
       if (!selectedOrigin || selectedOrigin.menuItems.length === 0) {
         if (isMounted) {
           setMenuDetails({})
           setMenuError(null)
+          setMenuImageLoaded({})
         }
         return
       }
@@ -171,6 +175,7 @@ export default function OriginsPage() {
           }
         })
         setMenuDetails(mapped)
+        setMenuImageLoaded({})
       }
       setIsMenuLoading(false)
     }
@@ -346,9 +351,15 @@ export default function OriginsPage() {
                       src={selectedOrigin.farmer.image}
                       alt={`${selectedOrigin.country} 小農 ${selectedOrigin.farmer.name}`}
                       fill
-                      className="object-cover object-top"
+                      className={`object-cover object-top transition-opacity duration-500 ${farmerImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                       sizes="(min-width: 1024px) 60vw, 90vw"
+                      onLoadingComplete={() => setFarmerImageLoaded(true)}
                     />
+                    {!farmerImageLoaded && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        <span className="h-8 w-8 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    )}
                   </div>
                   <p lang="the-Peak" className="text-sm text-muted-foreground leading-snug">
                     {selectedOrigin.farmer.description}
@@ -408,9 +419,26 @@ export default function OriginsPage() {
                         key={`${itemName}-${index}`}
                         className="rounded-[1.75rem] border bg-gradient-to-r from-primary/10 via-primary/5 to-background/40 p-4 flex items-center gap-4 shadow-sm"
                       >
-                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-white/10 bg-background/40">
+                        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-white/10 bg-background/40 relative">
                           {detail?.image ? (
-                            <img src={detail.image} alt={detail.name} className="h-full w-full object-cover" />
+                            <>
+                              <img
+                                src={detail.image}
+                                alt={detail.name ?? itemName}
+                                className={`h-full w-full object-cover transition-opacity duration-500 ${menuImageLoaded[detail?.name ?? itemName] ? 'opacity-100' : 'opacity-0'}`}
+                                onLoad={() =>
+                                  setMenuImageLoaded((prev) => ({
+                                    ...prev,
+                                    [detail?.name ?? itemName]: true,
+                                  }))
+                                }
+                              />
+                              {!menuImageLoaded[detail?.name ?? itemName] && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                                  <span className="h-6 w-6 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                                </div>
+                              )}
+                            </>
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-[0.7rem] text-muted-foreground">
                               無圖

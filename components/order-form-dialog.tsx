@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/hooks/use-cart'
+import { useMenu } from '@/contexts/menu-context'
 import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -25,6 +26,7 @@ const SWEETNESS_OPTIONS = ['全糖', '少糖', '半糖', '微糖', '無糖']
 
 export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const { items, getTotal, clearCart } = useCart()
+  const { categories } = useMenu()
   const router = useRouter()
   const [orderType, setOrderType] = useState<'dine-in' | 'takeout'>('dine-in')
   const [tableNumber, setTableNumber] = useState('')
@@ -42,6 +44,15 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const hasItems = items.length > 0
   const totalQuantity = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items])
   const totalCost = useMemo(() => getTotal(), [getTotal, items])
+  const dessertItems = useMemo(() => {
+    const set = new Set<string>()
+    categories.forEach((category) => {
+      if (/甜點|dessert/i.test(category.category)) {
+        category.items.forEach((item) => set.add(item.name))
+      }
+    })
+    return set
+  }, [categories])
 
   useEffect(() => {
     if (!open) {
@@ -188,6 +199,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                       sweetness: SWEETNESS_OPTIONS[0],
                     }
                     const isExpanded = expandedItem === item.name
+                    const canCustomize = !dessertItems.has(item.name)
                     return (
                       <li
                         key={item.name}
@@ -195,23 +207,31 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                       >
                         <button
                           type="button"
-                          className="flex w-full items-start justify-between gap-3"
-                          onClick={() =>
+                          className={`flex w-full items-start justify-between gap-3 ${canCustomize ? '' : 'cursor-default'}`}
+                          onClick={() => {
+                            if (!canCustomize) return
                             setExpandedItem((prev) =>
                               prev === item.name ? null : item.name
                             )
-                          }
-                          aria-expanded={isExpanded}
+                          }}
+                          aria-expanded={canCustomize ? isExpanded : false}
+                          aria-disabled={!canCustomize}
                         >
                           <div className="text-left">
                             <p className="font-semibold">{item.name}</p>
-                            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
-                              <span>數量：{item.quantity}</span>
-                              <span className="inline-block">|</span>
-                              <span>{customization.ice}</span>
-                              <span className="inline-block">|</span>
-                              <span>{customization.sweetness}</span>
-                            </div>
+                            {canCustomize ? (
+                              <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                                <span>數量：{item.quantity}</span>
+                                <span className="inline-block">|</span>
+                                <span>{customization.ice}</span>
+                                <span className="inline-block">|</span>
+                                <span>{customization.sweetness}</span>
+                              </div>
+                            ) : (
+                              <div className="text-sm text-muted-foreground">
+                                數量：{item.quantity}（不提供冰塊／甜度調整）
+                              </div>
+                            )}
                             <p className="text-sm text-muted-foreground">{item.price}</p>
                           </div>
                           <div className="flex items-center gap-3">
@@ -222,14 +242,16 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                                 className="h-16 w-16 rounded-md object-cover"
                               />
                             )}
-                            <ChevronDown
-                              className={`h-5 w-5 text-muted-foreground transition-transform ${
-                                isExpanded ? 'rotate-180' : ''
-                              }`}
-                            />
+                            {canCustomize && (
+                              <ChevronDown
+                                className={`h-5 w-5 text-muted-foreground transition-transform ${
+                                  isExpanded ? 'rotate-180' : ''
+                                }`}
+                              />
+                            )}
                           </div>
                         </button>
-                        {isExpanded && (
+                        {canCustomize && isExpanded && (
                           <div className="mt-4 space-y-3 border-t border-border/50 pt-3">
                             <div>
                               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
