@@ -42,8 +42,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${chenYu.variable} ${thePeak.variable}`}>
-      <body className={`${crimsonText.className} font-sans antialiased suppressHydrationWarning`}>
+    <html lang="en" className={`${chenYu.variable} ${thePeak.variable}`} suppressHydrationWarning>
+      <body className={`${crimsonText.className} font-sans antialiased`} suppressHydrationWarning>
         <AuthProvider>
           <MenuProvider>
             {children}

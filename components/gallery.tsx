@@ -1,12 +1,13 @@
-'use client'
+﻿'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 
 export function Gallery() {
   const images = [
     { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花' },
-    { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源' },
+    { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', href: '/gallery/coffee_beans' },
     { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
     { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
     { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
@@ -169,9 +170,9 @@ export function Gallery() {
                     : index - 1
               const isVisible = visibleImages.includes(actualIndex)
               const showCaption = isDesktop ? hoveredIndex === actualIndex : activeIndex === actualIndex
-              return (
+              const cardKey = `${image.alt}-${index}`
+              const card = (
                 <div
-                  key={`${image.alt}-${index}`}
                   className={`
                     relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
                     transition-all duration-700
@@ -198,6 +199,22 @@ export function Gallery() {
                       {image.alt}
                     </span>
                   </div>
+                </div>
+              )
+              if (image.href) {
+                return (
+                  <Link
+                    key={cardKey}
+                    href={image.href}
+                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                  >
+                    {card}
+                  </Link>
+                )
+              }
+              return (
+                <div key={cardKey} className="block">
+                  {card}
                 </div>
               )
             })}
