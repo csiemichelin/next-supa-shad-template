@@ -21,15 +21,17 @@ interface OrderFormDialogProps {
 }
 
 const ICE_OPTIONS = ['正常冰', '少冰', '微冰', '去冰', '熱飲']
-const SWEETNESS_OPTIONS = ['正常糖', '少糖', '半糖', '微糖', '無糖']
+const SWEETNESS_OPTIONS = ['全糖', '少糖', '半糖', '微糖', '無糖']
 
 export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const { items, getTotal, clearCart } = useCart()
   const router = useRouter()
   const [orderType, setOrderType] = useState<'dine-in' | 'takeout'>('dine-in')
   const [tableNumber, setTableNumber] = useState('')
-  const [iceLevel, setIceLevel] = useState(ICE_OPTIONS[0])
-  const [sweetness, setSweetness] = useState(SWEETNESS_OPTIONS[0])
+  const [customizations, setCustomizations] = useState<
+    Record<string, { ice: string; sweetness: string }>
+  >({})
+  const [expandedItem, setExpandedItem] = useState<string | null>(null)
   const [specialRequest, setSpecialRequest] = useState('')
   const [contactInfo, setContactInfo] = useState('')
   const [statusMessage, setStatusMessage] = useState<string | null>(null)
@@ -38,6 +40,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
 
   const hasItems = items.length > 0
+  const totalQuantity = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items])
   const totalCost = useMemo(() => getTotal(), [getTotal, items])
 
   useEffect(() => {
@@ -47,6 +50,46 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
       setIsSubmitting(false)
     }
   }, [open])
+
+  useEffect(() => {
+    setCustomizations((prev) => {
+      const next = { ...prev }
+      items.forEach((item) => {
+        if (!next[item.name]) {
+          next[item.name] = {
+            ice: ICE_OPTIONS[0],
+            sweetness: SWEETNESS_OPTIONS[2],
+          }
+        }
+      })
+      Object.keys(next).forEach((name) => {
+        if (!items.find((item) => item.name === name)) {
+          delete next[name]
+        }
+      })
+      return next
+    })
+    if (items.length === 0) {
+      setExpandedItem(null)
+    }
+  }, [items])
+
+  const handleCustomizationChange = (
+    itemName: string,
+    type: 'ice' | 'sweetness',
+    value: string
+  ) => {
+    setCustomizations((prev) => ({
+      ...prev,
+      [itemName]: {
+        ...(prev[itemName] ?? {
+          ice: ICE_OPTIONS[0],
+          sweetness: SWEETNESS_OPTIONS[0],
+        }),
+        [type]: value,
+      },
+    }))
+  }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -63,16 +106,25 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
       return
     }
 
+    if (orderType === 'takeout' && !contactInfo.trim()) {
+      setErrorMessage('外帶請留下聯繫資訊')
+      return
+    }
+
     setIsSubmitting(true)
+
+    const itemsWithCustomizations = items.map((item) => ({
+      ...item,
+      iceLevel: customizations[item.name]?.ice ?? ICE_OPTIONS[0],
+      sweetness: customizations[item.name]?.sweetness ?? SWEETNESS_OPTIONS[0],
+    }))
 
     const payload = {
       orderType,
       tableNumber: orderType === 'dine-in' ? tableNumber.trim() : '外帶',
-      iceLevel,
-      sweetness,
       specialRequest: specialRequest.trim(),
-      contactInfo: contactInfo.trim(),
-      items,
+      contactInfo: orderType === 'takeout' ? contactInfo.trim() : '',
+      items: itemsWithCustomizations,
       total: totalCost,
     }
 
@@ -118,7 +170,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
             </DialogTitle>
             <DialogDescription lang="the-Peak" className="text-base">
               {hasItems
-                ? `已選擇 ${items.length} 種餐點，請填寫取餐方式與備註`
+                ? `已選擇 ${totalQuantity} 份餐點，請填寫取餐方式與備註`
                 : '購物車為空，請先選擇餐點'}
             </DialogDescription>
           </DialogHeader>
@@ -130,22 +182,116 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
               </div>
               {hasItems ? (
                 <ul className="space-y-3 max-h-64 overflow-y-auto pr-1 custom-scrollbar">
-                  {items.map((item) => (
-                    <li key={item.name} className="flex items-start justify-between gap-3 bg-background rounded-lg p-3 shadow-sm">
-                      <div>
-                        <p className="font-semibold">{item.name}</p>
-                        <p className="text-sm text-muted-foreground">數量：{item.quantity}</p>
-                        <p className="text-sm text-muted-foreground">{item.price}</p>
-                      </div>
-                      {item.image && (
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="h-16 w-16 rounded-md object-cover"
-                        />
-                      )}
-                    </li>
-                  ))}
+                  {items.map((item) => {
+                    const customization = customizations[item.name] ?? {
+                      ice: ICE_OPTIONS[0],
+                      sweetness: SWEETNESS_OPTIONS[0],
+                    }
+                    const isExpanded = expandedItem === item.name
+                    return (
+                      <li
+                        key={item.name}
+                        className="bg-background rounded-lg p-3 shadow-sm border border-border/40"
+                      >
+                        <button
+                          type="button"
+                          className="flex w-full items-start justify-between gap-3"
+                          onClick={() =>
+                            setExpandedItem((prev) =>
+                              prev === item.name ? null : item.name
+                            )
+                          }
+                          aria-expanded={isExpanded}
+                        >
+                          <div className="text-left">
+                            <p className="font-semibold">{item.name}</p>
+                            <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+                              <span>數量：{item.quantity}</span>
+                              <span className="inline-block">|</span>
+                              <span>{customization.ice}</span>
+                              <span className="inline-block">|</span>
+                              <span>{customization.sweetness}</span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{item.price}</p>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            {item.image && (
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="h-16 w-16 rounded-md object-cover"
+                              />
+                            )}
+                            <ChevronDown
+                              className={`h-5 w-5 text-muted-foreground transition-transform ${
+                                isExpanded ? 'rotate-180' : ''
+                              }`}
+                            />
+                          </div>
+                        </button>
+                        {isExpanded && (
+                          <div className="mt-4 space-y-3 border-t border-border/50 pt-3">
+                            <div>
+                              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                冰塊調整
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {ICE_OPTIONS.map((option) => (
+                                  <Button
+                                    key={option}
+                                    type="button"
+                                    size="sm"
+                                    variant={
+                                      customization.ice === option
+                                        ? 'default'
+                                        : 'outline'
+                                    }
+                                    onClick={() =>
+                                      handleCustomizationChange(
+                                        item.name,
+                                        'ice',
+                                        option
+                                      )
+                                    }
+                                  >
+                                    {option}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                                甜度調整
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {SWEETNESS_OPTIONS.map((option) => (
+                                  <Button
+                                    key={option}
+                                    type="button"
+                                    size="sm"
+                                    variant={
+                                      customization.sweetness === option
+                                        ? 'default'
+                                        : 'outline'
+                                    }
+                                    onClick={() =>
+                                      handleCustomizationChange(
+                                        item.name,
+                                        'sweetness',
+                                        option
+                                      )
+                                    }
+                                  >
+                                    {option}
+                                  </Button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               ) : (
                 <div className="rounded-md border border-dashed border-border/70 bg-background/60 p-4 text-center text-sm text-muted-foreground">
@@ -161,7 +307,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
             </section>
 
             <section className="space-y-5">
-              <div className="space-y-2">
+              <div className="space-y-2 mb-5">
                 <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                   取餐方式
                 </p>
@@ -183,55 +329,42 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                     外帶
                   </Button>
                 </div>
-                {orderType === 'dine-in' && (
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="tableNumber" className="text-sm font-medium">
-                      請輸入桌號
-                    </label>
-                    <input
-                      id="tableNumber"
-                      name="tableNumber"
-                      value={tableNumber}
-                      onChange={(event) => setTableNumber(event.target.value)}
-                      placeholder="例如：A3 或 B1"
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">冰塊</label>
-                  <InlineSelect
-                    value={iceLevel}
-                    options={ICE_OPTIONS}
-                    onChange={setIceLevel}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium">甜度</label>
-                  <InlineSelect
-                    value={sweetness}
-                    options={SWEETNESS_OPTIONS}
-                    onChange={setSweetness}
-                  />
+                <div className="px-3 py-2 font-medium rounded-lg border border-dashed border-amber-900/40 bg-background/70 text-xs text-amber-900/70">
+                  點擊餐點可調整冰塊與甜度
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="contact" className="text-sm font-medium">
-                  聯繫資訊
-                </label>
-                <input
-                  id="contact"
-                  name="contact"
-                  value={contactInfo}
-                  onChange={(event) => setContactInfo(event.target.value)}
-                  placeholder="方便聯繫的暱稱或電話"
-                  className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
-                />
-              </div>
+              {orderType === 'dine-in' && (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="tableNumber" className="text-sm font-medium">
+                    請輸入桌號
+                  </label>
+                  <input
+                    id="tableNumber"
+                    name="tableNumber"
+                    value={tableNumber}
+                    onChange={(event) => setTableNumber(event.target.value)}
+                    placeholder="例如：A3 或 B1"
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  />
+                </div>
+              )}
+
+              {orderType === 'takeout' && (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="contact" className="text-sm font-medium">
+                    聯繫資訊
+                  </label>
+                  <input
+                    id="contact"
+                    name="contact"
+                    value={contactInfo}
+                    onChange={(event) => setContactInfo(event.target.value)}
+                    placeholder="方便聯繫的暱稱或電話"
+                    className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                  />
+                </div>
+              )}
 
               <div className="flex flex-col gap-2">
                 <label htmlFor="specialRequest" className="text-sm font-medium">
