@@ -77,7 +77,7 @@ export function HeroCarousel() {
   }, [])
 
   const restartAutoSlide = useCallback(() => {
-    if (autoSlideRef.current) {
+    if (autoSlideRef.current !== null) {
       clearInterval(autoSlideRef.current)
     }
     if (slides.length === 0) return
@@ -89,7 +89,7 @@ export function HeroCarousel() {
   useEffect(() => {
     restartAutoSlide()
     return () => {
-      if (autoSlideRef.current) {
+      if (autoSlideRef.current !== null) {
         clearInterval(autoSlideRef.current)
       }
     }

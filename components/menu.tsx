@@ -23,7 +23,7 @@ export function Menu() {
   const [isDesktop, setIsDesktop] = useState(false)
   const [desktopPage, setDesktopPage] = useState(0)
   const [isImageLoaded, setIsImageLoaded] = useState(false)
-  const desktopAutoTimer = useRef<ReturnType<typeof window.setInterval> | null>(null)
+  const desktopAutoTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const ITEMS_PER_PAGE = 5
   const DESKTOP_CARDS_PER_PAGE = 3
@@ -70,11 +70,11 @@ export function Menu() {
     categories.length > 0 ? Math.ceil(categories.length / DESKTOP_CARDS_PER_PAGE) : 0
 
   const restartDesktopAutoAdvance = useCallback(() => {
-    if (desktopAutoTimer.current) {
-      window.clearInterval(desktopAutoTimer.current)
+    if (desktopAutoTimer.current !== null) {
+      clearInterval(desktopAutoTimer.current)
     }
     if (!isDesktop || desktopPages <= 1) return
-    desktopAutoTimer.current = window.setInterval(() => {
+    desktopAutoTimer.current = setInterval(() => {
       setDesktopPage((prev) => (prev + 1) % desktopPages)
     }, 7000)
   }, [isDesktop, desktopPages])
@@ -94,8 +94,8 @@ export function Menu() {
   useEffect(() => {
     restartDesktopAutoAdvance()
     return () => {
-      if (desktopAutoTimer.current) {
-        window.clearInterval(desktopAutoTimer.current)
+      if (desktopAutoTimer.current !== null) {
+        clearInterval(desktopAutoTimer.current)
       }
     }
   }, [restartDesktopAutoAdvance])
