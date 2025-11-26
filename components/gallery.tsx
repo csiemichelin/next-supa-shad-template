@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 export function Gallery() {
   const images = [
-    { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花' },
+    { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花', href: '/gallery/latte_art' },
     { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', href: '/gallery/coffee_beans' },
     { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
     { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
