@@ -3,8 +3,8 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { X } from "lucide-react"
 import Image from "next/image"
+import { CloseButton } from "@/components/ui/close-button"
 import { supabase } from "@/lib/supabaseClient"
 
 interface CoffeeOrigin {
@@ -310,25 +310,10 @@ export default function OriginsPage() {
                       <h2 lang="zh-Hant" className="text-3xl md:text-5xl pt-1 font-bold text-foreground tracking-tight">{selectedOrigin.country}</h2>
                     </div>
                   </div>
-                  <button
+                  <CloseButton
                     onClick={() => setSelectedOrigin(null)}
-                    className="
-                      h-10 w-10 rounded-full
-                      flex items-center justify-center
-                      border border-border
-                      bg-background/80
-                      text-muted-foreground
-                      hover:bg-accent
-                      hover:text-accent-foreground
-                      active:bg-accent/80
-                      active:text-white
-                      shadow-sm
-                      transition-colors
-                    "
                     aria-label="Close origin details"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                  />
                 </div>
 
                 <section className="space-y-3">
