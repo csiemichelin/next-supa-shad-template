@@ -199,10 +199,10 @@ export function HeroCarousel() {
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary/10 active:bg-primary/10 hover:scale-105 active:scale-105 hover:text-primary active:text-primary transition-all">
-              造訪我們
+              線上訂位
               <Image
                 src="/icons/hand-pointer-regular-full.svg"
-                alt="造訪我們"
+                alt="線上訂位"
                 width={20}
                 height={20}
                 className="h-5 w-5 group-hover:translate-x-1 transition-transform"
