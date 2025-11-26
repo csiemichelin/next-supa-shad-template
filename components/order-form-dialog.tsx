@@ -375,14 +375,14 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
               {orderType === 'takeout' && (
                 <div className="flex flex-col gap-2">
                   <label htmlFor="contact" className="text-sm font-medium">
-                    聯繫資訊
+                    聯繫電話
                   </label>
                   <input
                     id="contact"
                     name="contact"
                     value={contactInfo}
                     onChange={(event) => setContactInfo(event.target.value)}
-                    placeholder="方便聯繫的暱稱或電話"
+                    placeholder="方便聯繫的電話"
                     className="rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   />
                 </div>

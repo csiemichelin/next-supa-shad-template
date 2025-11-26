@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabaseClient'
 import Image from "next/image"
 import Link from 'next/link'
@@ -22,6 +22,7 @@ export function HeroCarousel() {
   const [isVisible, setIsVisible] = useState(false);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchEndX, setTouchEndX] = useState<number | null>(null);
+  const autoSlideRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     setTouchStartX(e.touches[0].clientX);
@@ -75,26 +76,38 @@ export function HeroCarousel() {
     setIsVisible(true)
   }, [])
 
-  useEffect(() => {
+  const restartAutoSlide = useCallback(() => {
+    if (autoSlideRef.current) {
+      clearInterval(autoSlideRef.current)
+    }
     if (slides.length === 0) return
-
-    const timer = setInterval(() => {
+    autoSlideRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 6000)
-
-    return () => clearInterval(timer)
   }, [slides.length])
+
+  useEffect(() => {
+    restartAutoSlide()
+    return () => {
+      if (autoSlideRef.current) {
+        clearInterval(autoSlideRef.current)
+      }
+    }
+  }, [restartAutoSlide])
 
   const goToSlide = (index: number) => {
     setCurrentSlide(index)
+    restartAutoSlide()
   }
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
+    restartAutoSlide()
   }
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+    restartAutoSlide()
   }
 
   if (slides.length === 0) {
