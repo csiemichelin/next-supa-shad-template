@@ -227,7 +227,7 @@ export default function OriginsPage() {
                 }`}
                 aria-label={`快速查看${origin.country}`}
               >
-                <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-2 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
+                <div className="bg-accent/65 px-3 py-2 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
                   <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/40">
                     <Image
                       src={`/images/${origin.id}.png`}
