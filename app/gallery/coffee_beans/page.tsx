@@ -5,6 +5,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import Image from "next/image"
 import { CloseButton } from "@/components/ui/close-button"
+import { LoadingIndicator } from "@/components/loading-indicator"
 import { supabase } from "@/lib/supabaseClient"
 
 interface CoffeeOrigin {
@@ -135,6 +136,7 @@ export default function OriginsPage() {
   const [menuError, setMenuError] = useState<string | null>(null)
   const [farmerImageLoaded, setFarmerImageLoaded] = useState(false)
   const [menuImageLoaded, setMenuImageLoaded] = useState<Record<string, boolean>>({})
+  const [mapLoaded, setMapLoaded] = useState(false)
 
   useEffect(() => {
     setPinDelays(coffeeOrigins.map(() => Math.random() * 0.6 + 0.1))
@@ -230,7 +232,19 @@ export default function OriginsPage() {
 
           <div className="relative max-w-6xl mx-auto">
             <div className="relative w-full aspect-[1200/630] bg-muted/30 rounded-lg overflow-hidden shadow-2xl">
-              <Image src="/images/world-map.png" alt="World Map" fill className="object-cover scale-[1.28] translate-x-[5%] -translate-y-[5%]" priority />
+              {!mapLoaded && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/40 backdrop-blur-sm">
+                  <LoadingIndicator size={72} />
+                </div>
+              )}
+              <Image
+                src="/images/world-map.png"
+                alt="World Map"
+                fill
+                className="object-cover scale-[1.28] translate-x-[5%] -translate-y-[5%]"
+                priority
+                onLoadingComplete={() => setMapLoaded(true)}
+              />
 
               {coffeeOrigins.map((origin, index) => (
                 <button
@@ -286,8 +300,14 @@ export default function OriginsPage() {
       </main>
 
       {selectedOrigin && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-black/70 via-black/60 to-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
-          <div className="group relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-background/95 to-background/80 shadow-[0_30px_120px_rgba(0,0,0,0.5)]">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-black/70 via-black/60 to-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-300"
+          onClick={() => setSelectedOrigin(null)}
+        >
+          <div
+            className="group relative w-full max-w-5xl overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-background/95 to-background/80 shadow-[0_30px_120px_rgba(0,0,0,0.5)]"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="absolute inset-0 opacity-40 group-hover:opacity-60 group-active:opacity-60 transition-opacity duration-500">
               <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-primary/30 blur-3xl" />
               <div className="absolute top-10 -left-16 h-60 w-60 rounded-full bg-accent/25 blur-3xl" />
@@ -342,7 +362,7 @@ export default function OriginsPage() {
                     />
                     {!farmerImageLoaded && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/20">
-                        <span className="h-8 w-8 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                        <LoadingIndicator size={48} />
                       </div>
                     )}
                   </div>
@@ -383,19 +403,9 @@ export default function OriginsPage() {
                     No menu items currently use beans from this origin
                   </div>
                 ) : isMenuLoading ? (
-                  Array.from({ length: selectedOrigin.menuItems.length }).map((_, index) => (
-                    <div
-                      key={`skeleton-${index}`}
-                      className="rounded-[1.75rem] border border-white/5 bg-white/5 p-4 flex items-center gap-4 animate-pulse"
-                    >
-                      <div className="h-16 w-16 rounded-xl bg-white/10" />
-                      <div className="flex-1 space-y-2">
-                        <div className="h-4 w-1/2 rounded bg-white/10" />
-                        <div className="h-3 w-1/3 rounded bg-white/5" />
-                      </div>
-                      <div className="h-4 w-12 rounded bg-white/10" />
-                    </div>
-                  ))
+                  <div className="flex items-center justify-center py-8">
+                    <LoadingIndicator size={64} />
+                  </div>
                 ) : (
                   selectedOrigin.menuItems.map((itemName, index) => {
                     const detail = menuDetails[itemName]
@@ -420,7 +430,7 @@ export default function OriginsPage() {
                               />
                               {!menuImageLoaded[detail?.name ?? itemName] && (
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/10">
-                                  <span className="h-6 w-6 border-2 border-white/40 border-t-transparent rounded-full animate-spin" />
+                                  <LoadingIndicator size={28} />
                                 </div>
                               )}
                             </>
