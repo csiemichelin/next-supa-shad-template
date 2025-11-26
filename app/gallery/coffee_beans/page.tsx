@@ -137,10 +137,18 @@ export default function OriginsPage() {
   const [farmerImageLoaded, setFarmerImageLoaded] = useState(false)
   const [menuImageLoaded, setMenuImageLoaded] = useState<Record<string, boolean>>({})
   const [mapLoaded, setMapLoaded] = useState(false)
+  const [showPageLoader, setShowPageLoader] = useState(true)
 
   useEffect(() => {
     setPinDelays(coffeeOrigins.map(() => Math.random() * 0.6 + 0.1))
   }, [])
+
+  useEffect(() => {
+    if (mapLoaded) {
+      const timeout = setTimeout(() => setShowPageLoader(false), 200)
+      return () => clearTimeout(timeout)
+    }
+  }, [mapLoaded])
 
   useEffect(() => {
     let isMounted = true
@@ -191,6 +199,11 @@ export default function OriginsPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      {showPageLoader && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+          <LoadingIndicator size={96} />
+        </div>
+      )}
       <Header />
 
       <main className="pt-32 pb-16">
