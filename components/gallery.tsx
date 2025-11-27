@@ -6,12 +6,12 @@ import Link from 'next/link'
 
 export function Gallery() {
   const images = [
-    { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花', href: '/gallery/latte_art' },
-    { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', href: '/gallery/coffee_beans' },
-    { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
-    { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
-    { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
-    { url: '/images/milk.jpg', alt: '鮮乳直送' },
+    { url: '/images/latte-art-heart-design.jpg', alt: '台北時光咖啡手沖拉花', href: '/gallery/latte_art' },
+    { url: '/images/coffee-beans-roasting.jpg', alt: '台北時光咖啡嚴選豆源', href: '/gallery/coffee_beans' },
+    { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '台北時光咖啡精品設備' },
+    { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '台北時光咖啡溫馨空間' },
+    { url: '/images/barista-pouring-milk-coffee.jpg', alt: '台北時光咖啡職人堅持' },
+    { url: '/images/milk.jpg', alt: '台北時光咖啡鮮乳直送' },
   ]
 
   const [visibleImages, setVisibleImages] = useState<number[]>([])

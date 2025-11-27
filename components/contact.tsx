@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -111,7 +111,7 @@ export function Contact() {
               <div className="aspect-[16/9] bg-muted rounded-lg overflow-hidden group">
                 <img
                   src="/images/store-front.png"
-                  alt="Shiguang Coffee storefront"
+                  alt="時光咖啡 Shiguang Coffee storefront"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
@@ -134,7 +134,7 @@ export function Contact() {
                 查看路線
                 <Image
                   src="/icons/map-location-dot-solid-full.png"
-                  alt="查看路線"
+                  alt="查看時光咖啡路線"
                   width={20}
                   height={20}
                   className="h-5 w-5 group-hover:translate-x-1 transition-transform"

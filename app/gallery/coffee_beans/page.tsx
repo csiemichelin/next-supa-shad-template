@@ -231,7 +231,7 @@ export default function OriginsPage() {
                   <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/40">
                     <Image
                       src={`/images/${origin.id}.png`}
-                      alt={`${origin.country}`}
+                      alt={`${origin.country} 精品咖啡產區`}
                       fill
                       className="object-cover"
                       sizes="40px"
@@ -252,7 +252,7 @@ export default function OriginsPage() {
               )}
               <Image
                 src="/images/world-map.png"
-                alt="World Map"
+                alt="世界咖啡產區地圖"
                 fill
                 className="object-cover scale-[1.28] translate-x-[5%] -translate-y-[5%]"
                 priority
@@ -278,7 +278,7 @@ export default function OriginsPage() {
                         <div className="absolute z-10 inset-0 drop-shadow-lg">
                             <Image
                             src="/gif/location-pin.gif"
-                            alt={`${origin.country} pin`}
+                            alt={`${origin.country} 咖啡產區定位`}
                             fill
                             sizes="40px"
                             className="object-contain"
@@ -292,7 +292,7 @@ export default function OriginsPage() {
                         <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/30">
                           <Image
                             src={`/images/${origin.id}.png`}
-                            alt={`${origin.country}`}
+                            alt={`${origin.country} 咖啡豆資訊`}
                             fill
                             className="object-cover"
                             sizes="40px"
@@ -332,7 +332,7 @@ export default function OriginsPage() {
                     <div className="relative h-16 w-16 overflow-hidden rounded-full border border-white/20 shadow-lg flex-shrink-0">
                       <Image
                         src={`/images/${selectedOrigin.id}.png`}
-                        alt={`${selectedOrigin.country}`}
+                        alt={`${selectedOrigin.country} 精品咖啡豆`}
                         fill
                         className="object-cover"
                         sizes="64px"
@@ -367,7 +367,7 @@ export default function OriginsPage() {
                   <div className="relative h-[280px] w-full overflow-hidden rounded-xl">
                     <Image
                       src={selectedOrigin.farmer.image}
-                      alt={`${selectedOrigin.country} 小農 ${selectedOrigin.farmer.name}`}
+                      alt={`${selectedOrigin.country} 小農 ${selectedOrigin.farmer.name} 咖啡豆`}
                       fill
                       className={`object-cover object-top transition-opacity duration-500 ${farmerImageLoaded ? 'opacity-100' : 'opacity-0'}`}
                       sizes="(min-width: 1024px) 60vw, 90vw"
@@ -389,7 +389,7 @@ export default function OriginsPage() {
                 <div className="rounded-[1.75rem] border border-white/5 p-6 text-center shadow-sm relative overflow-hidden">
                   <Image
                     src="/images/mountain.png"
-                    alt="mountain backdrop"
+                    alt="咖啡產區山景背景"
                     fill
                     className="object-cover translate-y-7 opacity-70 scale-[1.2]"
                     sizes="(min-width: 1024px) 50vw, 90vw"

@@ -152,7 +152,7 @@ export default function LatteArtGallery() {
             <div className="relative w-full h-[480px] md:h-[520px] overflow-hidden rounded-[20px] border border-white/20 bg-muted/20 transition-opacity duration-700">
               <img
                 src={`/gif/barista_hand_drip_coffee_illustration.gif?${Date.now()}`}
-                alt="Barista hand drip coffee illustration"
+                alt="手沖咖啡與拉花插畫 Barista hand drip coffee illustration"
                 className="absolute inset-0 h-full w-full object-cover object-center"
                 onLoad={handleGifLoad}
               />

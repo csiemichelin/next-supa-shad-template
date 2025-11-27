@@ -146,7 +146,7 @@ export function HeroCarousel() {
               <div className="absolute inset-0 scale-105 animate-subtle-zoom">
                 <img
                   src={slide.image_url || "/placeholder.svg"}
-                  alt={`Slide ${index + 1}`}
+                  alt={`台北時光咖啡形象幻燈片 ${index + 1}`}
                   className="w-full h-full object-cover opacity-60"
                 />
               </div>
@@ -191,7 +191,7 @@ export function HeroCarousel() {
                 瀏覽菜單
                 <Image
                   src="/icons/mug-hot-solid-full.png"
-                  alt="瀏覽菜單"
+                  alt="瀏覽台北時光咖啡菜單"
                   width={20}
                   height={20}
                   className="h-5 w-5 group-hover:translate-x-1 transition-transform"
@@ -202,7 +202,7 @@ export function HeroCarousel() {
               線上訂位
               <Image
                 src="/icons/hand-pointer-regular-full.svg"
-                alt="線上訂位"
+                alt="台北時光咖啡線上訂位"
                 width={20}
                 height={20}
                 className="h-5 w-5 group-hover:translate-x-1 transition-transform"
