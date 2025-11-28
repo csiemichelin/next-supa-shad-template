@@ -79,12 +79,71 @@ export default function LatteArtGallery() {
   const desktopCardsPerPage = 4
   const desktopPages = Math.ceil(latteArtWorks.length / desktopCardsPerPage)
 
+  const [currentIndex, setCurrentIndex] = useState(1)
+  const touchStartX = useRef<number | null>(null)
+
+  const max = latteArtWorks.length
+  const prevIndex = (currentIndex - 1 + max) % max
+  const nextIndex = (currentIndex + 1) % max
+
+  const visibleWorks = [
+    latteArtWorks[prevIndex],
+    latteArtWorks[currentIndex],
+    latteArtWorks[nextIndex],
+  ]
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null) return
+
+    const endX = e.changedTouches[0].clientX
+    const deltaX = endX - touchStartX.current
+    const threshold = 50
+
+    // 滑動太短就忽略
+    if (Math.abs(deltaX) < threshold) {
+      touchStartX.current = null
+      return
+    }
+
+    setCurrentIndex((prev) => {
+      if (deltaX > 0) {
+        // 👉 手指往右滑：看「上一張」
+        return (prev - 1 + max) % max
+      } else {
+        // 👈 手指往左滑：看「下一張」
+        return (prev + 1) % max
+      }
+    })
+
+    touchStartX.current = null
+  }
+
+  useEffect(() => {
+    const container = mobileCarouselRef.current
+    if (!container) return
+
+    const firstSlide = container.firstElementChild as HTMLDivElement | null
+    if (!firstSlide) return
+
+    const slideWidth = firstSlide.clientWidth
+
+    // 中間那張是 index = 1，所以捲到 1 * slideWidth
+    container.scrollTo({
+      left: slideWidth, // 中間
+      behavior: "smooth",
+    })
+  }, [currentIndex])
+
   useEffect(() => {
     const timer = setTimeout(() => setShowLoader(false), 400)
     return () => clearTimeout(timer)
   }, [])
 
-   const handleGifLoad = () => {
+  const handleGifLoad = () => {
     setShowLoader(false)
     setTimeout(() => {
       setIsContainerHidden(true)
@@ -111,14 +170,6 @@ export default function LatteArtGallery() {
     desktopPage * desktopCardsPerPage + desktopCardsPerPage
   )
 
-  const mobileLoopItems = !isDesktop && latteArtWorks.length > 0
-    ? [
-        latteArtWorks[latteArtWorks.length - 1],
-        ...latteArtWorks,
-        latteArtWorks[0],
-      ]
-    : latteArtWorks
-
   const handleDesktopPrev = () => {
     setDesktopPage((prev) => (prev - 1 + desktopPages) % desktopPages)
   }
@@ -139,10 +190,16 @@ export default function LatteArtGallery() {
 
       <main className="flex-1 flex flex-col items-center px-4 pt-32 pb-16">
         <div className="text-center space-y-4 mb-15">
-          <h1 lang="zh-Hant" className="text-3xl md:text-5xl font-bold text-foreground">
+          <h1
+            lang="zh-Hant"
+            className="text-3xl md:text-5xl font-bold text-foreground"
+          >
             手沖拉花
           </h1>
-          <p lang="the-Peak" className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p
+            lang="the-Peak"
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+          >
             以手沖細膩的節奏繪出每一杯獨特的拉花
           </p>
         </div>
@@ -162,10 +219,16 @@ export default function LatteArtGallery() {
           {isContainerHidden && (
             <div className="space-y-6">
               <div className="text-center mb-4">
-                <h2 lang="zh-Hant" className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-emerald-400 to-teal-700">
+                <h2
+                  lang="zh-Hant"
+                  className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-emerald-400 to-teal-700"
+                >
                   小魚拉花師的自然系作品
                 </h2>
-                <p lang="the-Peak" className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 via-emerald-700 to-emerald-400">
+                <p
+                  lang="the-Peak"
+                  className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 via-emerald-700 to-emerald-400"
+                >
                   《 樹影與花語 》
                 </p>
               </div>
@@ -186,8 +249,18 @@ export default function LatteArtGallery() {
                           />
                         </div>
                         <div className="p-3 text-center space-y-1 flex-1 flex flex-col justify-center">
-                          <p lang="zh-Hant" className="text-lg font-semibold text-foreground">{work.title}</p>
-                          <p lang="the-Peak" className=" text-xs text-muted-foreground">{work.subtitle}</p>
+                          <p
+                            lang="zh-Hant"
+                            className="text-lg font-semibold text-foreground"
+                          >
+                            {work.title}
+                          </p>
+                          <p
+                            lang="the-Peak"
+                            className=" text-xs text-muted-foreground"
+                          >
+                            {work.subtitle}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -212,26 +285,29 @@ export default function LatteArtGallery() {
                   )}
                 </div>
               ) : (
-                <div 
+                <div
                   ref={mobileCarouselRef}
                   className="flex overflow-x-auto no-scrollbar"
-                  style={{ scrollBehavior: 'smooth', scrollSnapType: 'x mandatory' }}
+                  style={{ scrollBehavior: "smooth" }}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
                 >
-                  {mobileLoopItems.map((work, index) => (
+                  {visibleWorks.map((work, idx) => (
                     <div
-                      key={`${work.id}-${index}`}
+                      key={`${work.id}-${idx}`}
                       className="w-full flex-shrink-0 px-4"
-                      style={{ scrollSnapAlign: 'start' }}
                     >
-                      <div className="
-                        max-w-[350px] w-full
-                        rounded-[20px]
-                        bg-muted/25
-                        overflow-hidden
-                        shadow-sm active:shadow-xl
-                        transition-shadow duration-300
-                        mx-auto
-                      ">
+                      <div
+                        className="
+                          max-w-[350px] w-full
+                          rounded-[20px]
+                          bg-muted/25
+                          overflow-hidden
+                          shadow-sm active:shadow-xl
+                          transition-shadow duration-300
+                          mx-auto
+                        "
+                      >
                         <div className="w-full bg-white/5">
                           <img
                             src={work.image}
@@ -241,8 +317,18 @@ export default function LatteArtGallery() {
                         </div>
 
                         <div className="p-6 text-center space-y-1">
-                          <p lang="zh-Hant" className="text-2xl font-semibold text-foreground">{work.title}</p>
-                          <p lang="the-Peak" className="text-sm text-muted-foreground">{work.subtitle}</p>
+                          <p
+                            lang="zh-Hant"
+                            className="text-2xl font-semibold text-foreground"
+                          >
+                            {work.title}
+                          </p>
+                          <p
+                            lang="the-Peak"
+                            className="text-sm text-muted-foreground"
+                          >
+                            {work.subtitle}
+                          </p>
                         </div>
                       </div>
                     </div>
