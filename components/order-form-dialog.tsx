@@ -229,7 +229,7 @@ export function OrderFormDialog({ open, onOpenChange }: OrderFormDialogProps) {
                               </div>
                             ) : (
                               <div className="text-sm text-muted-foreground">
-                                數量：{item.quantity}（不提供冰塊／甜度調整）
+                                數量：{item.quantity}
                               </div>
                             )}
                             <p className="text-sm text-muted-foreground">{item.price}</p>

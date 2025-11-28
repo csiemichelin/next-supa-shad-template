@@ -9,62 +9,62 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 const latteArtWorks = [
   {
     id: 1,
-    title: "Forest Light #1",
-    subtitle: "森林光影的細膩層次",
+    title: "森林心湖",
+    subtitle: "像靜在林中的一面心形湖",
     image: "/images/latte_art/forest/forest_1.png",
   },
   {
     id: 2,
-    title: "Forest Light #2",
-    subtitle: "森林光影的細膩層次",
+    title: "林間漣漪",
+    subtitle: "拉花像落在湖面的暖漣漪",
     image: "/images/latte_art/forest/forest_2.png",
   },
   {
     id: 3,
-    title: "Forest Light #3",
-    subtitle: "森林光影的細膩層次",
+    title: "羽葉漫舞",
+    subtitle: "奶泡像羽葉在林中飛舞",
     image: "/images/latte_art/forest/forest_3.png",
   },
   {
     id: 4,
-    title: "Forest Light #4",
-    subtitle: "森林光影的細膩層次",
+    title: "林羽微漾",
+    subtitle: "羽狀葉影在杯面輕輕漂動",
     image: "/images/latte_art/forest/forest_4.png",
   },
   {
     id: 5,
-    title: "Forest Light #5",
-    subtitle: "森林光影的細膩層次",
+    title: "羽心森語",
+    subtitle: "羽葉間開了兩朵心花",
     image: "/images/latte_art/forest/forest_5.png",
   },
   {
     id: 6,
-    title: "Forest Light #6",
-    subtitle: "森林光影的細膩層次",
+    title: "羽林共生",
+    subtitle: "三枝羽葉一起向上生長",
     image: "/images/latte_art/forest/forest_6.png",
   },
   {
     id: 7,
-    title: "Forest Light #7",
-    subtitle: "森林光影的細膩層次",
+    title: "羽森環繞",
+    subtitle: "主羽葉被小羽枝簇擁著",
     image: "/images/latte_art/forest/forest_7.png",
   },
   {
     id: 8,
-    title: "Forest Light #8",
-    subtitle: "森林光影的細膩層次",
+    title: "孤林羽",
+    subtitle: "一枝羽葉靜靜展開",
     image: "/images/latte_art/forest/forest_8.png",
   },
   {
     id: 9,
-    title: "Forest Light #9",
-    subtitle: "森林光影的細膩層次",
+    title: "多羽森生",
+    subtitle: "多枝羽葉一同向上長",
     image: "/images/latte_art/forest/forest_9.png",
   },
   {
     id: 10,
-    title: "Forest Light #10",
-    subtitle: "森林光影的細膩層次",
+    title: "森羽綻",
+    subtitle: "羽葉像在林中盛開",
     image: "/images/latte_art/forest/forest_10.png",
   },
 ]
@@ -149,7 +149,7 @@ export default function LatteArtGallery() {
 
         <section className="w-full max-w-5xl space-y-10 relative">
           {!isContainerHidden && (
-            <div className="relative w-full h-[480px] md:h-[520px] overflow-hidden rounded-[20px] border border-white/20 bg-muted/20 transition-opacity duration-700">
+            <div className="relative w-full md:max-w-3xl mx-auto aspect-[16/9] overflow-hidden rounded-[20px] border border-white/20 bg-muted/20 transition-opacity duration-700">
               <img
                 src={`/gif/barista_hand_drip_coffee_illustration.gif?${Date.now()}`}
                 alt="手沖咖啡與拉花插畫 Barista hand drip coffee illustration"
@@ -162,7 +162,7 @@ export default function LatteArtGallery() {
           {isContainerHidden && (
             <div className="space-y-6">
               <div className="text-center mb-4">
-                <h2 lang="zh-Hant" className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-emerald-400 to-teal-500">
+                <h2 lang="zh-Hant" className="text-2xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-emerald-400 to-teal-700">
                   小魚拉花師的自然系作品
                 </h2>
                 <p lang="the-Peak" className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 via-emerald-700 to-emerald-400">
@@ -172,22 +172,22 @@ export default function LatteArtGallery() {
 
               {isDesktop ? (
                 <div className="relative">
-                  <div className="grid grid-cols-4 gap-6">
+                  <div className="grid grid-cols-4 gap-10">
                     {desktopVisibleCards.map((work) => (
                       <div
                         key={work.id}
-                        className="rounded-[24px] border border-white/10 bg-muted/25 overflow-hidden shadow-lg flex flex-col"
+                        className="mx-2 rounded-[15px] border border-white/10 bg-muted/25 overflow-hidden shadow-lg flex flex-col"
                       >
-                        <div className="h-40 w-full bg-white/5">
+                        <div className="h-35 w-full bg-white/5">
                           <img
                             src={work.image}
                             alt={work.title}
                             className="h-full w-full object-cover"
                           />
                         </div>
-                        <div className="p-4 text-center space-y-1 flex-1 flex flex-col justify-center">
-                          <p className="text-base font-semibold text-foreground">{work.title}</p>
-                          <p className="text-xs text-muted-foreground">{work.subtitle}</p>
+                        <div className="p-3 text-center space-y-1 flex-1 flex flex-col justify-center">
+                          <p lang="zh-Hant" className="text-lg font-semibold text-foreground">{work.title}</p>
+                          <p lang="the-Peak" className=" text-xs text-muted-foreground">{work.subtitle}</p>
                         </div>
                       </div>
                     ))}
@@ -196,14 +196,14 @@ export default function LatteArtGallery() {
                     <>
                       <button
                         onClick={handleDesktopPrev}
-                        className="hidden md:flex absolute -left-[60px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
+                        className="hidden md:flex absolute md:-left-[60px] xl:-left-[80px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
                         aria-label="Previous works page"
                       >
                         <ChevronLeft className="h-6 w-6 text-foreground" />
                       </button>
                       <button
                         onClick={handleDesktopNext}
-                        className="hidden md:flex absolute -right-[60px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
+                        className="hidden md:flex absolute md:-right-[60px] xl:-right-[80px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
                         aria-label="Next works page"
                       >
                         <ChevronRight className="h-6 w-6 text-foreground" />
@@ -220,19 +220,30 @@ export default function LatteArtGallery() {
                   {mobileLoopItems.map((work, index) => (
                     <div
                       key={`${work.id}-${index}`}
-                      className="min-w-full rounded-[24px] border border-white/10 bg-muted/25 overflow-hidden shadow-sm flex-shrink-0 mr-4"
+                      className="w-full flex-shrink-0 px-4"
                       style={{ scrollSnapAlign: 'start' }}
                     >
-                      <div className="h-56 w-full bg-white/5">
-                        <img
-                          src={work.image}
-                          alt={work.title}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-6 text-center space-y-1">
-                        <p className="text-lg font-semibold text-foreground">{work.title}</p>
-                        <p className="text-sm text-muted-foreground">{work.subtitle}</p>
+                      <div className="
+                        max-w-[350px] w-full
+                        rounded-[20px]
+                        bg-muted/25
+                        overflow-hidden
+                        shadow-sm active:shadow-xl
+                        transition-shadow duration-300
+                        mx-auto
+                      ">
+                        <div className="w-full bg-white/5">
+                          <img
+                            src={work.image}
+                            alt={work.title}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+
+                        <div className="p-6 text-center space-y-1">
+                          <p lang="zh-Hant" className="text-2xl font-semibold text-foreground">{work.title}</p>
+                          <p lang="the-Peak" className="text-sm text-muted-foreground">{work.subtitle}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
