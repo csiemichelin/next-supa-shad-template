@@ -1,7 +1,7 @@
 ﻿'use client'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 export function Gallery() {
@@ -17,17 +17,25 @@ export function Gallery() {
   const [visibleImages, setVisibleImages] = useState<number[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  const [activeIndex, setActiveIndex] = useState(-1)
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [isDesktop, setIsDesktop] = useState(false)
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const isAdjustingRef = useRef(false)
-  const extendedImages = useMemo(() => {
-    if (images.length === 0) return []
-    return [images[images.length - 1], ...images, images[0]]
-  }, [images])
-  const carouselImages = isDesktop ? images : extendedImages
 
+  // 手機版輪播狀態
+  const [currentIndex, setCurrentIndex] = useState(1) // 從 1 開始（真實的第一張）
+  const [isTransitioning, setIsTransitioning] = useState(true)
+  const touchStartX = useRef<number | null>(null)
+
+  const total = images.length
+  // 無限循環陣列：[最後一張, 0, 1, 2, ..., 5, 第一張]
+  const infiniteImages = [
+    images[total - 1], // 複製最後一張
+    ...images,
+    images[0], // 複製第一張
+  ]
+
+  const displayImages = isDesktop ? images : infiniteImages
+
+  // Intersection Observer for fade-in animation
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -52,12 +60,12 @@ export function Gallery() {
     return () => observer.disconnect()
   }, [])
 
+  // 偵測桌面/手機版
   useEffect(() => {
     if (typeof window === 'undefined') return
     const mediaQuery = window.matchMedia('(min-width: 768px)')
     const applyMatch = (matches: boolean) => {
       setIsDesktop(matches)
-      setActiveIndex(matches ? -1 : 0)
     }
 
     applyMatch(mediaQuery.matches)
@@ -67,76 +75,57 @@ export function Gallery() {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    let scrollEndTimer: NodeJS.Timeout | null = null
-
-    const handleScroll = () => {
-      if (isDesktop || isAdjustingRef.current) return
-      const width = el.clientWidth
-      if (!width) return
-
-      const scrollLeft = el.scrollLeft
-      
-      // 清除之前的計時器
-      if (scrollEndTimer) {
-        clearTimeout(scrollEndTimer)
-      }
-
-      // 更新顯示的索引
-      const rawIndex = Math.round(scrollLeft / width) - 1
-      const normalizedIndex =
-        ((rawIndex % images.length) + images.length) % images.length
-      setActiveIndex(normalizedIndex)
-
-      // 設置新的計時器，只有在真正停止滑動後才執行跳轉
-      scrollEndTimer = setTimeout(() => {
-        const currentIndex = Math.round(el.scrollLeft / width)
-        
-        // 當停在第一個複製圖片（index 0）時，跳到真實的最後一張
-        if (currentIndex === 0) {
-          isAdjustingRef.current = true
-          el.style.scrollBehavior = 'auto'
-          el.scrollLeft = width * images.length
-          setTimeout(() => {
-            el.style.scrollBehavior = ''
-            isAdjustingRef.current = false
-          }, 50)
-        }
-        // 當停在最後一個複製圖片時，跳到真實的第一張
-        else if (currentIndex === images.length + 1) {
-          isAdjustingRef.current = true
-          el.style.scrollBehavior = 'auto'
-          el.scrollLeft = width
-          setTimeout(() => {
-            el.style.scrollBehavior = ''
-            isAdjustingRef.current = false
-          }, 50)
-        }
-      }, 150) // 150ms 的延遲，確保滑動真的結束了
-    }
-
-    el.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      el.removeEventListener('scroll', handleScroll)
-      if (scrollEndTimer) {
-        clearTimeout(scrollEndTimer)
-      }
-    }
-  }, [images.length, isDesktop])
-
-  useEffect(() => {
+  // 手機版觸控滑動
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (isDesktop) return
-    const el = containerRef.current
-    if (!el) return
-    const width = el.clientWidth
-    isAdjustingRef.current = true
-    el.scrollLeft = width
-    requestAnimationFrame(() => {
-      isAdjustingRef.current = false
-    })
-  }, [isDesktop])
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (isDesktop || touchStartX.current === null) return
+
+    const endX = e.changedTouches[0].clientX
+    const deltaX = endX - touchStartX.current
+    const threshold = 50
+
+    if (Math.abs(deltaX) < threshold) {
+      touchStartX.current = null
+      return
+    }
+
+    if (deltaX > 0) {
+      // 往右滑：看上一張
+      setCurrentIndex((prev) => prev - 1)
+    } else {
+      // 往左滑：看下一張
+      setCurrentIndex((prev) => prev + 1)
+    }
+
+    touchStartX.current = null
+  }
+
+  // 處理邊界重置（無縫循環）
+  const handleTransitionEnd = () => {
+    if (isDesktop) return
+
+    if (currentIndex === 0) {
+      // 到達複製的最後一張，瞬間跳到真實的最後一張
+      setIsTransitioning(false)
+      setCurrentIndex(total)
+    } else if (currentIndex === total + 1) {
+      // 到達複製的第一張，瞬間跳到真實的第一張
+      setIsTransitioning(false)
+      setCurrentIndex(1)
+    }
+  }
+
+  useEffect(() => {
+    if (!isTransitioning && !isDesktop) {
+      // 瞬間跳轉後，重新啟用動畫
+      const timer = setTimeout(() => setIsTransitioning(true), 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isTransitioning, isDesktop])
 
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32 bg-secondary/30">
@@ -145,88 +134,142 @@ export function Gallery() {
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             職人匠心
           </h2>
-          <p  lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
+          <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
             一同探索我們的咖啡吧台、沖煮流程與店內使用的專業級咖啡設備
           </p>
         </div>
 
         <div className="relative">
-          <div
-            ref={containerRef}
-            className="
-              grid max-w-6xl mx-auto gap-4
-              grid-flow-col auto-cols-[100%] overflow-x-auto snap-x snap-mandatory
-              md:grid-flow-row md:auto-cols-auto md:grid-cols-2 lg:grid-cols-3 md:overflow-visible
-              no-scrollbar
-            "
-          >
-            {carouselImages.map((image, index) => {
-              const actualIndex = isDesktop
-                ? index
-                : index === 0
-                  ? images.length - 1
-                  : index === images.length + 1
-                    ? 0
-                    : index - 1
-              const isVisible = visibleImages.includes(actualIndex)
-              const showCaption = isDesktop ? hoveredIndex === actualIndex : activeIndex === actualIndex
-              const cardKey = `${image.alt}-${index}`
-              const card = (
-                <div
-                  className={`
-                    relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
-                    transition-all duration-700
-                    snap-center min-w-full md:min-w-0
-                    ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-                  `}
-                  onMouseEnter={() => isDesktop && setHoveredIndex(actualIndex)}
-                  onMouseLeave={() => isDesktop && setHoveredIndex(null)}
-                >
-                  <img
-                    src={image.url || "/placeholder.svg"}
-                    alt={image.alt}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span
-                      className={`
-                        text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
-                        transition-all duration-[1200ms] ease-out
-                        ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
-                      `}
-                    >
-                      {image.alt}
-                    </span>
-                  </div>
-                </div>
-              )
-              if (image.href) {
-                return (
-                  <Link
-                    key={cardKey}
-                    href={image.href}
-                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+          {/* 桌面版：Grid 佈局 */}
+          {isDesktop ? (
+            <div className="grid max-w-6xl mx-auto gap-4 grid-cols-2 lg:grid-cols-3">
+              {displayImages.map((image, index) => {
+                const isVisible = visibleImages.includes(index)
+                const showCaption = hoveredIndex === index
+                const card = (
+                  <div
+                    className={`
+                      relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
+                      transition-all duration-700
+                      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+                    `}
+                    onMouseEnter={() => setHoveredIndex(index)}
+                    onMouseLeave={() => setHoveredIndex(null)}
                   >
-                    {card}
-                  </Link>
+                    <img
+                      src={image.url || "/placeholder.svg"}
+                      alt={image.alt}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span
+                        className={`
+                          text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
+                          transition-all duration-[1200ms] ease-out
+                          ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                        `}
+                      >
+                        {image.alt}
+                      </span>
+                    </div>
+                  </div>
                 )
-              }
-              return (
-                <div key={cardKey} className="block">
-                  {card}
-                </div>
-              )
-            })}
-          </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center md:hidden">
-            <div className="flex items-center justify-between gap-6 w-[150px] rounded-full bg-black/40 text-white px-4 py-2 text-xs font-semibold tracking-wide backdrop-blur">
-              <ChevronLeft className="h-4 w-4 swipe-left-indicator" />
-              <div className="h-1 w-full max-w-[40px] rounded-full bg-white/30" />
-              <ChevronRight className="h-4 w-4 swipe-right-indicator" />
+                if (image.href) {
+                  return (
+                    <Link
+                      key={`desktop-${index}`}
+                      href={image.href}
+                      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                    >
+                      {card}
+                    </Link>
+                  )
+                }
+                return <div key={`desktop-${index}`}>{card}</div>
+              })}
             </div>
-          </div>
+          ) : (
+            /* 手機版：Flex 輪播 */
+            <div className="relative overflow-hidden max-w-6xl mx-auto">
+              <div
+                className={`flex ${isTransitioning ? 'transition-transform duration-300 ease-out' : ''}`}
+                style={{
+                  transform: `translateX(-${currentIndex * 100}%)`,
+                }}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onTransitionEnd={handleTransitionEnd}
+              >
+                {displayImages.map((image, idx) => {
+                  // 計算實際索引（用於 visibleImages）
+                  const actualIndex =
+                    idx === 0
+                      ? total - 1
+                      : idx === total + 1
+                        ? 0
+                        : idx - 1
+                  const isVisible = visibleImages.includes(actualIndex)
+                  const showCaption = currentIndex === idx
+
+                  const card = (
+                    <div
+                      key={`mobile-${idx}`}
+                      className="w-full flex-shrink-0 px-4"
+                    >
+                      <div
+                        className={`
+                          relative aspect-[4/3] overflow-hidden rounded-lg
+                          transition-all duration-700
+                          ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+                        `}
+                      >
+                        <img
+                          src={image.url || "/placeholder.svg"}
+                          alt={image.alt}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span
+                            className={`
+                              text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
+                              transition-all duration-[1200ms] ease-out
+                              ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                            `}
+                          >
+                            {image.alt}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )
+
+                  if (image.href) {
+                    return (
+                      <Link
+                        key={`mobile-link-${idx}`}
+                        href={image.href}
+                        className="w-full flex-shrink-0"
+                      >
+                        {card}
+                      </Link>
+                    )
+                  }
+                  return card
+                })}
+              </div>
+
+              {/* 滑動指示器 */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
+                <div className="flex items-center justify-between gap-6 w-[150px] rounded-full bg-black/40 text-white px-4 py-2 text-xs font-semibold tracking-wide backdrop-blur">
+                  <ChevronLeft className="h-4 w-4" />
+                  <div className="h-1 w-full max-w-[40px] rounded-full bg-white/30" />
+                  <ChevronRight className="h-4 w-4" />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
