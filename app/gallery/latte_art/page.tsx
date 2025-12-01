@@ -8,6 +8,12 @@ import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const latteArtWorks = [
   {
+    id: 0,
+    title: "森羽綻",
+    subtitle: "羽葉像在林中盛開",
+    image: "/images/latte_art/forest/forest_10.png",
+  },
+  {
     id: 1,
     title: "森林心湖",
     subtitle: "像靜在林中的一面心形湖",
@@ -60,13 +66,7 @@ const latteArtWorks = [
     title: "多羽森生",
     subtitle: "多枝羽葉一同向上長",
     image: "/images/latte_art/forest/forest_9.png",
-  },
-  {
-    id: 10,
-    title: "森羽綻",
-    subtitle: "羽葉像在林中盛開",
-    image: "/images/latte_art/forest/forest_10.png",
-  },
+  }
 ]
 
 export default function LatteArtGallery() {
@@ -74,22 +74,20 @@ export default function LatteArtGallery() {
   const [isContainerHidden, setIsContainerHidden] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
   const [desktopPage, setDesktopPage] = useState(0)
-  const mobileCarouselRef = useRef<HTMLDivElement | null>(null)
 
   const desktopCardsPerPage = 4
   const desktopPages = Math.ceil(latteArtWorks.length / desktopCardsPerPage)
 
-  const [currentIndex, setCurrentIndex] = useState(1)
+  const [currentIndex, setCurrentIndex] = useState(1) // 從 1 開始（因為 0 是複製的最後一張）
+  const [isTransitioning, setIsTransitioning] = useState(true)
   const touchStartX = useRef<number | null>(null)
 
-  const max = latteArtWorks.length
-  const prevIndex = (currentIndex - 1 + max) % max
-  const nextIndex = (currentIndex + 1) % max
-
-  const visibleWorks = [
-    latteArtWorks[prevIndex],
-    latteArtWorks[currentIndex],
-    latteArtWorks[nextIndex],
+  const total = latteArtWorks.length
+  // 建立無限循環陣列：[最後一張, 0, 1, 2, ..., 9, 第一張]
+  const infiniteWorks = [
+    latteArtWorks[total - 1], // 複製最後一張放最前面
+    ...latteArtWorks,
+    latteArtWorks[0], // 複製第一張放最後面
   ]
 
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -103,40 +101,42 @@ export default function LatteArtGallery() {
     const deltaX = endX - touchStartX.current
     const threshold = 50
 
-    // 滑動太短就忽略
     if (Math.abs(deltaX) < threshold) {
       touchStartX.current = null
       return
     }
 
-    setCurrentIndex((prev) => {
-      if (deltaX > 0) {
-        // 👉 手指往右滑：看「上一張」
-        return (prev - 1 + max) % max
-      } else {
-        // 👈 手指往左滑：看「下一張」
-        return (prev + 1) % max
-      }
-    })
+    if (deltaX > 0) {
+      // 👉 往右滑:看上一張
+      setCurrentIndex((prev) => prev - 1)
+    } else {
+      // 👈 往左滑:看下一張
+      setCurrentIndex((prev) => prev + 1)
+    }
 
     touchStartX.current = null
   }
 
+  // 處理邊界重置（無縫循環）
+  const handleTransitionEnd = () => {
+    if (currentIndex === 0) {
+      // 到達複製的最後一張，瞬間跳到真實的最後一張
+      setIsTransitioning(false)
+      setCurrentIndex(total)
+    } else if (currentIndex === total + 1) {
+      // 到達複製的第一張，瞬間跳到真實的第一張
+      setIsTransitioning(false)
+      setCurrentIndex(1)
+    }
+  }
+
   useEffect(() => {
-    const container = mobileCarouselRef.current
-    if (!container) return
-
-    const firstSlide = container.firstElementChild as HTMLDivElement | null
-    if (!firstSlide) return
-
-    const slideWidth = firstSlide.clientWidth
-
-    // 中間那張是 index = 1，所以捲到 1 * slideWidth
-    container.scrollTo({
-      left: slideWidth, // 中間
-      behavior: "smooth",
-    })
-  }, [currentIndex])
+    if (!isTransitioning) {
+      // 瞬間跳轉後，重新啟用動畫
+      const timer = setTimeout(() => setIsTransitioning(true), 50)
+      return () => clearTimeout(timer)
+    }
+  }, [isTransitioning])
 
   useEffect(() => {
     const timer = setTimeout(() => setShowLoader(false), 400)
@@ -285,54 +285,58 @@ export default function LatteArtGallery() {
                   )}
                 </div>
               ) : (
-                <div
-                  ref={mobileCarouselRef}
-                  className="flex overflow-x-auto no-scrollbar"
-                  style={{ scrollBehavior: "smooth" }}
-                  onTouchStart={handleTouchStart}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  {visibleWorks.map((work, idx) => (
-                    <div
-                      key={`${work.id}-${idx}`}
-                      className="w-full flex-shrink-0 px-4"
-                    >
+                <div className="relative overflow-hidden">
+                  <div 
+                    className={`flex ${isTransitioning ? 'transition-transform duration-300 ease-out' : ''}`}
+                    style={{ 
+                      transform: `translateX(-${currentIndex * 100}%)` 
+                    }}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                    onTransitionEnd={handleTransitionEnd}
+                  >
+                    {infiniteWorks.map((work, idx) => (
                       <div
-                        className="
-                          max-w-[350px] w-full
-                          rounded-[20px]
-                          bg-muted/25
-                          overflow-hidden
-                          shadow-sm active:shadow-xl
-                          transition-shadow duration-300
-                          mx-auto
-                        "
+                        key={`${work.id}-${idx}`}
+                        className="w-full flex-shrink-0 px-4"
                       >
-                        <div className="w-full bg-white/5">
-                          <img
-                            src={work.image}
-                            alt={work.title}
-                            className="h-full w-full object-cover object-center"
-                          />
-                        </div>
+                        <div
+                          className="
+                            max-w-[350px] w-full
+                            rounded-[20px]
+                            bg-muted/25
+                            overflow-hidden
+                            shadow-sm active:shadow-xl
+                            transition-shadow duration-300
+                            mx-auto
+                          "
+                        >
+                          <div className="w-full bg-white/5">
+                            <img
+                              src={work.image}
+                              alt={work.title}
+                              className="h-full w-full object-cover object-center"
+                            />
+                          </div>
 
-                        <div className="p-6 text-center space-y-1">
-                          <p
-                            lang="zh-Hant"
-                            className="text-2xl font-semibold text-foreground"
-                          >
-                            {work.title}
-                          </p>
-                          <p
-                            lang="the-Peak"
-                            className="text-sm text-muted-foreground"
-                          >
-                            {work.subtitle}
-                          </p>
+                          <div className="p-6 text-center space-y-1">
+                            <p
+                              lang="zh-Hant"
+                              className="text-2xl font-semibold text-foreground"
+                            >
+                              {work.title}
+                            </p>
+                            <p
+                              lang="the-Peak"
+                              className="text-sm text-muted-foreground"
+                            >
+                              {work.subtitle}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
