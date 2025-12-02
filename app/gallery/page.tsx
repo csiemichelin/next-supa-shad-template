@@ -25,14 +25,6 @@ export default function AboutPage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!activeSection) return
-    const section = document.getElementById(activeSection)
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, [activeSection])
-
   const handleSelect = (sectionId: GallerySectionId | null) => {
     setActiveSection(sectionId)
     if (typeof window !== 'undefined') {
