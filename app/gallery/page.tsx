@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Header } from '@/components/header'
-import { Features } from '@/components/features'
 import { Footer } from '@/components/footer'
 import { LoadingIndicator } from '@/components/loading-indicator'
+import { Gallery } from '@/components/gallery'
 
 export default function AboutPage() {
   const [showLoader, setShowLoader] = useState(true)
@@ -23,7 +23,7 @@ export default function AboutPage() {
       )}
       <Header />
       <div className="pt-20">
-        <Features />
+        <Gallery />
       </div>
       <Footer />
     </main>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Menu, X, LogIn } from 'lucide-react'
 import { CartButton } from './cart-button'
@@ -11,6 +12,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isOrderFormOpen, setIsOrderFormOpen] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,6 +21,10 @@ export function Header() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const handleGalleryNavigate = () => {
+    router.push('/gallery')
+  }
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${
@@ -114,7 +120,11 @@ export function Header() {
                 </div>
               </div>
             </Link>
-            <Link href="/#gallery" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
+            <button
+              type="button"
+              onClick={handleGalleryNavigate}
+              className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all"
+            >
               <span
                 lang="the-Peak"
                 className="
@@ -137,7 +147,7 @@ export function Header() {
                   <span className="steam-wisp steam-3"></span>
                 </div>
               </div>
-            </Link>
+            </button>
             <Link href="/#contact" className="nav-link group relative text-lg font-semibold text-foreground hover:text-primary active:text-primary transition-all">
               <span
                 lang="the-Peak"
@@ -250,7 +260,14 @@ export function Header() {
                 >菜單</span>
               </Button>
             </Link>
-            <Link className="block" href="/#gallery" onClick={() => setIsMenuOpen(false)}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsMenuOpen(false)
+                handleGalleryNavigate()
+              }}
+              className="w-full"
+            >
               <Button
                 variant="ghost"
                 className="w-full justify-start text-foreground hover:text-primary active:text-primary active:bg-transparent transition-all"
@@ -266,7 +283,7 @@ export function Header() {
                   "
                 >職人匠心</span>
               </Button>
-            </Link>
+            </button>
             <Link className="block" href="/#contact" onClick={() => setIsMenuOpen(false)}>
               <Button
                 variant="ghost"
