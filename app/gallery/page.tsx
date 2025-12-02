@@ -7,6 +7,10 @@ import { LoadingIndicator } from '@/components/loading-indicator'
 import { Gallery, type GallerySectionId } from '@/components/gallery'
 import LatteArtGallery from "@/app/gallery/latteArtGallery"
 import OriginsPage from "@/app/gallery/originsPage"
+import EquipmentShowcase from "@/app/gallery/equipmentShowcase"
+import SpaceExperience from "@/app/gallery/spaceExperience"
+import CraftsmanshipShowcase from "@/app/gallery/craftsmanshipShowcase"
+import MilkExperience from "@/app/gallery/milkExperience"
 
 export default function AboutPage() {
   const [showLoader, setShowLoader] = useState(true)
@@ -60,6 +64,10 @@ export default function AboutPage() {
               <OriginsPage />
             </section>
           )}
+          {activeSection === 'equipment' && <EquipmentShowcase />}
+          {activeSection === 'space' && <SpaceExperience />}
+          {activeSection === 'craftsmanship' && <CraftsmanshipShowcase />}
+          {activeSection === 'milk' && <MilkExperience />}
         </div>
       </main>
       <Footer />

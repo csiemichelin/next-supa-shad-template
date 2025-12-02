@@ -4,7 +4,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
-export type GallerySectionId = 'latte_art' | 'coffee_beans'
+export type GallerySectionId =
+  | 'latte_art'
+  | 'coffee_beans'
+  | 'equipment'
+  | 'space'
+  | 'craftsmanship'
+  | 'milk'
 
 type GalleryImage = {
   url: string
@@ -16,10 +22,10 @@ type GalleryImage = {
 const galleryImages: GalleryImage[] = [
   { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花', sectionId: 'latte_art' },
   { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', sectionId: 'coffee_beans' },
-  { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
-  { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
-  { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
-  { url: '/images/milk.jpg', alt: '鮮乳直送' },
+  { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備', sectionId: 'equipment' },
+  { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間', sectionId: 'space' },
+  { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持', sectionId: 'craftsmanship' },
+  { url: '/images/milk.jpg', alt: '鮮乳直送', sectionId: 'milk' },
 ]
 
 type GalleryProps = {
@@ -248,6 +254,19 @@ export function Gallery({ onSelectSection }: GalleryProps) {
                     </div>
                   )
 
+                  if (isCenter && image.sectionId && onSelectSection) {
+                    return (
+                      <button
+                        key={`desktop-${imageIndex}`}
+                        type="button"
+                        onClick={() => onSelectSection(image.sectionId!)}
+                        className="block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                      >
+                        {card}
+                      </button>
+                    )
+                  }
+
                   if (isCenter && image.href) {
                     return (
                       <Link
@@ -339,6 +358,19 @@ export function Gallery({ onSelectSection }: GalleryProps) {
                       </div>
                     </div>
                   )
+
+                  if (image.sectionId && onSelectSection) {
+                    return (
+                      <button
+                        key={`mobile-${idx}`}
+                        type="button"
+                        onClick={() => onSelectSection(image.sectionId!)}
+                        className="w-full flex-shrink-0 px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                      >
+                        {cardContent}
+                      </button>
+                    )
+                  }
 
                   if (image.href) {
                     return (
