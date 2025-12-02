@@ -198,11 +198,6 @@ export default function originsPage() {
 
   return (
     <div className="bg-background">
-      {showPageLoader && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
-          <LoadingIndicator size={96} />
-        </div>
-      )}
       <Header />
 
       <main className="px-6 pb-20 md:pb-32">

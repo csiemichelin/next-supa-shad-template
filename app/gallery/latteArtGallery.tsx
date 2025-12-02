@@ -203,7 +203,7 @@ export default function latteArtGallery() {
           </p>
         </div>
 
-        <section className="w-full max-w-5xl space-y-10 relative">
+        <section className="w-full space-y-10 relative">
           {!isContainerHidden && (
             <div className="relative w-full md:max-w-3xl mx-auto aspect-[16/9] overflow-hidden rounded-[20px] border border-white/20 bg-muted/20 transition-opacity duration-700">
               <img
@@ -233,55 +233,79 @@ export default function latteArtGallery() {
               </div>
 
               {isDesktop ? (
-                <div className="relative">
-                  <div className="grid grid-cols-4 gap-10">
-                    {desktopVisibleCards.map((work) => (
-                      <div
-                        key={work.id}
-                        className="mx-2 rounded-[15px] border border-white/10 bg-muted/25 overflow-hidden shadow-lg flex flex-col"
-                      >
-                        <div className="h-35 w-full bg-white/5">
-                          <img
-                            src={work.image}
-                            alt={work.title}
-                            className="h-full w-full object-cover"
-                          />
+                <div className="flex justify-center">
+                  <div className="relative">
+                    <div className="grid grid-cols-2 xl:grid-cols-4 gap-10">
+                      {desktopVisibleCards.map((work) => (
+                        <div
+                          key={work.id}
+                          className="mx-auto w-[280px] rounded-[20px] border border-white/10 bg-muted/25 overflow-hidden shadow-lg flex flex-col transform transition-transform hover:scale-[1.02] min-h-[42px]"
+                        >
+                          <div className="h-48 w-full bg-white/5">
+                            <img
+                              src={work.image}
+                              alt={work.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div className="p-3 text-center space-y-1 flex-1 flex flex-col justify-center">
+                            <p
+                              lang="zh-Hant"
+                              className="text-lg font-semibold text-foreground"
+                            >
+                              {work.title}
+                            </p>
+                            <p
+                              lang="the-Peak"
+                              className="text-xs text-muted-foreground"
+                            >
+                              {work.subtitle}
+                            </p>
+                          </div>
                         </div>
-                        <div className="p-3 text-center space-y-1 flex-1 flex flex-col justify-center">
-                          <p
-                            lang="zh-Hant"
-                            className="text-lg font-semibold text-foreground"
-                          >
-                            {work.title}
-                          </p>
-                          <p
-                            lang="the-Peak"
-                            className=" text-xs text-muted-foreground"
-                          >
-                            {work.subtitle}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+
+                    {desktopPages > 1 && (
+                      <>
+                        <button
+                          onClick={handleDesktopPrev}
+                          className="
+                            hidden md:flex
+                            absolute
+                            -left-24
+                            top-1/2 -translate-y-1/2
+                            z-20
+                            hover:bg-white active:bg-white
+                            p-3 rounded-full
+                            hover:scale-110 active:scale-110
+                            transition-all backdrop-blur-sm
+                          "
+                          aria-label="Previous works page"
+                        >
+                          <ChevronLeft className="h-6 w-6 text-foreground" />
+                        </button>
+
+                        <button
+                          onClick={handleDesktopNext}
+                          className="
+                            hidden md:flex
+                            absolute
+                            -right-24
+                            top-1/2 -translate-y-1/2
+                            z-20
+                            hover:bg-white active:bg-white
+                            p-3 rounded-full
+                            hover:scale-110 active:scale-110
+                            transition-all backdrop-blur-sm
+                          "
+                          aria-label="Next works page"
+                        >
+                          <ChevronRight className="h-6 w-6 text-foreground" />
+                        </button>
+                      </>
+                    )}
                   </div>
-                  {desktopPages > 1 && (
-                    <>
-                      <button
-                        onClick={handleDesktopPrev}
-                        className="hidden md:flex absolute md:-left-[60px] xl:-left-[80px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
-                        aria-label="Previous works page"
-                      >
-                        <ChevronLeft className="h-6 w-6 text-foreground" />
-                      </button>
-                      <button
-                        onClick={handleDesktopNext}
-                        className="hidden md:flex absolute md:-right-[60px] xl:-right-[80px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
-                        aria-label="Next works page"
-                      >
-                        <ChevronRight className="h-6 w-6 text-foreground" />
-                      </button>
-                    </>
-                  )}
                 </div>
               ) : (
                 <div className="relative overflow-hidden">
