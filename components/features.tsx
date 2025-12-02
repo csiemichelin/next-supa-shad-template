@@ -68,10 +68,16 @@ export function Features() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-10 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
-            為什麼來到時光咖啡
+            從程式碼到咖啡香：<br />
+            一位台北工程師寫下的時光日記
           </h2>
-          <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed">
-            在這裡，咖啡承載的不只是香氣與味道，更是一份讓人放慢腳步、靜靜感受的片刻
+          <p lang="the-Peak" className="text-lg text-muted-foreground leading-relaxed text-left">
+            「時光咖啡」的故事，始於一位在台北忙得不可開交的工程師。多年來，他被專案與無止盡的 Bug 塞滿生活，凌晨寫程式、匆忙買咖啡成了日常。直到某天，他在一家小咖啡館裡，看著窗外車流，突然想起——人生或許該有個讓時間慢下來的地方。<br />
+            那晚，他決定做一件最不像工程師的事：辭職、旅行、學習咖啡，重新開始。他走訪各地、向職人請益，重新理解了「時間」的味道，也找到了想帶給人的那份片刻寧靜。
+            於是，「時光咖啡」誕生了。店裡的線條、配色、氛圍，都藏著他的工程師靈魂；而溫度、香氣與節奏，則是他重新拾回的生活步調。他希望每位來訪的人，都能在這裡找回一段被忙碌偷走的時光。<br /><br />
+          </p>
+          <p lang="zh-Hant" className="text-xl md:text-2xl font-bold text-muted-foreground leading-relaxed">
+            這，也許是他寫過最溫柔的一段程式
           </p>
         </div>
 
