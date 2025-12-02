@@ -2,7 +2,6 @@
 
 import { useEffect, useState, type CSSProperties } from "react"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import Image from "next/image"
 import { CloseButton } from "@/components/ui/close-button"
 import { LoadingIndicator } from "@/components/loading-indicator"
@@ -128,7 +127,7 @@ const coffeeOrigins: CoffeeOrigin[] = [
   },
 ];
 
-export default function OriginsPage() {
+export default function originsPage() {
   const [selectedOrigin, setSelectedOrigin] = useState<CoffeeOrigin | null>(null)
   const [pinDelays, setPinDelays] = useState<number[]>([])
   const [menuDetails, setMenuDetails] = useState<Record<string, { name: string; price: string; image: string | null }>>({})
@@ -198,7 +197,7 @@ export default function OriginsPage() {
   }, [selectedOrigin])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       {showPageLoader && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
           <LoadingIndicator size={96} />
@@ -206,7 +205,7 @@ export default function OriginsPage() {
       )}
       <Header />
 
-      <main className="pt-32 pb-16">
+      <main className="px-6 pb-20 md:pb-32">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
             <h1 lang="zh-Hant" className="text-3xl md:text-5xl font-bold text-foreground mb-4 text-balance">嚴選豆源</h1>
@@ -470,8 +469,6 @@ export default function OriginsPage() {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   )
 }

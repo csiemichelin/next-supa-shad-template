@@ -4,15 +4,30 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
-export function Gallery() {
-  const images = [
-    { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花', href: '/gallery/latte_art' },
-    { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', href: '/gallery/coffee_beans' },
-    { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
-    { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
-    { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
-    { url: '/images/milk.jpg', alt: '鮮乳直送' },
-  ]
+export type GallerySectionId = 'latte_art' | 'coffee_beans'
+
+type GalleryImage = {
+  url: string
+  alt: string
+  href?: string
+  sectionId?: GallerySectionId
+}
+
+const galleryImages: GalleryImage[] = [
+  { url: '/images/latte-art-heart-design.jpg', alt: '手沖拉花', sectionId: 'latte_art' },
+  { url: '/images/coffee-beans-roasting.jpg', alt: '嚴選豆源', sectionId: 'coffee_beans' },
+  { url: '/images/espresso-machine-pouring-coffee.jpg', alt: '精品設備' },
+  { url: '/images/coffee-shop-interior-cozy-seating.jpg', alt: '溫馨空間' },
+  { url: '/images/barista-pouring-milk-coffee.jpg', alt: '職人堅持' },
+  { url: '/images/milk.jpg', alt: '鮮乳直送' },
+]
+
+type GalleryProps = {
+  onSelectSection?: (sectionId: GallerySectionId | null) => void
+}
+
+export function Gallery({ onSelectSection }: GalleryProps) {
+  const images = galleryImages
 
   const [visibleImages, setVisibleImages] = useState<number[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -89,6 +104,25 @@ export function Gallery() {
     const timer = setTimeout(() => setDesktopCaptionVisible(true), 40)
     return () => clearTimeout(timer)
   }, [desktopCenterIndex, isDesktop])
+
+  useEffect(() => {
+    if (!onSelectSection) return
+    let nextSection: GallerySectionId | null = null
+    if (isDesktop) {
+      const centerImage = galleryImages[desktopCenterIndex]
+      nextSection = centerImage?.sectionId ?? null
+    } else {
+      const realIndex =
+        currentIndex === 0
+          ? total - 1
+          : currentIndex === total + 1
+            ? 0
+            : currentIndex - 1
+      const image = galleryImages[realIndex]
+      nextSection = image?.sectionId ?? null
+    }
+    onSelectSection(nextSection)
+  }, [isDesktop, desktopCenterIndex, currentIndex, onSelectSection, total])
 
   // 手機版觸控滑動
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
@@ -194,9 +228,11 @@ export function Gallery() {
                         alt={image.alt}
                         className={`w-full h-full object-cover transition-transform duration-500 ${isCenter ? 'hover:scale-105' : ''}`}
                       />
-                      <div className="absolute inset-0 transition-all duration-300
-                        ${isCenter ? 'bg-primary/0 hover:bg-primary/10' : 'bg-black/20'}
-                      " />
+                      <div
+                        className={`absolute inset-0 transition-all duration-300 ${
+                          isCenter ? 'bg-primary/0 hover:bg-primary/10' : 'bg-black/20'
+                        }`}
+                      />
 
                       <div className="absolute inset-0 flex items-center justify-center">
                         <span
@@ -212,7 +248,7 @@ export function Gallery() {
                     </div>
                   )
 
-                  if (image.href) {
+                  if (isCenter && image.href) {
                     return (
                       <Link
                         key={`desktop-${imageIndex}`}
@@ -277,34 +313,29 @@ export function Gallery() {
                   const isVisible = visibleImages.includes(actualIndex)
                   const showCaption = currentIndex === idx
 
-                  const card = (
+                  const cardContent = (
                     <div
-                      key={`mobile-${idx}`}
-                      className="w-full flex-shrink-0 px-2"
+                      className={`
+                        relative aspect-[4/3] overflow-hidden rounded-lg
+                        transition-all duration-700
+                        ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
+                      `}
                     >
-                      <div
-                        className={`
-                          relative aspect-[4/3] overflow-hidden rounded-lg
-                          transition-all duration-700
-                          ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-                        `}
-                      >
-                        <img
-                          src={image.url || "/placeholder.svg"}
-                          alt={image.alt}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span
-                            className={`
-                              text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
-                              transition-all duration-[1200ms] ease-out
-                              ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
-                            `}
-                          >
-                            {image.alt}
-                          </span>
-                        </div>
+                      <img
+                        src={image.url || "/placeholder.svg"}
+                        alt={image.alt}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span
+                          className={`
+                            text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
+                            transition-all duration-[1200ms] ease-out
+                            ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                          `}
+                        >
+                          {image.alt}
+                        </span>
                       </div>
                     </div>
                   )
@@ -314,13 +345,17 @@ export function Gallery() {
                       <Link
                         key={`mobile-link-${idx}`}
                         href={image.href}
-                        className="w-full flex-shrink-0"
+                        className="w-full flex-shrink-0 px-2"
                       >
-                        {card}
+                        {cardContent}
                       </Link>
                     )
                   }
-                  return card
+                  return (
+                    <div key={`mobile-${idx}`} className="w-full flex-shrink-0 px-2">
+                      {cardContent}
+                    </div>
+                  )
                 })}
               </div>
 

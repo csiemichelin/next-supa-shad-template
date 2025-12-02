@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { LoadingIndicator } from "@/components/loading-indicator"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
@@ -69,7 +68,7 @@ const latteArtWorks = [
   }
 ]
 
-export default function LatteArtGallery() {
+export default function latteArtGallery() {
   const [showLoader, setShowLoader] = useState(true)
   const [isContainerHidden, setIsContainerHidden] = useState(false)
   const [isDesktop, setIsDesktop] = useState(false)
@@ -179,7 +178,7 @@ export default function LatteArtGallery() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="bg-background flex flex-col">
       {showLoader && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
           <LoadingIndicator size={96} />
@@ -188,7 +187,7 @@ export default function LatteArtGallery() {
 
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-6 pt-32 pb-16">
+      <main className="flex-1 flex flex-col items-center px-6 pb-20 md:pb-32">
         <div className="text-center space-y-4 mb-15">
           <h1
             lang="zh-Hant"
@@ -343,8 +342,6 @@ export default function LatteArtGallery() {
           )}
         </section>
       </main>
-
-      <Footer />
     </div>
   )
 }
