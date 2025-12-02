@@ -17,8 +17,9 @@ export function Gallery() {
   const [visibleImages, setVisibleImages] = useState<number[]>([])
   const sectionRef = useRef<HTMLDivElement>(null)
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [isDesktop, setIsDesktop] = useState(false)
+  const [desktopCenterIndex, setDesktopCenterIndex] = useState(0)
+  const [desktopCaptionVisible, setDesktopCaptionVisible] = useState(true)
 
   // 手機版輪播狀態
   const [currentIndex, setCurrentIndex] = useState(1) // 從 1 開始（真實的第一張）
@@ -75,6 +76,20 @@ export function Gallery() {
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])
 
+  useEffect(() => {
+    if (!isDesktop) {
+      setDesktopCenterIndex(0)
+      setDesktopCaptionVisible(true)
+    }
+  }, [isDesktop])
+
+  useEffect(() => {
+    if (!isDesktop) return
+    setDesktopCaptionVisible(false)
+    const timer = setTimeout(() => setDesktopCaptionVisible(true), 40)
+    return () => clearTimeout(timer)
+  }, [desktopCenterIndex, isDesktop])
+
   // 手機版觸控滑動
   const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
     if (isDesktop) return
@@ -127,6 +142,22 @@ export function Gallery() {
     }
   }, [isTransitioning, isDesktop])
 
+  const desktopIndices = isDesktop
+    ? [
+        (desktopCenterIndex - 1 + total) % total,
+        desktopCenterIndex,
+        (desktopCenterIndex + 1) % total,
+      ]
+    : []
+
+  const handleDesktopPrev = () => {
+    setDesktopCenterIndex((prev) => (prev - 1 + total) % total)
+  }
+
+  const handleDesktopNext = () => {
+    setDesktopCenterIndex((prev) => (prev + 1) % total)
+  }
+
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32">
       <div className="container mx-auto px-6">
@@ -140,55 +171,88 @@ export function Gallery() {
         </div>
 
         <div className="relative">
-          {/* 桌面版：Grid 佈局 */}
+          {/* 桌面版：Carousel 佈局 */}
           {isDesktop ? (
-            <div className="grid max-w-6xl mx-auto gap-4 grid-cols-2 lg:grid-cols-3">
-              {displayImages.map((image, index) => {
-                const isVisible = visibleImages.includes(index)
-                const showCaption = hoveredIndex === index
-                const card = (
-                  <div
-                    className={`
-                      relative aspect-[4/3] overflow-hidden rounded-lg group cursor-pointer
-                      transition-all duration-700
-                      ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-                    `}
-                    onMouseEnter={() => setHoveredIndex(index)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                  >
-                    <img
-                      src={image.url || "/placeholder.svg"}
-                      alt={image.alt}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span
-                        className={`
-                          text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
-                          transition-all duration-[1200ms] ease-out
-                          ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
-                        `}
-                      >
-                        {image.alt}
-                      </span>
-                    </div>
-                  </div>
-                )
+            <div className="relative max-w-6xl mx-auto px-6">
+              <div className="flex items-center justify-center gap-6">
+                {desktopIndices.map((imageIndex, positionIndex) => {
+                  const image = images[imageIndex]
+                  const isVisible = visibleImages.includes(imageIndex)
+                  const isCenter = positionIndex === 1
+                  const showCaption = isCenter && desktopCaptionVisible
 
-                if (image.href) {
+                  const card = (
+                    <div
+                      className={`
+                        relative aspect-[4/3] w-full max-w-sm overflow-hidden rounded-2xl transition-all duration-500
+                        ${isCenter ? 'scale-100 opacity-100 grayscale-0 shadow-2xl ring-2 ring-primary/40' : 'scale-95 opacity-60 grayscale'}
+                        ${isVisible ? 'translate-y-0' : 'translate-y-4'}
+                      `}
+                    >
+                      <img
+                        src={image.url || "/placeholder.svg"}
+                        alt={image.alt}
+                        className={`w-full h-full object-cover transition-transform duration-500 ${isCenter ? 'hover:scale-105' : ''}`}
+                      />
+                      <div className="absolute inset-0 transition-all duration-300
+                        ${isCenter ? 'bg-primary/0 hover:bg-primary/10' : 'bg-black/20'}
+                      " />
+
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span
+                          className={`
+                            text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
+                            transition-all duration-[1200ms] ease-out
+                            ${isCenter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                          `}
+                        >
+                          {image.alt}
+                        </span>
+                      </div>
+                    </div>
+                  )
+
+                  if (image.href) {
+                    return (
+                      <Link
+                        key={`desktop-${imageIndex}`}
+                        href={image.href}
+                        className={`block rounded-2xl ${isCenter ? 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40' : 'pointer-events-none select-none'}`}
+                        tabIndex={isCenter ? 0 : -1}
+                        aria-disabled={!isCenter}
+                      >
+                        {card}
+                      </Link>
+                    )
+                  }
                   return (
-                    <Link
-                      key={`desktop-${index}`}
-                      href={image.href}
-                      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg"
+                    <div
+                      key={`desktop-${imageIndex}`}
+                      className={isCenter ? '' : 'select-none pointer-events-none'}
                     >
                       {card}
-                    </Link>
+                    </div>
                   )
-                }
-                return <div key={`desktop-${index}`}>{card}</div>
-              })}
+                })}
+              </div>
+              {total > 3 && (
+                <>
+                  <button
+                    onClick={handleDesktopPrev}
+                    className="hidden md:flex absolute md:-left-[40px] lg:-left-[60px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
+                    aria-label="Previous gallery slide"
+                  >
+                    <ChevronLeft className="h-6 w-6 text-foreground" />
+                  </button>
+                  <button
+                    onClick={handleDesktopNext}
+                    className="hidden md:flex absolute md:-right-[40px] lg:-right-[60px] top-1/2 -translate-y-1/2 z-20 hover:bg-white active:bg-white p-3 rounded-full hover:scale-110 active:scale-110 transition-all backdrop-blur-sm"
+                    aria-label="Next gallery slide"
+                  >
+                    <ChevronRight className="h-6 w-6 text-foreground" />
+                  </button>
+                </>
+              )}
             </div>
           ) : (
             /* 手機版：Flex 輪播 */

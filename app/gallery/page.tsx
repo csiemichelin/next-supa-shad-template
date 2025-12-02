@@ -15,17 +15,17 @@ export default function AboutPage() {
   }, [])
 
   return (
-    <main className="min-h-screen overflow-x-hidden max-w-full">
+    <div className="min-h-screen overflow-x-hidden max-w-full flex flex-col">
       {showLoader && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
           <LoadingIndicator />
         </div>
       )}
       <Header />
-      <div className="pt-20">
+      <main className="flex-1 pt-20">
         <Gallery />
-      </div>
+      </main>
       <Footer />
-    </main>
+    </div>
   )
 }
