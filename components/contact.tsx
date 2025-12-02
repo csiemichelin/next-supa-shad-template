@@ -69,7 +69,11 @@ export function Contact() {
   ]
 
   return (
-    <section ref={sectionRef} id="contact" className="py-20 md:py-32">
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="py-20 md:py-32 bg-secondary/30"
+    >
       <div className="container mx-auto px-6">
         <div className="text-center mb-10 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
