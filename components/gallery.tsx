@@ -129,8 +129,8 @@ export function Gallery() {
 
   return (
     <section ref={sectionRef} id="gallery" className="py-20 md:py-32 bg-secondary/30">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-4xl mx-auto">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-10 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             職人匠心
           </h2>
@@ -216,7 +216,7 @@ export function Gallery() {
                   const card = (
                     <div
                       key={`mobile-${idx}`}
-                      className="w-full flex-shrink-0 px-4"
+                      className="w-full flex-shrink-0 px-2"
                     >
                       <div
                         className={`
@@ -261,11 +261,11 @@ export function Gallery() {
               </div>
 
               {/* 滑動指示器 */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
+              <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center md:hidden">
                 <div className="flex items-center justify-between gap-6 w-[150px] rounded-full bg-black/40 text-white px-4 py-2 text-xs font-semibold tracking-wide backdrop-blur">
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-4 w-4 swipe-left-indicator" />
                   <div className="h-1 w-full max-w-[40px] rounded-full bg-white/30" />
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 swipe-right-indicator" />
                 </div>
               </div>
             </div>

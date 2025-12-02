@@ -70,8 +70,8 @@ export function Contact() {
 
   return (
     <section ref={sectionRef} id="contact" className="py-20 md:py-32">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-4xl mx-auto">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-10 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             店面資訊
           </h2>
@@ -80,7 +80,7 @@ export function Contact() {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto px-2">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {contactCards.map((card, index) => {
               const Icon = card.icon

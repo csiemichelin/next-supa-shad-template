@@ -26,7 +26,7 @@ export function Header() {
         ? 'bg-background/95 backdrop-blur-md border-border shadow-sm' 
         : 'bg-background/80 backdrop-blur-sm border-border/50'
     }`}>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-6">
         <div className="flex items-center justify-between h-20 md:h-24">
           <Link href="/" className="inline-flex">
             <div className="flex items-center text-primary hover:scale-105 active:scale-105 transition-transform duration-300 cursor-pointer">

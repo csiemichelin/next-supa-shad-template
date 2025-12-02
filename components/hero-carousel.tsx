@@ -159,7 +159,7 @@ export function HeroCarousel() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8">
           <div className="min-h-[120px] md:min-h-[240px] flex items-end">
             <h1 className={`w-full text-center text-5xl md:text-7xl lg:text-8xl font-bold text-balance leading-tight transition-all duration-1000 ${

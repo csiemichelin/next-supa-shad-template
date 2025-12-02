@@ -61,8 +61,8 @@ export function Features() {
 
   return (
     <section ref={sectionRef} id="about" className="py-20 md:py-32 bg-secondary/30">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16 max-w-4xl mx-auto">
+      <div className="container mx-auto px-6">
+        <div className="text-center mb-10 max-w-4xl mx-auto">
           <h2 lang="zh-Hant" className="text-3xl md:text-5xl font-bold mb-4 text-balance">
             為什麼來到時光咖啡
           </h2>
@@ -71,7 +71,7 @@ export function Features() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
           {features.map((feature, index) => {
             const Icon = feature.icon
             const isVisible = visibleItems.includes(index)

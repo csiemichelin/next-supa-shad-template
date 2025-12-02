@@ -99,7 +99,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary/10 to-accent/5">
       {/* Header */}
       <header className="bg-card border-b border-border shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
@@ -125,7 +125,7 @@ export default function AdminPage() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-6 py-8">
         <Tabs defaultValue="menu" className="space-y-6">
           <TabsList className="grid w-full grid-cols-2 max-w-md">
             <TabsTrigger className="w-full" value="menu">菜單管理</TabsTrigger>

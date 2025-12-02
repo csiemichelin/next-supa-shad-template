@@ -188,7 +188,7 @@ export default function LatteArtGallery() {
 
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-32 pb-16">
+      <main className="flex-1 flex flex-col items-center px-6 pt-32 pb-16">
         <div className="text-center space-y-4 mb-15">
           <h1
             lang="zh-Hant"

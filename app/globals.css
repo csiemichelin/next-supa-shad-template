@@ -133,6 +133,10 @@
     @apply bg-background text-foreground;
     overflow-x: hidden; /* Added to prevent horizontal scrollbars */
   }
+  html {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }
 
 /* Added custom keyframe animations for enhanced visual effects */
