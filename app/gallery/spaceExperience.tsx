@@ -2,7 +2,7 @@
 
 export default function SpaceExperience() {
   return (
-    <section id="space" className="w-full py-16 px-6 bg-white rounded-[32px] border border-black/5 text-gray-900">
+    <section id="space" className="w-full px-6 pt-16 pb-20 md:pb-32 bg-secondary/30">
       <div className="max-w-5xl mx-auto grid gap-10 md:grid-cols-[0.9fr_1.1fr] items-center">
         <div className="rounded-[24px] overflow-hidden shadow-xl">
           <img
@@ -11,9 +11,14 @@ export default function SpaceExperience() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-emerald-600">Cozy Space</p>
-          <h2 className="text-3xl md:text-4xl font-semibold">溫馨空間</h2>
+        <div className="text-center space-y-4 mb-15">
+          <p className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#7B5538] font-bold">Cozy Space</p>
+          <h2
+            lang="zh-Hant"
+            className="text-3xl md:text-5xl font-bold text-foreground"
+          >
+            溫馨空間
+          </h2>
           <p className="text-base text-gray-600 leading-relaxed">
             以大量木質與柔和光線打造的溫暖座位，讓早晨到夜晚都能感受舒適的待客氛圍。窗邊座席配置隱藏插座與 USB 充電，適合攜帶筆電或閱讀。
           </p>

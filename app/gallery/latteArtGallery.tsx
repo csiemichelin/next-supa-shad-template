@@ -187,14 +187,15 @@ export default function latteArtGallery() {
 
       <Header />
 
-      <main className="flex-1 flex flex-col items-center px-6 pb-20 md:pb-32">
+      <main className="flex-1 flex flex-col items-center w-full px-6 pt-16 pb-20 md:pb-32 bg-secondary/30">
         <div className="text-center space-y-4 mb-15">
-          <h1
+          <p className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#7B5538] font-bold">Latte Art</p>
+          <h2
             lang="zh-Hant"
             className="text-3xl md:text-5xl font-bold text-foreground"
           >
             手沖拉花
-          </h1>
+          </h2>
           <p
             lang="the-Peak"
             className="text-muted-foreground text-lg max-w-2xl mx-auto"

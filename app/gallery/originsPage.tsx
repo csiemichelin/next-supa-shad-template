@@ -200,110 +200,114 @@ export default function originsPage() {
     <div className="bg-background">
       <Header />
 
-      <main className="px-6 pb-20 md:pb-32">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            <h1 lang="zh-Hant" className="text-3xl md:text-5xl font-bold text-foreground mb-4 text-balance">嚴選豆源</h1>
-            <p lang="the-Peak" className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-              本店嚴選世界各地咖啡豆，帶你品味其豐富傳承與獨特風味
-            </p>
-          </div>
+      <main className="w-full px-6 pt-16 pb-20 md:pb-32 bg-secondary/30">
+        <div className="text-center space-y-4 mb-15">
+          <p className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#7B5538] font-bold">Curated Coffee Beans</p>
+          <h2
+            lang="zh-Hant"
+            className="text-3xl md:text-5xl font-bold text-foreground"
+          >
+            嚴選豆源
+          </h2>
+          <p lang="the-Peak" className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
+            本店嚴選世界各地咖啡豆，帶你品味其豐富傳承與獨特風味
+          </p>
+        </div>
 
-          <div className="md:hidden mb-8 flex flex-wrap gap-3 justify-center">
-            {coffeeOrigins.map((origin) => (
+        <div className="md:hidden mb-8 flex flex-wrap gap-3 justify-center">
+          {coffeeOrigins.map((origin) => (
+            <button
+              key={`mobile-${origin.id}`}
+              onClick={() => setSelectedOrigin(origin)}
+              className={`w-36 rounded-2xl border overflow-hidden transition-all duration-300 ${
+                selectedOrigin?.id === origin.id
+                  ? 'border-white/80 shadow-lg scale-[1.02]'
+                  : 'border-white/30 hover:scale-[1.02]'
+              }`}
+              aria-label={`快速查看${origin.country}`}
+            >
+              <div className="bg-accent/65 px-3 py-2 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
+                <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/40">
+                  <Image
+                    src={`/images/${origin.id}.png`}
+                    alt={`${origin.country} 精品咖啡產區`}
+                    fill
+                    className="object-cover"
+                    sizes="40px"
+                  />
+                </div>
+                <span>{origin.country}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <div className="relative max-w-6xl mx-auto">
+          <div className="relative w-full aspect-[1200/630] bg-muted/30 rounded-lg overflow-hidden shadow-2xl">
+            {!mapLoaded && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/40 backdrop-blur-sm">
+                <LoadingIndicator size={72} />
+              </div>
+            )}
+            <Image
+              src="/images/world-map.png"
+              alt="世界咖啡產區地圖"
+              fill
+              className="object-cover scale-[1.28] translate-x-[5%] -translate-y-[5%]"
+              priority
+              onLoadingComplete={() => setMapLoaded(true)}
+            />
+
+            {coffeeOrigins.map((origin, index) => (
               <button
-                key={`mobile-${origin.id}`}
+                key={origin.id}
                 onClick={() => setSelectedOrigin(origin)}
-                className={`w-36 rounded-2xl border overflow-hidden transition-all duration-300 ${
-                  selectedOrigin?.id === origin.id
-                    ? 'border-white/80 shadow-lg scale-[1.02]'
-                    : 'border-white/30 hover:scale-[1.02]'
-                }`}
-                aria-label={`快速查看${origin.country}`}
+                className="absolute group cursor-pointer"
+                style={{
+                  left: origin.position.x,
+                  top: origin.position.y,
+                  transform: "translate(-50%, -50%)",
+                }}
+                aria-label={`View ${origin.country} coffee information`}
               >
-                <div className="bg-accent/65 px-3 py-2 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
-                  <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/40">
-                    <Image
-                      src={`/images/${origin.id}.png`}
-                      alt={`${origin.country} 精品咖啡產區`}
-                      fill
-                      className="object-cover"
-                      sizes="40px"
-                    />
+                  <div
+                      className="relative w-6 h-6 md:w-10 md:h-10 hover:scale-125 active:scale-125 transition-transform duration-300"
+                      style={{ "--pin-delay": `${pinDelays[index] ?? 0}s` } as CSSProperties}
+                  >
+                      <div className="absolute z-10 inset-0 drop-shadow-lg">
+                          <Image
+                          src="/gif/location-pin.gif"
+                          alt={`${origin.country} 咖啡產區定位`}
+                          fill
+                          sizes="40px"
+                          className="object-contain"
+                          unoptimized
+                          />
+                      </div>
                   </div>
-                  <span>{origin.country}</span>
+
+                <div className="absolute z-20 top-full left-1/2 -translate-x-1/2 mt-1 w-35 rounded-2xl border border-white/40 overflow-hidden opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 pointer-events-none hidden md:block">
+                    <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-1 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
+                      <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/30">
+                        <Image
+                          src={`/images/${origin.id}.png`}
+                          alt={`${origin.country} 咖啡豆資訊`}
+                          fill
+                          className="object-cover"
+                          sizes="40px"
+                        />
+                      </div>
+                      <span>{origin.country}</span>
+                    </div>
                 </div>
               </button>
             ))}
           </div>
 
-          <div className="relative max-w-6xl mx-auto">
-            <div className="relative w-full aspect-[1200/630] bg-muted/30 rounded-lg overflow-hidden shadow-2xl">
-              {!mapLoaded && (
-                <div className="absolute inset-0 z-20 flex items-center justify-center bg-background/40 backdrop-blur-sm">
-                  <LoadingIndicator size={72} />
-                </div>
-              )}
-              <Image
-                src="/images/world-map.png"
-                alt="世界咖啡產區地圖"
-                fill
-                className="object-cover scale-[1.28] translate-x-[5%] -translate-y-[5%]"
-                priority
-                onLoadingComplete={() => setMapLoaded(true)}
-              />
-
-              {coffeeOrigins.map((origin, index) => (
-                <button
-                  key={origin.id}
-                  onClick={() => setSelectedOrigin(origin)}
-                  className="absolute group cursor-pointer"
-                  style={{
-                    left: origin.position.x,
-                    top: origin.position.y,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  aria-label={`View ${origin.country} coffee information`}
-                >
-                    <div
-                        className="relative w-6 h-6 md:w-10 md:h-10 hover:scale-125 active:scale-125 transition-transform duration-300"
-                        style={{ "--pin-delay": `${pinDelays[index] ?? 0}s` } as CSSProperties}
-                    >
-                        <div className="absolute z-10 inset-0 drop-shadow-lg">
-                            <Image
-                            src="/gif/location-pin.gif"
-                            alt={`${origin.country} 咖啡產區定位`}
-                            fill
-                            sizes="40px"
-                            className="object-contain"
-                            unoptimized
-                            />
-                        </div>
-                    </div>
-
-                  <div className="absolute z-20 top-full left-1/2 -translate-x-1/2 mt-1 w-35 rounded-2xl border border-white/40 overflow-hidden opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-all duration-300 pointer-events-none hidden md:block">
-                      <div className="bg-gradient-to-r from-primary/70 to-accent/70 px-3 py-1 text-xs font-semibold text-primary-foreground flex items-center justify-start gap-2">
-                        <div className="relative h-6 w-10 overflow-hidden rounded-md border border-white/30">
-                          <Image
-                            src={`/images/${origin.id}.png`}
-                            alt={`${origin.country} 咖啡豆資訊`}
-                            fill
-                            className="object-cover"
-                            sizes="40px"
-                          />
-                        </div>
-                        <span>{origin.country}</span>
-                      </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <div lang="the-Peak" className="text-base mt-5 text-center text-muted-foreground">
-              <p>探索世界各地咖啡豆的豐富傳承與獨特風味，這些都是本店嚴選的精品</p>
-            </div>
+          <div lang="the-Peak" className="text-base mt-5 text-center text-muted-foreground">
+            <p>探索世界各地咖啡豆的豐富傳承與獨特風味，這些都是本店嚴選的精品</p>
           </div>
-        </div>
+        </div>      
       </main>
 
       {selectedOrigin && (

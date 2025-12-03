@@ -245,7 +245,7 @@ export function Gallery({ onSelectSection }: GalleryProps) {
                           className={`
                             text-white bg-black/90 px-4 py-2 rounded-full text-sm font-semibold
                             transition-all duration-[1200ms] ease-out
-                            ${isCenter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
+                            ${showCaption ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}
                           `}
                         >
                           {image.alt}

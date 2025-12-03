@@ -2,11 +2,16 @@
 
 export default function CraftsmanshipShowcase() {
   return (
-    <section id="craftsmanship" className="w-full py-16 px-6 bg-emerald-950 rounded-[32px] border border-emerald-800/50 text-emerald-50">
+    <section id="craftsmanship" className="w-full px-6 pt-16 pb-20 md:pb-32 bg-secondary/30">
       <div className="max-w-5xl mx-auto space-y-6">
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.4em] text-emerald-200">Craftsmanship</p>
-          <h2 className="text-3xl md:text-4xl font-semibold">職人堅持</h2>
+        <div className="text-center space-y-4 mb-15">
+          <p className="text-xs md:text-sm uppercase tracking-[0.4em] text-[#7B5538] font-bold">Craftsmanship</p>
+          <h2
+            lang="zh-Hant"
+            className="text-3xl md:text-5xl font-bold text-foreground"
+          >
+            職人堅持
+          </h2>
           <p className="text-sm md:text-base text-emerald-100/80 leading-relaxed">
             從杯測、烘焙到沖煮流程，我們遵循 SCA 標準訓練，維持穩定的萃取紀錄。每位吧台同仁每日進行手沖曲線與義式萃取記錄，確保每杯咖啡都符合當日標準。
           </p>
