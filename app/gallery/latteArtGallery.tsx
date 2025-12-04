@@ -309,7 +309,7 @@ export default function latteArtGallery() {
                   </div>
                 </div>
               ) : (
-                <div className="relative overflow-hidden">
+                <div className="relative overflow-x-hidden">
                   <div 
                     className={`flex ${isTransitioning ? 'transition-transform duration-300 ease-out' : ''}`}
                     style={{ 
@@ -322,18 +322,10 @@ export default function latteArtGallery() {
                     {infiniteWorks.map((work, idx) => (
                       <div
                         key={`${work.id}-${idx}`}
-                        className="w-full flex-shrink-0 px-4"
+                        className="w-full flex-shrink-0 px-5 pb-9"
                       >
                         <div
-                          className="
-                            max-w-[350px] w-full
-                            rounded-[20px]
-                            bg-muted/25
-                            overflow-hidden
-                            shadow-sm active:shadow-xl
-                            transition-shadow duration-300
-                            mx-auto
-                          "
+                          className="rounded-[24px] border border-gray/10 bg-white/5 backdrop-blur-md shadow-xl overflow-hidden"
                         >
                           <div className="w-full bg-white/5">
                             <img
