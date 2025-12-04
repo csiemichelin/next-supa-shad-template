@@ -76,12 +76,12 @@ export function Features() {
             那晚，他決定做一件最不像工程師的事：辭職、旅行、學習咖啡，重新開始。他走訪各地、向職人請益，重新理解了「時間」的味道，也找到了想帶給人的那份片刻寧靜。
             於是，「時光咖啡」誕生了。店裡的線條、配色、氛圍，都藏著他的工程師靈魂；而溫度、香氣與節奏，則是他重新拾回的生活步調。他希望每位來訪的人，都能在這裡找回一段被忙碌偷走的時光。<br /><br />
           </p>
-          <p lang="zh-Hant" className="text-xl md:text-2xl font-bold text-muted-foreground leading-relaxed">
+          <p lang="zh-Hant" className="text-2xl md:text-2xl font-bold text-muted-foreground leading-relaxed">
             這，也許是他寫過最溫柔的一段程式
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2 px-6">
           {features.map((feature, index) => {
             const Icon = feature.icon
             const isVisible = visibleItems.includes(index)

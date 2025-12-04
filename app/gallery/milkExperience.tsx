@@ -7,7 +7,7 @@ const features = [
     icon: Truck,
     title: '每日直送鮮乳',
     description:
-      '與彰化小農牧場合作，每日低溫配送 12 小時內裝瓶的鮮乳，保留完整奶香與自然甜感',
+      '彰化小農牧場每日低溫直送，保留完整奶香與自然甜感',
     // 奶油感偏暖黃
     gradient: 'from-emerald-200/35 via-green-100/10 to-transparent',
   },
@@ -15,7 +15,7 @@ const features = [
     icon: Stamp,
     title: '產地履歷',
     description:
-      '每一批鮮乳皆附上生產日期與牧場資訊，來源透明可追溯，喝得安心也喝得放心',
+      '每批鮮乳標示牧場與生產日期，來源透明可追溯',
     // 帶一點紙張＋土地的灰棕色
     gradient: 'from-stone-300/50 via-amber-100/20 to-transparent',
   },
@@ -23,7 +23,7 @@ const features = [
     icon: ThermometerSnowflake,
     title: '低溫冷鏈保鮮',
     description:
-      '全程冷鏈運輸搭配店內 2℃ 冷藏設備，嚴格控溫，確保送入口中的每一口都維持最佳鮮度',
+      '全程冷鏈搭配店內 2℃ 冷藏，將鮮度鎖在每一口裡',
     // 明顯冷調藍綠
     gradient: 'from-sky-300/20 via-cyan-200/8 to-transparent',
   },
@@ -31,7 +31,7 @@ const features = [
     icon: CupSoda,
     title: '專屬奶泡比例',
     description:
-      '依照鮮乳特性建立加熱與打發曲線，微調溫度與時間，讓奶泡綿密、甜感飽滿，特別適合拿鐵與拉花',
+      '依鮮乳特性調整加熱與打發曲線，打造綿密又甜感飽滿的奶泡',
     // 帶奶泡感的粉橘拿鐵色
     gradient: 'from-rose-100/50 via-orange-100/30 to-transparent',
   },
